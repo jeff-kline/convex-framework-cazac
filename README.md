@@ -64,6 +64,99 @@ In `main()` you can change:
   This is fine for the moderate sizes used in the manuscript experiments.
 - CVXPY solver availability varies by platform. The script will try `CLARABEL`, then `ECOS`, then `SCS`.
 
+## Appendix: Extending Alternating Projections (IPUC) to \(N>1\) — reference implementation (`iterated.py`)
+
+This appendix describes the straightforward extension of *iterative projection onto the unimodular torus* (IPUC) to a **family** of \(N\) length-\(n\) sequences, together with an implementation in the adjacent file `iterated.py`.
+
+### Goal (coupled CAZAC-style feasibility)
+
+We seek \((x_1,\dots,x_N)\in(\mathbb{C}^n)^N\) such that:
+
+1. **Unit-modulus (time domain)** for each sequence:
+   \[
+   |x_j(k)| = 1 \quad \forall j\in\{1,\dots,N\},\ \forall k.
+   \]
+2. **Coupled spectral flatness (frequency domain)** across the family:
+   \[
+   \sum_{j=1}^N |F(x_j)(\ell)|^2 = Nn \quad \forall \ell,
+   \]
+   where \(F(\cdot)\) is the length-\(n\) DFT.
+
+In `iterated.py`, the second condition is encoded as a per-frequency **total power constraint** across the stacked spectra.
+
+---
+
+### Alternating-projection iteration
+
+The iteration alternates between:
+
+#### (A) Projection onto the unimodular torus (componentwise)
+Given current \(x_j\), enforce unit modulus by
+\[
+x_j(k)\leftarrow \frac{x_j(k)}{|x_j(k)|+\texttt{tiny}}.
+\]
+This is implemented exactly as:
+- `seqs = [s / (np.abs(s) + tiny) for s in seqs]`
+
+#### (B) “Projection” onto the coupled spectral constraint \(S_N\)
+Compute spectra \(X_j = F(x_j)\). For each frequency bin \(\ell\), enforce
+\(\sum_j |X_j(\ell)|^2 = Nn\) by applying a *shared* scaling across all sequences at that bin:
+\[
+X_j(\ell)\leftarrow X_j(\ell)\cdot \sqrt{\frac{Nn}{\sum_i |X_i(\ell)|^2+\texttt{tiny}}}.
+\]
+
+In `iterated.py` this is vectorized as:
+- `spectra = [fft(s) for s in seqs]`
+- `P = sum(|S_j|^2) + tiny` (a length-\(n\) vector over bins)
+- `s = sqrt((N*n)/P)` (length-\(n\) vector)
+- `spectra = [S_j * s for S_j in spectra]`
+
+Then transform back with inverse FFT and re-apply unit-modulus normalization.
+
+---
+
+### Convergence check used in `iterated.py`
+
+The function
+
+- `discrepancy_N(seqs)`
+
+computes the max deviation from the coupled spectral constraint:
+\[
+\max_{\ell}\left|\sum_{j=1}^N |F(x_j)(\ell)|^2 - Nn\right|.
+\]
+The main loop stops when `discrepancy_N(seqs) <= eps`.
+
+---
+
+### How to run (as in the file)
+
+`iterated.py` includes a small driver:
+
+- sets `n = 103`, `N = 4`,
+- calls `generate_cazac_family(...)`,
+- prints basic diagnostics (iterations, convergence, final discrepancy, min/max modulus),
+- verifies the normalized per-bin power statistic.
+
+Key entry point:
+
+- `generate_cazac_family(n, N=4, eps=..., max_iter=..., seed=..., real=False, verbose=True)`
+
+Notes:
+- `real=True` forces the iterates back to `np.real(...)` after each inverse FFT; this is a *heuristic* restriction and does not preserve unimodularity in general without the subsequent normalization step.
+- A small constant `tiny = 1e-15` prevents division-by-zero in normalization/scaling.
+
+---
+
+### Relationship to the convex refinement method in the letter
+
+This \(N>1\) IPUC extension is simple and often fast when feasibility is favorable, but it differs from the convex refinement framework emphasized in the main text:
+
+- Each iteration is **not** the globally optimal solution of a convex subproblem (it is a sequence of closed-form normalizations).
+- Adding additional convex side constraints (e.g., phase-window constraints, linear/SOC restrictions) generally breaks the closed-form projection structure and requires a different algorithmic backbone.
+
+(These points motivate the convex refinement approach in the letter while still acknowledging the practicality of alternating projections for some regimes.)
+
 ## License
 
 The manuscript states the code listing is released under **GNU GPL v3**.
