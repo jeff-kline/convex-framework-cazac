@@ -35,3 +35,80 @@ python -m venv .venv
 source .venv/bin/activate
 pip install -r requirements.txt
 python cazac_code_listing.py
+
+
+```markdown
+## What the SOCP enforces (high level)
+
+Variables: `N` complex sequences \(x_1,\dots,x_N\in\mathbb{C}^n\) (the listing defaults to `N=2`).
+
+### Core feasibility constraints
+
+- **Amplitude bound (outer approximation to constant modulus):**
+  \[
+  |x_j(k)| \le \tau.
+  \]
+- **Coupled spectral flatness bound:**
+  \[
+  \sum_{j=1}^N |F(x_j)(\ell)|^2 \le Nn \quad \forall \ell.
+  \]
+
+### Phase constraints (why they matter)
+
+A major practical advantage of the convex refinement approach is that **phase restrictions can be added without changing the algorithmic backbone**.
+
+The code supports phase-window constraints by restricting each entry \(x_j(k)\) to lie near a regular polygon in the complex plane:
+
+- `q` controls the polygon: a **regular `2q`-gon** approximation of the unit circle.
+- `sigma` controls slack: how far points may deviate from the polygon boundary.
+
+Conceptually, this lets you encode requirements like:
+
+- **bounded phase spread** (keep phases within a window),
+- **hardware-friendly phase alphabets** (coarse quantization / polyphase constraints),
+- **design-space narrowing** to improve stability or convergence.
+
+Because these are expressed as **linear / second-order cone constraints**, they remain compatible with the per-iteration convex optimization step.
+
+> Practical note: tightening phase restrictions too aggressively can make the SOCP infeasible at a given `τ`. The presolve step that gradually tightens `τ` is helpful when combined with phase constraints.
+
+### Workflow used in the listing
+
+1) **Presolve** loop to tighten `τ`, then  
+2) main refinement loop at `τ = 1`, updating the objective direction from the previous iterate.
+
+Implementation notes:
+- The DFT matrix is formed as `F = fft(I_n)` for clarity (uses **O(n²)** memory, aligned with moderate `n` used in the manuscript experiments).
+- Solver availability varies by platform; the script tries multiple cone solvers in order.
+
+---
+
+## Baseline: alternating projections for `N > 1` (`iterated.py`)
+
+`iterated.py` provides a lightweight IPUC-style baseline that alternates:
+
+1) **Projection onto the unimodular torus (componentwise):**
+   \[
+   x_j(k) \leftarrow \frac{x_j(k)}{|x_j(k)|}.
+   \]
+
+2) **Coupled spectral normalization (per frequency bin \(\ell\)):**
+   \[
+   F(x_j)(\ell) \leftarrow \sqrt{Nn}\,
+   \frac{F(x_j)(\ell)}{\left(\sum_{i=1}^N |F(x_i)(\ell)|^2\right)^{1/2}}.
+   \]
+
+This baseline can converge quickly in favorable regimes, but unlike the SOCP refinement it does **not** solve a convex subproblem per iteration and does **not** naturally accommodate additional convex side constraints (in particular, phase windows / polygonal phase constraints generally break the closed-form projection structure).
+
+---
+
+## License
+
+The manuscript states the code listing is released under **GNU GPL v3**. If you publish this as a public repository, include a `LICENSE` file containing the GPL-3.0 text.
+
+---
+
+## Citation
+
+If you use this code in academic work, please cite the associated manuscript (and the final venue version, once published).
+```
