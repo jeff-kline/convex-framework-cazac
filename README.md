@@ -38,7 +38,15 @@ Run the listing:
 python cazac_code_listing.py
 ```
 
-You should see output similar to the paper (time, max/min entry magnitudes, matrix size, condition number).
+You should see output similar to 
+
+```bash
+Time (s):      5.5
+Max |H(j,k)| 1.00000e+00
+Min |H(j,k)| 1.00000e+00
+Size H       (106, 106)
+Condition(H) 1.00000e+00
+```
 
 ## Parameters
 
