@@ -1,14 +1,53 @@
 #!/usr/bin/env python3
-"""Convex SOCP code listing (runnable transcription).
+#!/usr/bin/env python3
+"""
+Convex SOCP code listing (paper companion)
 
-This script is a lightly cleaned transcription of the manuscript code listing
-(phase‑window constrained program). Changes from the literal listing:
+This script presents the reference implementation of the paper, showing how
+CAZAC-style spectral flatness constraints can be enforced via a small second-order
+cone program (SOCP) in CVXPY, and how the resulting sequences can be assembled into
+a structured block-circulant matrix.
 
-- Uses ASCII quotes and PEP8-ish formatting.
-- Adds a `main()` entry point.
-- Adds solver fallback (Clarabel → ECOS → SCS) for portability.
+Model (high level)
+------------------
+Given N length-n complex sequences {x_j}, the program enforces:
+  • Time-domain amplitude bound:            |x_j(k)| ≤ τ   (parameter τ tightened in a presolve loop)
+  • Joint spectral flatness (energy):       Σ_j |FFT(x_j)(m)|^2 ≤ N n   for all frequency bins m
+  • Optional quantized-phase side-constraint:
+        entries lie within a neighborhood of vertices of a regular 2q-gon on the unit circle
+        (implemented as linear/second-order cone inequalities using directions exp(iπ(0.5+k)/q)
+        with slack s = cos(π/(2q)) + σ).
 
-The optimization model and update logic match the listing.
+Sequential refinement
+---------------------
+The objective maximizes alignment with a running reference direction r. After each solve,
+r is updated to the current solution. A short continuation phase tightens τ (the listing’s
+“presolve”), followed by a main loop at τ = 1 until convergence.
+
+N=2 block construction
+----------------------
+For N=2, the output sequences (x,y) define circulant matrices X=circulant(x), Y=circulant(y),
+and the script forms the 2n×2n block matrix
+    H = [[X,  Y],
+         [-Y*, X*]],
+which is unitary/complex-Hadamard when the constraints are met at equality (numerically).
+The script prints basic diagnostics (entry magnitudes, size, condition number).
+
+Requirements
+------------
+    numpy
+    scipy
+    cvxpy
+    clarabel   (preferred SOC solver; ECOS/SCS are used as fallbacks)
+
+
+Sample output
+----------------------------
+Time (s):      5.7
+Max |H(j,k)| 1.00000e+00
+Min |H(j,k)| 1.00000e+00
+Size H       (106, 106)
+Condition(H) 1.00000e+00
 """
 
 from __future__ import annotations
