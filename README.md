@@ -37,7 +37,7 @@ pip install -r requirements.txt
 python cazac_code_listing.py
 
 
-```markdown
+
 ## What the SOCP enforces (high level)
 
 Variables: `N` complex sequences \(x_1,\dots,x_N\in\mathbb{C}^n\) (the listing defaults to `N=2`).
