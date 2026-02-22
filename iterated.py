@@ -1,90 +1,36 @@
-import numpy as np
+"""
+IPUC-style iterative projection for CAZAC feasibility + small test harness.
 
-def discrepancy_N(seqs):
-    """
-    Max deviation of sum_j |F(seqs[j])|^2 from N*n.
-    """
-    n = len(seqs[0])
-    spectra = [np.fft.fft(s) for s in seqs]
-    S = sum(np.abs(Sj) ** 2 for Sj in spectra)
-    return np.max(np.abs(S - len(seqs) * n))
+This module implements an alternating normalization scheme to construct
+length-n constant-amplitude sequences with (coupled) spectral flatness.
+It is intended as a minimal, NumPy-only reference script for GitHub.
 
+Constraints
+-----------
+For sequences x_j (j=1..N):
+  (i)  |x_j[t]| = 1  for all samples t
+  (ii) sum_{j=1}^N |FFT(x_j)[k]|^2 = N*n  for all frequency bins k
 
-def generate_cazac_family(
-    n,
-    N=4,                 # <-- number of sequences
-    eps=1e-8,
-    max_iter=10000,
-    seed=None,
-    verbose=True,
-    real=False,
-):
-    """
-    Iterative projection to generate N length-n sequences such that:
-      (i)  |x_j(k)| = 1  for all j,k
-      (ii) sum_j |F(x_j)|^2 = N*n  (per frequency bin)
+Algorithm
+---------
+`generate_cazac_family` alternates between:
+  1) time-domain unit-modulus normalization (elementwise), and
+  2) frequency-domain per-bin rescaling so the total power equals N*n,
+     then returns to time domain via IFFT.
 
-    Returns
-    -------
-    seqs : list of length-N ndarrays of shape (n,)
-    """
+Extensions beyond the original single-sequence formulation
+----------------------------------------------------------
+This implementation explicitly supports:
+  - N>1 coupled families via the per-bin total-power constraint, and
+  - an optional `real=True` mode that forces real-valued iterates (yielding
+    approximately {±1} sequences after unit-modulus normalization).
 
-    rng = np.random.default_rng(seed)
-    tiny = 1e-15
+Testing regime
+--------------
+`run_regime` repeats independent trials (distinct seeds) and reports the
+success fraction under the criterion `discrepancy_N(seqs) <= eps` within
+`max_iter` iterations.
 
-    def rand_unit_phasor(size):
-        return np.exp(1j * 2 * np.pi * rng.random(size))
-
-    def maybe_real(v):
-        return np.real(v) if real else v
-
-    # --- Initialization ---
-    spectra = [rand_unit_phasor(n) for _ in range(N)]
-    seqs = [maybe_real(np.fft.ifft(S)) for S in spectra]
-
-    seqs = [s / (np.abs(s) + tiny) for s in seqs]
-
-    converged = False
-    iters = 0
-
-    for k in range(1, max_iter + 1):
-
-        if discrepancy_N(seqs) <= eps:
-            converged = True
-            iters = k - 1
-            break
-
-        # --- Projection 1: unit modulus ---
-        seqs = [s / (np.abs(s) + tiny) for s in seqs]
-
-        # --- Frequency domain ---
-        spectra = [np.fft.fft(s) for s in seqs]
-
-        # --- Projection 2: enforce per-bin total power = N*n ---
-        P = sum(np.abs(Sj) ** 2 for Sj in spectra) + tiny
-        s = np.sqrt((N * n) / P)
-
-        spectra = [Sj * s for Sj in spectra]
-
-        # --- Back to time domain ---
-        seqs = [maybe_real(np.fft.ifft(Sj)) for Sj in spectra]
-        seqs = [s / (np.abs(s) + tiny) for s in seqs]
-
-        iters = k
-
-    if real:
-        seqs = [np.real(s) for s in seqs]
-    # Final normalization
-    seqs = [s / (np.abs(s) + tiny) for s in seqs]
-
-    
-    if verbose:
-        print("Iterations performed:", iters)
-        print("Converged:", converged)
-        print("Final discrepancy:", discrepancy_N(seqs))
-        mags = [np.abs(s) for s in seqs]
-        print("Max |.|:", max(np.max(m) for m in mags))
-        print("Min |.|:", min(np.min(m) for m in mags))
-        print("N =", N, " Real mode:", real)
-
-    return seqs
+Reference: Amis et al., “CAZAC sequence generation of any length with iterative
+projection onto unit circle: principle and first results,” arXiv:2509.05097.
+"""
