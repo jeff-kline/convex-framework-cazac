@@ -35,7 +35,7 @@ Edit parameters at the top of the file you want to run, then:
 
 ## License
 
-GPL-3.0 (add a `LICENSE` file with the GPL v3 text if you make the repo public).
+GPL-3.0 (see `LICENSE`).
 
 ## Citation
 
