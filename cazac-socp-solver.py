@@ -134,14 +134,30 @@ def solve_with_fallback(prob: cp.Problem, preferred: str = "CLARABEL") -> float:
 
 def main() -> None:
     # Parameters from the listing
+
+    # n and N define the program size
+    # the output matrix will be 2nN x 2nN
+    # the 
     n = 53
     N = 2
+    
+    # these are iteration thresholds for presolve (L0) 
+    # and the main program (L)
     L0 = 10
     L = 100
+
+    # 2-q gon constraints
+    # When q is 2 the 4-gon (i.e., square) is oriented with 
+    # vertices at (1,-i, -1, -i)
     q = 2
     eps = 1e-5
 
-    # Phase-window slack (σ); listing uses cos(pi/(2q)) + 0.2
+    # Phase-window slack (σ)
+    # Increase sigma to relax the phase constraints
+    # If sigma is too small, the problem will fail to converge 
+    # to an orthogonal solution
+    # If sigma is large enough, the problem will ignore the
+    # phase constraints
     sigma = 0.2
 
     prob, x, r, t, s = get_lp_prog(n, N, q)
