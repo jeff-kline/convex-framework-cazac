@@ -384,5 +384,4 @@ are left incomplete-but-accurate rather than complete-but-guessed.
 Recompiled clean after every fix, `pdflatex main.tex` twice, no errors,
 no undefined references, 15 pages throughout.
 
-**Current HEAD as of this line: `621fd11`.** (Will be updated again once
-this round's fixes are committed.)
+**Current HEAD as of this line: `4798a92`** (round 4's fixes, committed).
