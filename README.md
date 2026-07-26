@@ -1,5 +1,16 @@
 # Convergence of iterated SOCP refinement for CAZAC feasibility
 
+**Scorecard** (blind, cold, per-axis grading; see `AUDIT-LEDGER.md` for
+methodology, per-axis justification, and what would move each score) ---
+graded at commit `b9634b2`, 2026-07-26:
+
+| Axis | Score | One-line note |
+| --- | --- | --- |
+| Novelty | 7/10 | Graded against CAZAC construction (the target field), not just the optimization literature Theorem A borrows from: no prior iterative CAZAC method (e.g. IPUC, 2025) has a convergence guarantee; Theorem D's exact dimension count is unclaimed elsewhere. |
+| Depth | 8/10 | Central claims fully proved and independently re-derivable; secondary claims (Theorem C, Björck) conditional on a stated hypothesis proved in an important special case. |
+| Reach | 7/10 | Method genuinely reused within the paper (elliptope, Björck, cubic-phase) with real payoffs each time; Q1--Q7 are concrete, some already partially attacked. |
+| Evidence | 7/10 | Flagship numerical claims reproducible with stated tolerances and disclosed negative results (the $p=71$ near-degeneracy); a couple of secondary claims were found under-cited during scoring and fixed. |
+
 CAZAC sequences satisfy a constant-modulus condition in time and a flat
 spectral-magnitude condition in frequency — a nonconvex intersection of two
 tori. This repository's primary artifact is `paper/main.tex`, a
