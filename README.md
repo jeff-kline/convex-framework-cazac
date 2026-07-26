@@ -13,7 +13,7 @@ unconditionally at Zadoff–Chu points for *all* lengths $n$ (both parities —
 even $n$ was not previously closed), via a new mechanism: the DFT of a
 Zadoff–Chu chirp is again a chirp, collapsing a dependency-rank computation
 to counting solutions of a congruence. The same mechanism extends to a
-partial result at Björck's quadratic-phase construction, reducing that case
+partial result at Björck's Legendre-symbol-phase construction, reducing that case
 to one unproved, numerically-confirmed lemma; that same specific mechanism
 (not every conceivable route) provably cannot reach cubic or higher phase.
 This underwrites **Theorem C** (proved conditional on the hypothesis;
@@ -119,9 +119,12 @@ above. See `code/README.md` for both scripts' parameters.)
 
 If you reference this work, please cite the repository. **Note:** the
 remote below is this repository's configured `origin`, but at the time of
-writing this repository has not yet been pushed there, so the URL does
-not yet resolve publicly — check before citing, or cite a local commit
-hash in the interim.
+writing that remote is a private, out-of-date snapshot that predates this
+document (an earlier version of the repository, from before its current
+`paper/` layout and audit history) and local work here is currently ahead
+of it — the URL will not resolve to what is described in this document
+until the local state is pushed. Check before citing, or cite a local
+commit hash in the interim.
 
 ```bibtex
 @misc{kline2026cazacconvergence,

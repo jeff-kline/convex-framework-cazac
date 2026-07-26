@@ -51,7 +51,7 @@ chirp is again a chirp, collapsing a rank computation to counting
 solutions of $t^2\equiv0\bmod n$ --- so (R) holds iff $n$ is squarefree.
 The mechanism is a reusable schema: a different closure fact (self-duality
 of the Legendre symbol) extends it to a partial regularity result at
-Bj\"orck's quadratic-phase construction, reduced to one unproved,
+Bj\"orck's Legendre-symbol-phase construction, reduced to one unproved,
 numerically-confirmed (44 primes) determinant lemma; the same specific
 mechanism, by contrast, provably cannot reach cubic or higher-degree
 phase (this does not rule out some other route). This underwrites Theorem
@@ -542,7 +542,14 @@ $$\langle x^*,y\rangle_\R=(1-t)\bigl[\re y_0(0)+\re y_1(0)\bigr]+t\bigl[\re F(y_
 using the amplitude bound directly on the first bracket and
 Cauchy--Schwarz ($\re F(y_0)(0)+\re F(y_1)(0)\le\sqrt2\sqrt{S_y(0)}$) only
 on the coupled second bracket, matching $\|x^*\|^2=2(1+t^2)$ for the
-doubled point. Part (c) follows immediately from the existence of one such
+doubled point. Equality forces $\re y_j(0)=1$ for $j=0,1$ (each term of
+the first bracket individually at its bound, so $y_j(0)=1$ exactly), and
+in the Cauchy--Schwarz step: $\re F(y_0)(0)=\re F(y_1)(0)=|F(y_j)(0)|$
+(parallel to $(1,1)$ and real, nonnegative) with $S_y(0)=4$ exactly,
+giving $F(y_0)(0)=F(y_1)(0)=\sqrt2$; since $F(y_j)(0)=y_j(0)+y_j(1)=1+y_j(1)$,
+this forces $y_j(1)=\sqrt2-1=t$ for both blocks, i.e.\ $y=x^*$ ---
+again a genuine separating functional, uniquely exposing the doubled
+point. Part (c) follows immediately from the existence of one such
 retained point.
 \end{proof}
 
@@ -824,12 +831,13 @@ here, since Steps 1--4 characterize $K$ by its Fourier support directly.
 
 \begin{remark}[Scope of the written derivation]
 Steps 2--3 evaluate the same kind of quadratic exponential sum as Step
-1's self-transform identity, via the same completion-of-square technique;
-the definition of the reality-defect kernel $e$ is the one place a
-compressed first pass is liable to drop the conjugate term and
-mis-simplify the zero set (an error the schema shares structurally with
-the naive, incorrect transfer attempt at Bj\"orck's construction below,
-Lemma~\ref{lem:bjaffine}'s own point of departure). The \emph{conclusion}
+1's self-transform identity, via the same completion-of-square technique.
+The definition of the reality-defect kernel $e$ is the one place this
+computation is easy to get wrong: dropping the conjugate term mis-simplifies
+the zero set to the wrong condition, structurally the same error as
+transferring $\chi$'s self-duality naively (i.e.\ without the affine
+correction) to Bj\"orck's construction below (Lemma~\ref{lem:bjaffine}'s
+own point of departure). The \emph{conclusion}
 $\dim K=d_{\max}$ is independently corroborated: by hand at $n=4$
 (self-paired case) and $n=9$ (odd, non-self-paired) via direct enumeration
 of $Z_0$, and numerically across all $21+43=64$ tested Zadoff--Chu
@@ -876,14 +884,17 @@ sequence of length $n=sm^2$ by an \emph{arbitrary} unimodular sequence of
 period $m$ again satisfies the ideal periodic autocorrelation property
 (their Theorem~1); at $m=d_{\max}$ this gives an explicit
 $d_{\max}$-real-parameter family of CAZAC points \emph{through every
-Zadoff--Chu tuple} --- we confirmed numerically that this family exists
+Zadoff--Chu tuple} --- confirmed numerically that this family exists
 exactly as claimed and has the predicted dimension at $n=4$ ($d_{\max}=2$:
 an arbitrary period-$2$ phase pair gives a verified $2$-parameter family
-of exact CAZAC points). \textbf{Bj\"orck--Saffari (1995)} \cite{BjorckSaffari95}:
+of exact CAZAC points; script: {\tt experiments/verify\_popovic\_n4.py} in
+the companion repository \cite{CazacAlgorithmRepo}). \textbf{Bj\"orck--Saffari (1995)} \cite{BjorckSaffari95}:
 a further, more general construction (any constant-amplitude length-$N$
 seed sequence and any permutation, not just a phase modulation of a fixed
 Zadoff--Chu sequence) gives explicit continuous families of CAZAC
-sequences at every non-squarefree length unconditionally. Of the three,
+sequences of length $N^2$, extended by a further construction (with an
+initial parity condition removed by a Kronecker-product trick) to every
+non-squarefree length unconditionally. Of the three,
 Popovi\'c's is the most directly comparable to this paper's setup (a
 family literally through a Zadoff--Chu tuple), and we have \textbf{not}
 worked out the precise identification between any of these three explicit
@@ -898,8 +909,8 @@ and to ruling out cubic-or-higher phase; and the connection to hypothesis
 constructions address. Separately: Bj\"orck and Saffari also
 \emph{conjectured} the complementary finiteness statement --- that at
 squarefree $n$ the full CAZAC variety (not just the Zadoff--Chu orbit) is
-finite up to phase --- which remains open in general (Haagerup settled
-only the case $n$ prime); this is the natural generalization of exactly
+finite up to phase --- which remains open in general (settled only for
+prime $n$, by Haagerup \cite{Haagerup08}); this is the natural generalization of exactly
 the gap Q4 below leaves open (regularity at non-Zadoff--Chu CAZAC points),
 not a new question invented by this paper.
 \end{remark}
@@ -934,10 +945,14 @@ a pure reindexing of the phase, exactly as Step~1 does) only when $d=2$;
 for $d\ge3$ and $\gcd(d,n)=1$, matching the cross term $-km$ (linear in
 $m$) forces $ds\equiv0\pmod n$, hence $s\equiv0$, so no nontrivial shift
 completes the $d$-th power the way Step~1 completes the square.
-Separately, quadratic Gauss sums have an exact closed-form evaluation
-(magnitude $\sqrt n$ always); Weyl sums of degree $\ge3$ have no such exact
-evaluation, only upper bounds, so even if some other closure map existed
-it would not obviously carry the exact-modulus property Step~1 needs.
+Separately, the specific quadratic Gauss sum $G_u$ entering Theorem~D's
+Step~1 has magnitude exactly $\sqrt n$, forced by Parseval applied to the
+Zadoff--Chu sequence itself (not by a general closed-form evaluation:
+classical quadratic Gauss sums have magnitude $\sqrt n$ for $n$ odd, $0$
+for $n\equiv2\bmod4$, and $\sqrt{2n}$ for $n\equiv0\bmod4$); Weyl sums of
+degree $\ge3$ have no comparable exact evaluation, only upper bounds, so
+even if some other closure map existed it would not obviously carry the
+exact-modulus property Step~1 needs.
 \textbf{Together these show the specific self-transform mechanism used in
 Theorem~D's proof does not extend to cubic or higher phase}; this is an
 obstruction to \emph{this} route, not a proof that no route exists, and
@@ -988,28 +1003,35 @@ $\overline{b(m)}\,(F^*(c\odot\hat b))(m)\in\R$ for all $m$ to
 $c=\alpha\mathbf1+\beta\chi+\gamma\delta_0\in T$ collapses --- since
 $b,\hat b\in T$ closes under pointwise product and $F$ --- to exactly
 three scalar equations, one evaluation each at $m=0$, $m\in$~QR,
-$m\in$~QNR (the condition depends on $m$ only through $\chi(m)\in\{0,1,-1\}$).
-Use $\alpha_0:=\alpha$ and $\beta_0:=\beta$, the same angles fixed in
-Lemma~\ref{lem:bjaffine} (not a phase of $Bg$: for $p\equiv1\pmod4$,
-$Bg=i\sin\alpha\cdot\sqrt p$ is purely imaginary, never real, so no
-polar-decomposition phase of $Bg$ itself is what is meant here). The three
-equations reduce, after eliminating the $m=0$ equation (which involves
-only $\alpha,\gamma$ and is solved by $\alpha$ free), to:
-$$p\equiv1\!\!\pmod4:\quad s\sqrt p\,\beta=0,\qquad -s\gamma\bigl(1+c(p-1)\bigr)=0\quad(c=\cos\alpha_0=\tfrac1{1+\sqrt p},\,s=\sin\alpha_0);$$
-$$p\equiv3\!\!\pmod4:\quad \frac{\sqrt p(1-\cos\beta_0)}2\,\beta=\frac{p\sin\beta_0}2\,\gamma,
-\qquad \frac{\sqrt p(1-\cos\beta_0)}2\,\beta=-\frac{\sin\beta_0}2\,\gamma.$$
-In the first case, $\alpha_0=\arccos\frac1{1+\sqrt p}\in(0,\pi/2)$ since
+$m\in$~QNR (the condition depends on $m$ only through $\chi(m)\in\{0,1,-1\}$);
+$\alpha$ never appears in any of the three (consistent with
+$\mathbf1\in K$ unconditionally), so only the $\beta,\gamma$ coefficients
+are at stake. Use $\alpha_0:=\alpha$ and $\beta_0:=\beta$, the same angles
+fixed in Lemma~\ref{lem:bjaffine} (not a phase of $Bg$: for
+$p\equiv1\pmod4$, $Bg=i\sin\alpha\cdot\sqrt p$ is purely imaginary, never
+real, so no polar-decomposition phase of $Bg$ itself is what is meant
+here).
+
+For $p\equiv1\pmod4$, eliminating the $m=0$ equation (which involves only
+$\beta$) leaves:
+$$s\sqrt p\,\beta=0,\qquad -s\gamma\bigl(1+c(p-1)\bigr)=0\quad(c=\cos\alpha_0=\tfrac1{1+\sqrt p},\,s=\sin\alpha_0).$$
+$\alpha_0=\arccos\frac1{1+\sqrt p}\in(0,\pi/2)$ since
 $\frac1{1+\sqrt p}\in(0,1)$, so $s=\sin\alpha_0>0$; $s\sqrt p\ne0$ forces
 $\beta=0$ directly. Also $c=\cos\alpha_0=\frac1{1+\sqrt p}\in(0,1)$
 exactly (not merely bounded, and not $\pm1$), so $1+c(p-1)>1>0$ for every
 $p\ge5$ (both terms of $c(p-1)$ positive), hence $1+c(p-1)\ne0$ forces
-$\gamma=0$. In the second case, $\beta_0=\arccos\frac{1-p}{1+p}$ with
-$\frac{1-p}{1+p}\in(-1,1)$ strictly for every $p\ge3$, so
-$\beta_0\in(0,\pi)$ and $\sin\beta_0>0$; subtracting the two equations
-gives $\gamma\bigl(\tfrac{p\sin\beta_0}2+\tfrac{\sin\beta_0}2\bigr)=0$,
-i.e.\ $\gamma\sin\beta_0(p+1)/2=0$, and since $p+1\ne0$ and
-$\sin\beta_0\ne0$, $\gamma=0$; then $\beta=0$ from either equation, since
-the coefficient $\sqrt p(1-\cos\beta_0)/2$ is nonzero (as $\beta_0\ne0$).
+$\gamma=0$.
+
+For $p\equiv3\pmod4$, the QR and QNR equations (the $m=0$ equation is
+linearly dependent on these two) are:
+$$\sqrt p(1-\cos\beta_0)\,\beta+\tfrac{p-1}2\sin\beta_0\,\gamma=0,\qquad
+\tfrac{p+1}2\sin\beta_0\,\gamma=0.$$
+$\beta_0=\arccos\frac{1-p}{1+p}$ with $\frac{1-p}{1+p}\in(-1,1)$ strictly
+for every $p\ge3$, so $\beta_0\in(0,\pi)$ and $\sin\beta_0>0$; the second
+equation then forces $\gamma=0$ directly, since $\tfrac{p+1}2\sin\beta_0\ne0$;
+substituting into the first, $\sqrt p(1-\cos\beta_0)\beta=0$ forces
+$\beta=0$ as well, since $1-\cos\beta_0\ne0$ ($\beta_0\ne0$).
+
 In both residue classes the system forces $\beta=\gamma=0$ with $\alpha$
 free, giving $K\cap T=\operatorname{span}\{\mathbf1\}$ exactly.
 \end{proof}
@@ -1027,9 +1049,11 @@ factors $u,v,w,p_f$) gives $\det=-\tfrac14[e(-k/q)\rho_R(k)^2u(k)v(k)-\rho_N(k)^
 $\rho_R(k)=\tfrac12[g(\lambda_k)+g(\lambda_k\chi)]$,
 $\rho_N(k)=e(-k/2q)\tfrac12[g(\lambda_k)-g(\lambda_k\chi)]$ for
 $\lambda_k$ the order-$(p-1)$ character with $\lambda_k(g_0)=e(k/(p-1))$
-($g_0$ a primitive root mod $p$). \textbf{One necessary condition for
-$\det=0$ is now proved impossible, unconditionally}: $\rho_R(k)=0$ or
-$\rho_N(k)=0$ requires $g(\lambda_k)=\pm g(\lambda_k\chi)$, and the
+($g_0$ a primitive root mod $p$). \textbf{One route to $\det=0$ is now
+ruled out unconditionally}: the route where $\rho_R(k)$ \emph{and}
+$\rho_N(k)$ vanish simultaneously (which would zero out the entire
+$2\times2$ block, hence $\det$). $\rho_R(k)=0$ or $\rho_N(k)=0$
+individually requires $g(\lambda_k)=\pm g(\lambda_k\chi)$, and the
 classical Gauss--Jacobi identity $g(\psi)g(\chi)=J(\psi,\chi)g(\psi\chi)$
 re-expresses this as $J(\lambda_k,\chi)=\pm g(\chi)$; since
 $J(\lambda_k,\chi)\in\Q(\zeta_{p-1})$ (a $\Z$-linear combination of
@@ -1040,21 +1064,39 @@ $J(\lambda_k,\chi)=\pm g(\chi)$ would force $g(\chi)\in\Q$, a
 contradiction. So $\rho_R(k),\rho_N(k)\ne0$ for every prime and every
 nontrivial $k$, \textbf{proved}, not merely checked (script: {\tt
 experiments/verify\_bjorck\_jacobi\_unification.py} in the companion
-repository \cite{CazacAlgorithmRepo}). \textbf{This does not, however,
-resolve $\det\ne0$}: $\det$ is a \emph{difference} of two terms, and
-$u(k)v(k)-w(k)p_f(k)$ is a separate, nonzero quantity (an explicit closed
-form, $-16\,a\,\epsilon\,g\,\gamma\sin^2\alpha$ for Bj\"orck's own
-constants $a,\gamma,g$, itself never zero), so $\det=0$ remains logically
-possible via $e(-k/q)\rho_R(k)^2u(k)v(k)=\rho_N(k)^2p_f(k)w(k)$ even
-though every individual factor is nonzero --- and this cross-term
-coincidence is checked directly, not assumed away: at the $k$ minimizing
-$|\det|/p^2$ for each tested prime $p\equiv1\pmod4$ in $[5,60)$,
-$\min(|\rho_R(k)|,|\rho_N(k)|)/\sqrt p$ stays in $[0.11,0.6]$ ---
-\textbf{not small} --- even as $|\det|/p^2$ itself shrinks by three
-orders of magnitude, showing the near-degeneracy traces to this
-cross-term, not to $\rho_R$ or $\rho_N$ (script: {\tt
-experiments/verify\_bjorck\_crossterm\_gap.py}, same repository). The
-cross-term coincidence remains open and unresolved. Separately, the
+repository \cite{CazacAlgorithmRepo}) --- a clean standalone fact, but
+\textbf{one that does not, by itself, narrow the determinant question}:
+neither $\rho_R(k)=0$ nor $\rho_N(k)=0$ was ever a necessary or a
+sufficient condition for $\det=0$ on its own (e.g.\ at $\rho_R(k)=0$,
+$\det$ collapses to $\tfrac14\rho_N(k)^2p_f(k)w(k)$, itself zero only if
+$p_f$ or $w$ also vanishes), so this proof does not directly rule out
+$\det=0$ in general. $\det$ is a \emph{difference} of two terms, and the
+actual open condition is the cross-term coincidence
+$e(-k/q)\rho_R(k)^2u(k)v(k)=\rho_N(k)^2p_f(k)w(k)$, which can hold even
+with $\rho_R,\rho_N,u,v,w,p_f$ all individually nonzero.
+$u(k)v(k)-w(k)p_f(k)$ has an explicit nonzero closed form
+($-16\,A\,\varepsilon\,g\,C\sin^2\alpha$ for the constants $A,C$ of
+Lemma~\ref{lem:bjaffine} and $\varepsilon:=(-1)^k$; itself never zero,
+since $A=\cos\alpha\in(0,1)$, $C=1-A\ne0$, $g=\sqrt p\ne0$, and
+$\sin\alpha\ne0$), confirming the
+cross-term is a genuinely separate condition, not reducible to $\rho_R,
+\rho_N$ vanishing. Checked directly, not assumed away, \textbf{for
+$p\equiv1\pmod4$ in $[5,60)$}: at the $k$ minimizing $|\det|/p^2$ for each
+such prime, $\min(|\rho_R(k)|,|\rho_N(k)|)/\sqrt p$ stays in $[0.11,0.6]$
+--- \textbf{not small} --- even as $|\det|/p^2$ itself shrinks by three
+orders of magnitude, confirming that in \emph{this} range the
+near-degeneracy traces to the cross-term, not to $\rho_R$ or $\rho_N$
+(script: {\tt experiments/verify\_bjorck\_crossterm\_gap.py}, same
+repository). \textbf{This does not extend to $p=71$}: that prime is
+$\equiv3\pmod4$, outside both the closed form above and this sweep's
+range, and at $p=71,k=17$ specifically $\min(|\rho_R|,|\rho_N|)/\sqrt p
+\approx5.3\times10^{-7}$ --- there, unlike the $p\equiv1\pmod4$ range
+just checked, the near-degeneracy traces directly to $\rho_R$ or $\rho_N$
+being small, not to the cross-term; the two residue classes are not
+shown to behave the same way, and the $p\equiv3\pmod4$ closed form
+needed to even pose the cross-term question there has not been derived.
+The cross-term coincidence remains open and unresolved for
+$p\equiv1\pmod4$. Separately, the
 relevant determinants are confirmed numerically nonzero at every one of
 $44$ tested primes $p\in[5,200)$ (both residue classes, $\dim K=1$
 throughout) --- at $p=71$ the gap is a factor of $\approx4\times10^3$
@@ -1092,9 +1134,12 @@ are non-CAZAC fixed points always measure-zero repellers, or can they
 attract an open set of initializations?
 
 \noindent\textbf{Q3 (partially answered).} Why does $N=2$ empirically always
-succeed where $N=1$ sometimes fails? The dimension lower bound
-$\dim\CAZ(n,N)\ge(N-1)n+1$ (proved) gives a mechanism, and
-Corollary~\ref{cor:D2} makes it exact at squarefree Zadoff--Chu points; but
+succeed where $N=1$ sometimes fails? Corollary~\ref{cor:D2}'s exact
+dimension count, $\dim\CAZ(n,N)=(N-1)n+1$ at squarefree Zadoff--Chu
+tuples, suggests a mechanism (more coupled sequences means more escape
+directions), though this is proved only at those specific points, not as
+a general lower bound at every CAZAC point (which would additionally
+require $\CAZ(n,N)$ to be a manifold there, not established in general);
 the pathological fixed-point classes are the same for $N=1,2$, so the gap
 is about basin measure, not existence, and remains open.
 
@@ -1107,7 +1152,7 @@ the true sharp-growth constant is conjectural (proved bounds scale like
 $c_N/n$, sampled ratios show no decay). This remaining gap is not a new
 question: it is the natural generalization of Bj\"orck and Saffari's own
 still-open finiteness conjecture (\S\ref{sec:zc}, remark after
-Corollary~\ref{cor:D2}) --- settled only at prime $n$, by Haagerup.
+Corollary~\ref{cor:D2}) --- settled only at prime $n$, by Haagerup \cite{Haagerup08}.
 
 \noindent\textbf{Q5 (open, deprioritized).} What does the $\tau$-continuation
 presolve actually buy? Hypothesis: it drives the iterate onto (or near) the
@@ -1117,7 +1162,9 @@ easier flat-spectrum variety before the main phase. Untested by ablation.
 initialization, does the iteration converge to $\CAZ(n,N)$ with
 probability $1$ (or $\ge1-c^n$)? Requires a full fixed-point census (Q2)
 and a basin/measure argument. For $N=1$, empirical success probability
-decays from $\approx1$ at small $n$ to $\approx0.3$ at $n=167$; whether
+decays from $\approx1$ at small $n$ to $\approx0.3$ at $n=167$ (50 trials
+per configuration; {\tt docs/main.tex}, Table~1, in the companion
+repository \cite{CazacAlgorithmRepo}); whether
 this decay is exponential or polynomial in $n$ is unresolved.
 
 \noindent\textbf{Q7 (partially settled by citation, residual part open).}
@@ -1219,10 +1266,17 @@ in $m$ for $d\ge3$); \textbf{not} a general impossibility result, and not
 addressed when $\gcd(d,n)>1$.
 \item Bj\"orck partial result: Lemma~\ref{lem:bjaffine},
 Lemma~\ref{lem:bjequiv}, Theorem~\ref{thm:E0} ($K\cap T=\operatorname{span}\{\mathbf1\}$):
-\emph{Unconditional}. Full regularity (R) at Bj\"orck points:
-\textbf{open}, reduced to one unproved determinant-nonvanishing lemma,
-\emph{verified numerically only} at 44 primes, $p\in[5,200)$. Do not read
-this as ``proved'' --- the reduction is real but incomplete.
+\emph{Unconditional}. Within the residual (non-symmetry-invariant)
+directions: $\rho_R(k),\rho_N(k)\ne0$ for every prime and every nontrivial
+$k$ is \emph{Unconditional} (proved, an elementary cyclotomic-field
+argument, not merely checked --- \S\ref{sec:zc}, Björck subsection), but
+this is only a necessary condition for the full isotypic-block determinant
+to be nonzero, not a sufficient one. Full regularity (R) at Bj\"orck points:
+\textbf{open}, reduced to one unproved determinant-nonvanishing lemma
+(specifically, a cross-term coincidence not addressed by the proved
+sub-result above), \emph{verified numerically only} at 44 primes,
+$p\in[5,200)$. Do not read this as ``proved'' --- the reduction is real
+but incomplete.
 \item Q1--Q7: precise open-problem statements as in Section~\ref{sec:open}; Q1 is
 settled (restated as a theorem above), the rest range from ``partially
 answered'' to fully open conjectures, as stated there.
@@ -1257,7 +1311,7 @@ via the Frank-Wolfe Algorithm with the Kurdyka-{\L}ojasiewicz Inequality},
 arXiv:2505.00221 (2025).
 
 \bibitem{JNRS10} M. Journ\'ee, Y. Nesterov, P. Richt\'arik, R. Sepulchre,
-\emph{Generalized Power Method for Sparse PCA}, J. Mach. Learn. Res.
+\emph{Generalized Power Method for Sparse Principal Component Analysis}, J. Mach. Learn. Res.
 \textbf{11} (2010), 517--553. arXiv:0811.4724.
 
 \bibitem{LLM09} A. S. Lewis, D. R. Luke, J. Malick, \emph{Local linear
@@ -1290,6 +1344,9 @@ finite unimodular sequences with unimodular Fourier transforms. Circulant
 Hadamard matrices with complex entries}, C. R. Acad. Sci. Paris S\'er. I
 \textbf{320}(3) (1995), 319--324.
 
+\bibitem{Haagerup08} U. Haagerup, \emph{Cyclic $p$-roots of prime lengths
+$p$ and related complex Hadamard matrices}, arXiv:0803.2629 (2008).
+
 \bibitem{CazacAlgorithmRepo} J. Kline, \emph{cazac-algorithm}: companion
 research repository holding the {\tt theory/} derivations, the dated
 {\tt AUDIT-LEDGER.md}, and the {\tt experiments/} scripts (including
@@ -1297,7 +1354,7 @@ research repository holding the {\tt theory/} derivations, the dated
 {\tt verify\_elliptope\_convergence.py}, {\tt verify\_elliptope\_rank\_sweep.py},
 {\tt verify\_bjorck\_regularity.py}, {\tt verify\_bjorck\_isotypic.py},
 {\tt verify\_bjorck\_jacobi\_unification.py},
-{\tt verify\_bjorck\_crossterm\_gap.py}) that
+{\tt verify\_bjorck\_crossterm\_gap.py}, {\tt verify\_popovic\_n4.py}) that
 reproduce every numerical claim in this paper, 2026. \textbf{Not publicly
 hosted at time of writing} --- no location is asserted here because none
 can currently be given; a reader cannot yet independently fetch this
