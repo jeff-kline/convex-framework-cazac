@@ -33,7 +33,10 @@ markdown. `STATUS.md` — every principal claim with its proof tier (proved /
 proved-conditional / numerically verified / conjectural). `problems/` —
 the open questions this leaves (P1–P8; `main.tex`'s own condensed
 Open Problems section labels the same list Q1–Q7 for its shorter,
-paper-facing form), stated precisely enough to attack.
+paper-facing form), stated precisely enough to attack. `AUDIT-LEDGER.md` —
+the record of an adversarial audit run against this repo (per-claim
+findings across mathematics, citations, numerics, prose, privacy, and
+this file), with fixes applied and cross-referenced.
 
 ## How to use this repository
 

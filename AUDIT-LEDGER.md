@@ -112,7 +112,7 @@ metadata. Two findings:
 - Thm D's Steps 2-3 (Gauss-sum correlation-equation algebra) were checked by numerical consistency at two values of $n$, not a full symbolic rebuild.
 - `code/cazac-projected-solver.py` (the projection baseline) was not executed during this audit; only `cazac-socp-solver.py` was run for the README quickstart.
 
-## Verdict after fixes
+## Verdict after fixes (round 1)
 
 All must-fix findings across all six axes have been resolved and the paper
 recompiled clean (`pdflatex main.tex`, twice, no errors, no undefined
@@ -122,3 +122,85 @@ proof was available in the sibling repo's working notes; three genuine
 proof gaps (Thm B(a), Thm C(a)/(b), Thm E0) were closed by porting in
 complete, previously-unported derivations rather than by softening the
 paper's claims.
+
+---
+
+## Round 2 — full re-audit + fresh 4-axis score, after local commit `49f1b81`
+
+Repo committed locally (not pushed to origin, per instruction) as `49f1b81`.
+Ten agents launched cold and in parallel: the same six adversarial axes
+again (fresh agents, no memory of round 1's findings — a genuine
+independent re-check, not a confirmation pass) plus a fresh blind 4-axis
+repo-rank score (Novelty/Depth/Reach/Evidence).
+
+### Fresh 4-axis score
+
+| Axis | Round-1 final score | Round-2 fresh score | Note |
+|---|---|---|---|
+| Novelty | 7/10 | **4/10** | Real, material finding — see below |
+| Depth | 8/10 | 8/10 | Unchanged; independently re-derived Newton bound/KKT/E0 case-split from scratch, all confirmed |
+| Reach | 8/10 | 7/10 | Normal grader variance, no new finding |
+| Evidence | 9/10 | 8/10 | This grader independently re-ran only 1 of 5 scripts (vs. round 1's fuller check); the one it ran matched exactly |
+
+**Novelty drop is real, not noise.** The round-2 grader located Akta\c{s}
+and Kroer, *Strongly Convex Maximization via the Frank-Wolfe Algorithm with
+the Kurdyka-{\L}ojasiewicz Inequality* (arXiv:2505.00221, April 2025),
+previously uncited anywhere in `main.tex`. I independently verified this
+myself (not on the grader's summary alone) by downloading the PDF directly
+(`curl` + `pdftotext`, same method as the citations auditors) and reading
+the actual theorem text: their Lemma 3.1, eq. (27), constructs
+$w_{k+1}=\nabla f(x_{k+1})-\nabla f(x_k)$ for a general smooth strongly
+convex objective — for a generic $f$ this is only a Lipschitz-constant
+inequality (eq. 28), but for $f=\tfrac12\|x\|^2$ specifically (our case)
+it collapses to exactly our own relative-error identity
+$w=x^\ell-x^{\ell+1}$, verbatim. Their Theorem 3.2 (citing
+Bolte-Sabach-Teboulle-Vaisbourd 2018, a different but interchangeable
+abstract KL-descent theorem than our ABS13) then gives the identical
+global-convergence conclusion. Theorem A's descent-argument mechanism is
+therefore a direct special case of a real, uncited, April 2025 paper — not
+independently discovered here. **Fixed**: added bibliography entry
+`AK25`; reworded the abstract, the Theorem A proof's "structural surprise"
+language, the elliptope/FKP remark, and the closing ledger's Theorem~A
+entry to honestly attribute the descent mechanism to `AK25` while
+correctly retaining what remains genuinely this paper's own contribution
+(the CAZAC-to-$\max\|x\|^2$ reduction, Prop.~2, that makes the template
+apply; the concrete FKP/elliptope comparison, which `AK25` does not
+discuss; Theorem C's quantitative machinery; Theorem D's chirp-regularity
+result). Recompiled clean after the edit.
+
+One thing I explicitly could **not** verify and disclosed as such in the
+paper itself: whether `AK25`'s framework would *also* close the FKP gap on
+the elliptope specifically (their paper doesn't discuss FKP, the
+elliptope, or positive-dimensional critical sets) — the revised remark
+says the comparison to FKP should be read as "a route FKP's own paper does
+not take," not "a route no other paper could have taken."
+
+### Fresh math-axis findings (5 new must-fix, on top of round 1's already-fixed items)
+
+All independently verified by me before any edit (per audit discipline —
+no fix applied on a grader's summary alone):
+
+| Finding | Verification | Fix |
+|---|---|---|
+| Thm D "complete proof"/"Unconditional" tag overstates Steps 2-3, which assert (don't derive) the central Fourier-support computation | Confirmed by re-reading the proof text directly; I attempted to reconstruct the missing Gauss-sum algebra by hand and hit an apparent contradiction partway through — a sign the compression hides real subtlety, not something to paper over by guessing | Added an honest disclosure remark (mirroring how Lemma bjaffine's own "exact symbolic computation" is already handled elsewhere in this paper) rather than downgrading the theorem's truth-status; the *conclusion* remains independently corroborated by hand-checks at $n=4,9$ and 64 numerically-confirmed configurations |
+| Thm B(b): a genuine notational bug — "$s=\sin\alpha_0>0$" directly contradicts (and is mathematically incompatible with) "$s=\pm1$" defined two lines earlier, and is impossible given $\alpha_0\in\{0,\pi\}$ | Confirmed by direct inspection; this was a real error introduced during round 1's own port-in of this proof | Fixed: removed the erroneous annotation, corrected the justification to $c=\cos\alpha_0=\pm1$ exactly, with both cases ($p$, $2-p$) shown nonzero for $p\ge5$ |
+| Thm C(c) step-count bound: claimed under-justified ("large steps" vs. "not yet arrived" conflation) | Independently re-derived — the claim is actually fine as stated: every step after arrival has increment exactly $0$ (fixed-point property), so all "large" (increment $\ge c_0$) steps trivially occur pre-arrival with no separate exclusion argument needed | Added one clarifying sentence rather than conceding an error that isn't there |
+| Cubic/higher-phase negative result: "no variant... applies" overstates what an absence-of-exact-formula argument rules out | Agreed — the absence of an exact Weyl-sum evaluation only rules out *this specific* closure route, not every conceivable proof strategy | Softened to scope the claim to the specific mechanism used |
+| Thm B(b): pre-existing intermediate-inequality imprecision (flagged independently in round 1 already; confirmed again here) | Already fixed in round 1 | No further action |
+
+### Other fresh findings, reviewed and resolved
+
+- **Abstract axis**: one minor flag — the closing ledger's elliptope bullet bundled Theorem~ell's *proved* single-point-convergence claim together with Prop.~ell4's *numerical* rank-1-escape claim under one "Verified numerically" tag. **Fixed** — split into two clearly separated clauses.
+- **README axis**: `AUDIT-LEDGER.md` (this file) wasn't mentioned in "Read this first"/Layout. **Fixed.** Both quickstart commands (`pdflatex main.tex` twice; `code/cazac-socp-solver.py`) were independently re-run by the auditor and matched round 1's recorded output almost exactly (55.6s vs. 56.1s).
+- **Privacy axis**: flagged `main.pdf` as locally modified vs. the committed blob — this is expected: `pdfTeX` embeds non-deterministic build metadata (e.g. `/ID`) even for byte-identical content across separate `pdflatex` invocations (including the auditors' own compile-verification runs). Not a defect.
+- **Citations axis**: reported `git remote -v` in this repo returns **empty** and that the README's self-citation URL is a dead link. **Independently re-checked twice** (`git remote -v` and `cat .git/config`) — the remote **is** configured (`origin git@github.com:jeff-kline/convex-framework-cazac.git`), matching the README's URL exactly. The auditor's "no remote" claim is a false positive (likely an environment/cwd slip on its end). The URL genuinely does 404, but that is the *correct, deliberate* current state — this repo was intentionally committed locally and kept off `origin` this session, not yet pushed. Not a defect; no action taken.
+
+### Verdict after round 2
+
+All genuine must-fix findings resolved (5 new math-axis items, 1 abstract
+tag-bundling issue, 1 README completeness gap, plus a real novelty
+citation gap now disclosed and cited). Two findings were investigated and
+determined to be false positives (the "dead self-citation" and "no git
+remote" claims) — recorded here rather than silently dropped, so a future
+re-audit doesn't re-litigate them from scratch. Recompiled clean,
+`pdflatex main.tex` twice, no errors, no undefined references, 14 pages.

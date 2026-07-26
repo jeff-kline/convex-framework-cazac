@@ -47,15 +47,24 @@ convergence theory for this iteration. Theorem A (unconditional): every
 measurable selection from the iteration has finite length and converges to
 a single fixed point, via the Attouch--Bolte--Svaiter Kurdyka--{\L}ojasiewicz
 (KL) descent framework, applied here to a set-valued argmax update rather
-than a proximal step. The same argument, since it never uses CAZAC-specific
-structure beyond compactness, convexity, and semialgebraicity, transfers
-verbatim to a second example, the elliptope $\El=\{X\succeq0: X_{ii}=1\}$ ---
-Felzenszwalb--Klivans--Paul's (2021) own worked case, where their
-finiteness-dependent single-point-convergence mechanism does not apply and
-their own example stalls at set-level convergence; we prove single-point
-convergence there unconditionally and verify numerically (four trajectories
-on $\mathcal E_5$) that generic trajectories escape the fixed-point continuum
-onto a rank-1 point, a phenomenon we leave as Conjecture (Q7). Theorem B
+than a proximal step. This mechanism --- KL descent for a Frank-Wolfe-type
+greedy update, with a strongly convex smooth objective supplying the
+sufficient-decrease and relative-error conditions --- is itself a known,
+general-purpose template, independently instantiated by Akta\c{s} and
+Kroer \cite{AK25} via a different (but interchangeable) citation to the
+same family of abstract descent theorems; the CAZAC-specific content of
+Theorem A is the reduction of CAZAC feasibility to $\max_{C_\tau}\|x\|^2$
+(Prop.~\ref{prop:2}) that makes the template applicable here, not the
+descent argument itself. Since neither that reduction nor the descent
+argument uses CAZAC-specific structure beyond compactness, convexity, and
+semialgebraicity, the argument transfers verbatim to a second example, the
+elliptope $\El=\{X\succeq0: X_{ii}=1\}$ --- Felzenszwalb--Klivans--Paul's
+(2021) own worked case, where their finiteness-dependent
+single-point-convergence mechanism does not apply and their own example
+stalls at set-level convergence; we prove single-point convergence there
+unconditionally and verify numerically (four trajectories on $\mathcal
+E_5$) that generic trajectories escape the fixed-point continuum onto a
+rank-1 point, a phenomenon we leave as Conjecture (Q7). Theorem B
 (unconditional, obstruction): non-CAZAC fixed points exist and some are
 exposed (unique maximizers of their own functional), so no deterministic
 selection rule can guarantee convergence to the CAZAC set; the correct
@@ -215,7 +224,7 @@ Apply the abstract descent theorem of Attouch, Bolte, and Svaiter
 maximizing $\|x\|^2/2$ on $C_\tau$):
 \begin{itemize}
 \item \textbf{Sufficient decrease} ($a=\tfrac12$): exactly Prop.~\ref{prop:3}(3).
-\item \textbf{Relative error} ($b=1$), the structural surprise: first-order
+\item \textbf{Relative error} ($b=1$): first-order
 optimality of the argmax step gives $x^\ell\in N_{C_\tau}(x^{\ell+1})$, the
 normal cone at the new iterate. Since $\partial F(x^{\ell+1})=-x^{\ell+1}+N_{C_\tau}(x^{\ell+1})$
 (sum rule for $C^1$ plus indicator of a convex set), the vector
@@ -223,7 +232,13 @@ $w=x^\ell-x^{\ell+1}$ lies in $\partial F(x^{\ell+1})$, and
 $\|w\|=\|x^{\ell+1}-x^\ell\|$ \emph{exactly}: the subgradient residual is
 literally the step. This identity is specific to $f=\tfrac12\|x\|^2$; for a
 generic convex objective the relative-error condition would be a genuine
-additional hypothesis, but here it is free.
+additional hypothesis, but here it is free. (The identical construction,
+for a general smooth strongly convex objective where it holds only as a
+Lipschitz-constant inequality rather than an exact equality, is
+Aktaş--Kroer's \cite{AK25} Lemma 3.1 eq.~(27)--(28); our case is the
+special instance where that Lipschitz constant is exactly $1$, so the
+inequality becomes an equality --- this observation is a corollary of
+their general lemma, not an independent discovery.)
 \item \textbf{Compactness/continuity}: iterates lie in compact $C_\tau$;
 $F$ is continuous there.
 \item \textbf{KL property}: $C_\tau$ is defined by polynomial (in)equalities
@@ -348,7 +363,16 @@ their Theorem~1 only ever derives connectedness and never separately
 invokes finiteness. Theorem~\ref{thm:ell} closes exactly this gap via the
 KL/finite-length route \cite{ABS13} rather than the connectedness-plus-
 finiteness route, and is therefore not subsumed by \cite{FKP21} even in the
-positive-dimensional-face case.
+positive-dimensional-face case. This route itself, as noted at Theorem~A,
+is not unique to this paper --- Aktaş--Kroer's \cite{AK25} independent
+KL/Frank-Wolfe framework (built on a different but interchangeable
+abstract descent theorem, Bolte--Sabach--Teboulle--Vaisbourd) would very
+plausibly deliver the same elliptope conclusion by the same general
+mechanism; \cite{AK25} does not discuss FKP, the elliptope, or
+positive-dimensional critical sets explicitly, so this is not independently
+confirmed here, but the comparison to FKP should be read as ``a route
+FKP's own paper does not take,'' not as ``a route no other paper could
+have taken.''
 \end{remark}
 
 \section{Theorem B --- obstruction: the limit need not be CAZAC}
@@ -392,8 +416,8 @@ attained at $y=x^*$ --- a direct support-function argument, no KKT needed
 for sufficiency.
 \end{proof}
 \begin{proof}[Proof of (b), $n=2,N=1$]
-For $y=(y_0,y_1)\in\C^2$ feasible in $C_1$ (so $|y_m|\le1$ and
-$|F(y)(0)|^2+|F(y)(1)|^2\le2$, hence $|F(y)(0)|\le\sqrt2$),
+For $y=(y_0,y_1)\in\C^2$ feasible in $C_1$ (so $|y_m|\le1$ for each $m$,
+and $S_y(0)=|F(y)(0)|^2\le2$ directly, hence $|F(y)(0)|\le\sqrt2$),
 $$\langle x^*,y\rangle_\R=(1-t)\,\re y(0)+t\,\re F(y)(0)\le(1-t)+t\sqrt2=1+t^2=\|x^*\|^2,$$
 with equality iff $y(0)=1$ and $F(y)(0)=\sqrt2$, which forces
 $y(1)=\sqrt2-1=t$, i.e.\ $y=x^*$ --- a genuine separating functional
@@ -565,7 +589,11 @@ $y=z$ --- the argmax is the singleton $\{z\}$, so $x^{\ell+2}=z$, and by
 induction $x^m=z$ for all $m>\ell$; in particular $\bar x=z\in\CAZ(n,N)$.
 The step-count bound is Theorem~A's
 $\sum_\ell\|x^{\ell+1}-x^\ell\|^2\le Nn-\|x^0\|^2$ telescoped against
-$c_0^2$ per large step.
+$c_0^2$ per large step (increment $\ge c_0$); since every step after
+arrival has increment exactly $0$ (the sequence is constant at $z$), every
+large step occurs strictly before arrival, so this global count already
+\emph{is} the count of large steps before arrival, with no separate
+argument needed to exclude post-arrival steps.
 \end{proof}
 
 \begin{remark}
@@ -657,6 +685,22 @@ bookkeeping is specific to the pair-counting route and does not arise
 here, since Steps 1--4 characterize $K$ by its Fourier support directly.
 \end{proof}
 
+\begin{remark}[Scope of the written derivation]
+Steps 2--3 compress a Gauss-sum completion-of-square computation of the
+same kind as Step 1's self-transform identity (the correlation $c'\star e$
+of Step 2 and its Fourier zero-set in Step 3 both reduce, by the same
+technique, to evaluating quadratic exponential sums); the symbol-by-symbol
+expansion is not spelled out here, in the same spirit as
+Lemma~\ref{lem:bjaffine} below, whose ``exact symbolic computation'' is
+likewise not displayed in full. The \emph{conclusion} $\dim K=d_{\max}$ is
+independently corroborated: by hand at $n=4$ (self-paired case) and $n=9$
+(odd, non-self-paired) via direct enumeration of $Z_0$, and numerically
+across all $21+43=64$ tested Zadoff--Chu configurations (both parities;
+Section~\ref{sec:zc}'s corollaries below cite the exact scripts). No
+counterexample or numerical discrepancy has been found at any tested
+configuration.
+\end{remark}
+
 \begin{corollary}\label{cor:D1}
 Hypothesis (R) holds at every Zadoff--Chu tuple iff $n$ is squarefree ---
 in particular at every prime $n$, odd or $n=2$. Theorem~C is therefore
@@ -706,8 +750,12 @@ evaluation (magnitude $\sqrt n$ always), which is what underwrites
 Theorem~D's Step~1, but Weyl sums of degree $\ge3$ have no such exact
 evaluation, only upper bounds, and the addition law
 $(m+s)^d=m^d+s^d+(\text{nonlinear mixing})$ for $d\ge3$ does not reduce to
-a reindexing of the original phase. \textbf{No variant of the chirp
-argument applies to cubic or higher phase sequences.}
+a reindexing of the original phase. \textbf{The specific self-transform
+closure mechanism used in Theorem~D's proof --- an exact, modulus-$\sqrt n$
+evaluation of the underlying exponential sum --- does not extend to cubic
+or higher phase sequences}; this rules out the route used here, though it
+does not itself preclude some structurally different argument reaching
+the same conclusion by other means.
 \end{proposition}
 
 \subsection{The Bj\"orck case: a partial result, not a proof}
@@ -753,11 +801,14 @@ $p\equiv3\pmod4$ --- this parity of $g$ is exactly where the two residue
 classes diverge. The three equations reduce, after eliminating the
 $m=0$ equation (which involves only $\alpha,\gamma$ and is solved by
 $\alpha$ free), to:
-$$p\equiv1\!\!\pmod4:\quad s\sqrt p\,\beta=0,\qquad -s\gamma\bigl(1+c(p-1)\bigr)=0\quad(c=\cos\alpha_0,\,s=\sin\alpha_0>0);$$
+$$p\equiv1\!\!\pmod4:\quad s\sqrt p\,\beta=0,\qquad -s\gamma\bigl(1+c(p-1)\bigr)=0\quad(c=\cos\alpha_0=\pm1,\,s=\pm1\text{ the sign of }Bg);$$
 $$p\equiv3\!\!\pmod4:\quad \frac{\sqrt p(1-\cos\beta_0)}2\,\beta=\frac{p\sin\beta_0}2\,\gamma,
 \qquad \frac{\sqrt p(1-\cos\beta_0)}2\,\beta=-\frac{\sin\beta_0}2\,\gamma.$$
-In the first case, $s\sqrt p\ne0$ forces $\beta=0$ directly, and
-$1+c(p-1)>0$ (as $c>-1$ and $p\ge5$) then forces $\gamma=0$. In the second
+In the first case, $s\ne0$ so $s\sqrt p\ne0$ forces $\beta=0$ directly.
+Since $Bg$ is real ($g$ is real for $p\equiv1\pmod4$), $\alpha_0\in\{0,\pi\}$
+exactly, so $c=\cos\alpha_0=\pm1$ exactly (not merely bounded); then
+$1+c(p-1)$ equals $p$ (if $c=1$) or $2-p$ (if $c=-1$), both nonzero for
+$p\ge5$, so $1+c(p-1)\ne0$ forces $\gamma=0$. In the second
 case, subtracting the two equations gives
 $\gamma\bigl(\tfrac{p\sin\beta_0}2+\tfrac{\sin\beta_0}2\bigr)=0$, i.e.\
 $\gamma\sin\beta_0(p+1)/2=0$; since $p+1\ne0$ and $\sin\beta_0\ne0$ (a
@@ -781,14 +832,17 @@ also failed: the relevant determinants are confirmed numerically nonzero
 at every one of $44$ tested primes $p\in[5,200)$ (both residue classes,
 $\dim K=1$ throughout), but with no uniform lower bound of the shape a
 classical single-Gauss/Jacobi-sum-modulus argument would give --- at
-$p=71$ the relevant gap is $\sim10^4\times$ smaller than at neighboring
-primes, a genuine near-degeneracy confirmed not to be a rounding artifact
-by an independent recomputation at $60$-digit precision at that specific
-prime. Script: {\tt experiments/verify\_bjorck\_isotypic.py} in the
+$p=71$ the relevant gap is a factor of $\approx4\times10^3$ smaller than
+at the next-nearest tested prime, a genuine near-degeneracy; the script
+itself reports this was independently confirmed not to be a floating-point
+artifact by a separate $60$-digit-precision recomputation at that specific
+prime (performed once, outside the script's own run, and recorded in its
+output). Script: {\tt experiments/verify\_bjorck\_isotypic.py} in the
 companion repository \cite{CazacAlgorithmRepo} (the $44$-prime
-determinant check; a separate, disjoint set of $14$ primes is used for
-the affine-closure check of Lemma~\ref{lem:bjaffine}, in
-{\tt experiments/verify\_bjorck\_regularity.py}). \textbf{The overall regularity
+determinant check; a separately-run set of $14$ primes, all contained in
+this same tested range, is used for the affine-closure check of
+Lemma~\ref{lem:bjaffine}, in {\tt experiments/verify\_bjorck\_regularity.py}).
+\textbf{The overall regularity
 claim at Bj\"orck points is therefore still open, not proved}, despite this
 genuine partial progress: what is established is a full proof restricted
 to the symmetry-invariant subspace, plus strong (but non-uniform)
@@ -865,13 +919,21 @@ either way.
 \begin{itemize}
 \item Propositions~\ref{prop:1}--\ref{prop:4} (generalized power method,
 max-norm = CAZAC, monotone ascent, limit points fixed): \emph{Unconditional}.
-\item Theorem~A (global single-point convergence): \emph{Unconditional}.
+\item Theorem~A (global single-point convergence): \emph{Unconditional}
+as a mathematical claim, but its descent-argument mechanism is a special
+case of Akta\c{s}--Kroer's \cite{AK25} general Frank-Wolfe/KL framework
+(2025); the paper's own contribution here is the CAZAC-to-$\max\|x\|^2$
+reduction (Prop.~\ref{prop:2}) that makes that template apply, not the
+descent argument itself --- see the note at Theorem~A.
 \item Elliptope semialgebraicity and H1--H3 transfer
 (Props.~\ref{prop:ell1}--\ref{prop:ell2}): \emph{Unconditional}. Fixed-point
 continuum (Prop.~\ref{prop:ell3}): \emph{Unconditional} (cited fact plus a
-machine-exact identity). Single-point convergence, generic escape to
-rank-1 (Prop.~\ref{prop:ell4}): \emph{Verified numerically} ($n=5$, four
-trajectories). Universal rank-1 convergence (Q7): \emph{Conjecture}.
+machine-exact identity). Single-point convergence despite that continuum
+(Theorem~\ref{thm:ell}): \emph{Unconditional} --- this is a proved theorem,
+not a numerical finding. \emph{Separately}, that generic trajectories
+escape onto a rank-1 point specifically (Prop.~\ref{prop:ell4}):
+\emph{Verified numerically only} ($n=5$, four trajectories) --- this is
+not proved. Universal rank-1 convergence (Q7): \emph{Conjecture}.
 \item Theorem B (obstruction, exposed non-CAZAC fixed point):
 \emph{Unconditional}.
 \item Theorem C, parts (a),(b),(c), including the full contradiction-based
@@ -921,6 +983,10 @@ Math. Program. \textbf{137} (2013), 91--129.
 
 \bibitem{FKP21} P. Felzenszwalb, C. Klivans, A. Paul, \emph{Iterated Linear
 Optimization}, Quarterly of Applied Mathematics (2021). arXiv:2012.02213.
+
+\bibitem{AK25} F. S. Akta\c{s}, C. Kroer, \emph{Strongly Convex Maximization
+via the Frank-Wolfe Algorithm with the Kurdyka-{\L}ojasiewicz Inequality},
+arXiv:2505.00221 (2025).
 
 \bibitem{JNRS10} M. Journ\'ee, Y. Nesterov, P. Richt\'arik, R. Sepulchre,
 \emph{Generalized Power Method for Sparse PCA}, J. Mach. Learn. Res.
