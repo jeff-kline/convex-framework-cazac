@@ -678,3 +678,86 @@ this round:**
    float64 rounding artifact. `main.tex`'s disclosure text updated to
    match (no longer describes this as performed "outside the script's own
    run").
+
+## Re-scoring pass at commit `0c41570`, plus a deeper Backelin/Bj\"orck-Saffari check
+
+Full four-axis blind re-score, immediately after the fixes above landed:
+
+| Axis | Score | vs. prior pass |
+|---|---|---|
+| Novelty | 5/10 | unchanged, but the finding sharpened (below) |
+| Depth | 8/10 | unchanged; all 5 round-5 fixes independently re-confirmed correct; one new (minor) bug found and fixed |
+| Reach | 7/10 | unchanged |
+| Evidence | 7/10 | up from 6; both prior gaps confirmed genuinely fixed |
+
+**Depth pass re-confirmed all five round-5 fixes are correct** (Thm B(a)'s
+general-$N$ KKT argument, Thm D's reality-defect kernel, Thm E0's
+$\alpha_0/\beta_0$ fix, Prop ell3's $n>3$ restriction — including an
+independent proof that $n=3$ is also finite and an explicit
+$1$-parameter continuum exhibited at $n=4$ — and Thm B(b)'s Cauchy-Schwarz
+step), by independent reconstruction, not a rubber stamp. **One new bug
+found and fixed**: Lemma bjaffine's DFT-closure formula stated
+$g=i\sqrt p$ for $p\equiv3\bmod4$; with this paper's own DFT convention
+($\hat x(k)=\sum_mx(m)\omega^{-km}$), the correct value is $g=-i\sqrt p$
+(verified independently: $g_{\text{ours}}=\overline{G(\chi)}$ for the
+classical Gauss sum $G(\chi)=i\sqrt p$ at $p\equiv3\bmod4$; confirmed
+numerically at $p=3,7,11,19$). Non-load-bearing — Theorem E0's own stated
+equations use $\beta_0=\beta$ directly, not $g$, so the conclusion
+$K\cap T=\operatorname{span}\{\mathbf1\}$ is unaffected — but the
+lemma's own formula was simply wrong as printed. **Fixed.**
+
+**Evidence pass confirmed both round-5 fixes hold** (companion repo's
+experiment scripts now tracked; the 60-digit mpmath cross-check is real,
+and specifically does NOT contain the "$\mathrm{Im}$ pulled outside a
+complex sum" bug class that broke the first draft) and **found one more
+gap, now fixed**: `cazac-algorithm/AUDIT-LEDGER.md` itself, cited by name
+in `main.tex`'s bibliography entry for the companion repo, was untracked
+in that repo's own git — a clone at HEAD would not have gotten it.
+Committed. Also flagged (not yet fixed, low priority): Q6's "success
+probability $\approx0.3$ at $n=167$" figure traces to prose in
+`cazac-algorithm/results/T4/findings.md` citing an unlocated "Table I,"
+with no script reproducing it — an orphaned, anecdotal-tier claim inside
+an otherwise well-evidenced repository.
+
+**Novelty pass located substantially stronger prior art than the previous
+round's Popovi\'c-only finding.** Independently searching the literature
+(not relying on the paper's own framing), it located **Backelin (1989)**
+and **Bj\"orck--Saffari (1995)** — standard, surveyed results (via
+Verschelde et al.'s restatement of Backelin's Lemma, arXiv:1109.0241, and
+Benedetto--Cordwell--Magsino's exposition of Bj\"orck--Saffari, accessed
+at math.umd.edu/~jjb) stating essentially the same lower-bound dimension
+count Theorem D computes, in the same "dimension of the degenerate family"
+language, predating even Popovi\'c (1992). **Independently verified before
+acting**, not accepted on the auditor's say-so:
+- Fetched and read Verschelde et al.'s exact restatement of Backelin's
+  Lemma: for $n=m^2\ell$, $\ell$ squarefree, an explicit $(m-1)$-parameter
+  algebraic family of cyclic-$n$-root solutions, matching $d_{\max}-1$
+  free real phases at $m=d_{\max}$ once restricted to unimodular
+  parameters — the same count as $\dim K$ once the global-phase direction
+  is added back.
+- Fetched and read Benedetto--Cordwell--Magsino's exposition of
+  Bj\"orck--Saffari's Theorem 2.11/Corollary 2.12: an unconditional
+  construction giving explicit continuous families of CAZAC sequences at
+  every non-squarefree length, more general than Popovi\'c's (arbitrary
+  constant-amplitude seed sequence, not just a phase-modulated
+  Zadoff--Chu tuple).
+- Confirmed Haagerup's theorem (same exposition) is stated \emph{only for
+  $n$ prime} — the Bj\"orck--Saffari finiteness conjecture (squarefree
+  $n\Rightarrow$ finite CAZAC variety) remains open in general, exactly as
+  the scoring pass reported, not resolved as one might have guessed from
+  the survey's framing.
+- Did **not** verify that any of the three explicit families is literally
+  identical to this paper's dependency space $K$ (a harder, unattempted
+  question) — the disclosure added to `main.tex` says so explicitly.
+
+**Fixed in `main.tex`**: the "Prior art" remark after Corollary D2 was
+rewritten to credit all three sources (Backelin, Popovi\'c,
+Bj\"orck--Saffari) rather than Popovi\'c alone, with two new bibliography
+entries (`Backelin89`, `BjorckSaffari95`). Also added a cross-reference in
+Q4, noting its remaining open sub-question (regularity at non-Zadoff--Chu
+CAZAC points) is the natural generalization of Bj\"orck--Saffari's own
+still-open finiteness conjecture, not a question this paper invented.
+Recompiled clean, 18 pages, no errors, no undefined references.
+
+Companion repo: also committed `cazac-algorithm/AUDIT-LEDGER.md` (was
+untracked, per the Evidence finding above).

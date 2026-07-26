@@ -859,34 +859,48 @@ argument is needed: the DFT of a chirp is a chirp, collapsing the
 dependency analysis to counting solutions of $t^2\equiv0\bmod n$. Both
 scripts are in the companion repository \cite{CazacAlgorithmRepo}.
 
-\begin{remark}[Prior art bearing on the lower bound: Popovi\'c's
-generalized chirp-like sequences]
-When $n=sm^2$ for positive integers $s,m$ (the largest valid $m$ is
-$d_{\max}$ itself), Popovi\'c's 1992 construction \cite{Popovic92} gives an
-explicit, elementary route to \emph{part} of Theorem~D: modulating a
-Zadoff--Chu sequence of length $n$ by an \emph{arbitrary} unimodular
-sequence of period $m$ (an $m$-real-parameter family, one free phase per
-period) again satisfies the ideal periodic autocorrelation property ---
-Popovi\'c's own Theorem~1, proved by an entirely different, purely
-combinatorial argument with no DFT-closure or Gauss-sum machinery. At
-$m=d_{\max}$ this gives an explicit $d_{\max}$-real-parameter family of
-CAZAC points through every Zadoff--Chu tuple; we confirmed numerically
-that this family exists exactly as claimed and has the predicted
-dimension at $n=4$ ($d_{\max}=2$: an arbitrary period-$2$ phase pair gives
-a verified $2$-parameter family of exact CAZAC points). This is real,
-previously uncited prior art bearing on the \emph{existence} half of
-Theorem~D --- that $\dim K$ can be as large as $d_{\max}$, not just $1$
---- via a route substantially different from, and more elementary than,
-this paper's own. We have \textbf{not} worked out the precise
-identification between Popovi\'c's explicit tangent family and this
-paper's dependency space $K$ (a natural next step; the dimension match at
-$n=4$ is evidence for, not proof of, such an identification), so this
-disclosure is conservative: what Theorem~D adds beyond \cite{Popovic92} is
-the \emph{exact} count (no more than $d_{\max}$, not merely at least
-$d_{\max}$), the reusable chirp-DFT-closure mechanism itself --- which
-extends, unlike Popovi\'c's construction, to Bj\"orck's non-Zadoff--Chu
-sequences and to ruling out cubic-or-higher phase --- and the connection
-to hypothesis (R) and Theorem~C's convergence rate.
+\begin{remark}[Prior art bearing on the lower bound]
+Three older, independent constructions already anticipate part of
+Theorem~D --- its \emph{existence} half, that $\dim K$ can be as large as
+$d_{\max}$, not just $1$ --- via routes substantially different from, and
+more elementary than, this paper's own. \textbf{Backelin (1989)}
+\cite{Backelin89}: for $n=m^2\ell$ with $\ell$ squarefree, an explicit
+algebraic construction gives an $(m-1)$-parameter family of solutions to
+the cyclic-$n$-roots system (the polynomial system underlying CAZAC/
+biunimodular sequences), which at $m=d_{\max}$, restricted to unimodular
+parameters, matches $d_{\max}-1$ free real phases --- the same count as
+$\dim K$ once the always-present global-phase direction is added back.
+\textbf{Popovi\'c (1992)} \cite{Popovic92}: modulating a Zadoff--Chu
+sequence of length $n=sm^2$ by an \emph{arbitrary} unimodular sequence of
+period $m$ again satisfies the ideal periodic autocorrelation property
+(their Theorem~1); at $m=d_{\max}$ this gives an explicit
+$d_{\max}$-real-parameter family of CAZAC points \emph{through every
+Zadoff--Chu tuple} --- we confirmed numerically that this family exists
+exactly as claimed and has the predicted dimension at $n=4$ ($d_{\max}=2$:
+an arbitrary period-$2$ phase pair gives a verified $2$-parameter family
+of exact CAZAC points). \textbf{Bj\"orck--Saffari (1995)} \cite{BjorckSaffari95}:
+a further, more general construction (any constant-amplitude length-$N$
+seed sequence and any permutation, not just a phase modulation of a fixed
+Zadoff--Chu sequence) gives explicit continuous families of CAZAC
+sequences at every non-squarefree length unconditionally. Of the three,
+Popovi\'c's is the most directly comparable to this paper's setup (a
+family literally through a Zadoff--Chu tuple), and we have \textbf{not}
+worked out the precise identification between any of these three explicit
+families and this paper's dependency space $K$ (a natural next step; the
+dimension matches above are evidence for, not proof of, such an
+identification). What Theorem~D adds beyond all three: the \emph{exact}
+count (no more than $d_{\max}$, not merely at least $d_{\max}$), at every
+Zadoff--Chu tuple and both parities; the reusable chirp-DFT-closure
+mechanism itself, which extends to Bj\"orck's non-Zadoff--Chu construction
+and to ruling out cubic-or-higher phase; and the connection to hypothesis
+(R) and Theorem~C's convergence rate, none of which the 1989--1995
+constructions address. Separately: Bj\"orck and Saffari also
+\emph{conjectured} the complementary finiteness statement --- that at
+squarefree $n$ the full CAZAC variety (not just the Zadoff--Chu orbit) is
+finite up to phase --- which remains open in general (Haagerup settled
+only the case $n$ prime); this is the natural generalization of exactly
+the gap Q4 below leaves open (regularity at non-Zadoff--Chu CAZAC points),
+not a new question invented by this paper.
 \end{remark}
 
 \subsection{The chirp-argument schema, and where it does and does not generalize}
@@ -947,8 +961,11 @@ $$p\equiv1\!\!\pmod4:\ A=\cos\alpha,\ B=i\sin\alpha,\ \alpha=\arccos\tfrac1{1+\s
 The $3$-dimensional space $T:=\operatorname{span}_\C\{\mathbf1,\chi,\delta_0\}$
 closes under the DFT: $\hat b=C\cdot\mathbf1+Bg\cdot\chi+Ap\cdot\delta_0$
 (using $F(\mathbf1)=p\delta_0$, $F(\chi)=g\chi$, $F(\delta_0)=\mathbf1$,
-$g=g(\chi)$ the Gauss sum, $g=\sqrt p$ for $p\equiv1\pmod4$ and $g=i\sqrt p$
-for $p\equiv3\pmod4$).
+$g=g(\chi)$ the Gauss sum, $g=\sqrt p$ for $p\equiv1\pmod4$ and $g=-i\sqrt p$
+for $p\equiv3\pmod4$, with the sign fixed by this paper's DFT convention
+$\hat x(k)=\sum_mx(m)\omega^{-km}$, i.e.\ $g=\overline{G(\chi)}$ for the
+classical Gauss sum $G(\chi)=\sum_m\chi(m)\omega^m=i\sqrt p$ at
+$p\equiv3\pmod4$).
 \end{lemma}
 
 \begin{lemma}[Proved]\label{lem:bjequiv}
@@ -1054,7 +1071,10 @@ Theorem~D now makes regularity unconditional at Zadoff--Chu points of
 either parity for squarefree $n$. Remaining: (R) at non-Zadoff--Chu CAZAC
 points is open beyond the Bj\"orck partial result above; $n$-uniformity of
 the true sharp-growth constant is conjectural (proved bounds scale like
-$c_N/n$, sampled ratios show no decay).
+$c_N/n$, sampled ratios show no decay). This remaining gap is not a new
+question: it is the natural generalization of Bj\"orck and Saffari's own
+still-open finiteness conjecture (\S\ref{sec:zc}, remark after
+Corollary~\ref{cor:D2}) --- settled only at prime $n$, by Haagerup.
 
 \noindent\textbf{Q5 (open, deprioritized).} What does the $\tau$-continuation
 presolve actually buy? Hypothesis: it drives the iterate onto (or near) the
@@ -1147,11 +1167,13 @@ all $n$ regardless of parity, with Steps 2--3 spelled out via the
 reality-defect kernel $e$ (see the ``Scope of the written derivation''
 remark after the proof) --- independently corroborated by hand at $n=4,9$
 and numerically at all 64 tested configurations. Prior art disclosed
-(remark after Corollary~\ref{cor:D2}): Popovi\'c's 1992 construction
-\cite{Popovic92} gives, by an unrelated elementary method, an explicit
-family matching the \emph{existence} half of this count ($\dim K$ can
-reach $d_{\max}$) at $n=sm^2$; Theorem~D's own contribution is the exact
-count and the reusable mechanism, not the existence of degeneracy per se.
+(remark after Corollary~\ref{cor:D2}): three older, independent
+constructions --- Backelin (1989) \cite{Backelin89}, Popovi\'c (1992)
+\cite{Popovic92}, Bj\"orck--Saffari (1995) \cite{BjorckSaffari95} --- each
+give, by unrelated elementary methods, explicit families matching the
+\emph{existence} half of this count ($\dim K$ can reach $d_{\max}$) at
+non-squarefree $n$; Theorem~D's own contribution is the exact count and
+the reusable mechanism, not the existence of degeneracy per se.
 Corollaries~\ref{cor:D1}--\ref{cor:D2}: \emph{Unconditional} (Corollary~1
 conditionally activates Theorem~C, but is itself unconditional as a
 dimension/regularity statement).
@@ -1217,6 +1239,10 @@ identifiability, and sensitivity}, Math. Program. \textbf{147} (2014),
 correlation properties}, IEEE Trans. Inform. Theory \textbf{18}(4) (1972),
 531--532.
 
+\bibitem{Backelin89} J. Backelin, \emph{Square multiples $n$ give
+infinitely many cyclic $n$-roots}, Reports, Matematiska Institutionen
+\textbf{8}, Stockholms Universitet, 1989.
+
 \bibitem{Popovic92} B. M. Popovi\'c, \emph{Generalized chirp-like
 polyphase sequences with optimum correlation properties}, IEEE Trans.
 Inform. Theory \textbf{38}(4) (1992), 1406--1409.
@@ -1225,6 +1251,11 @@ Inform. Theory \textbf{38}(4) (1992), 1406--1409.
 whose Fourier transforms have constant modulus, and ``cyclic $n$-roots''},
 in: Recent Advances in Fourier Analysis and its Applications, NATO ASI
 Series C \textbf{315}, Kluwer, 1990, 131--140.
+
+\bibitem{BjorckSaffari95} G. Bj\"orck, B. Saffari, \emph{New classes of
+finite unimodular sequences with unimodular Fourier transforms. Circulant
+Hadamard matrices with complex entries}, C. R. Acad. Sci. Paris S\'er. I
+\textbf{320}(3) (1995), 319--324.
 
 \bibitem{CazacAlgorithmRepo} J. Kline, \emph{cazac-algorithm}: companion
 research repository holding the {\tt theory/} derivations, the dated
