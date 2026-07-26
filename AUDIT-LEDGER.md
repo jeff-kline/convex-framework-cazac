@@ -832,3 +832,42 @@ real and still open. The paper's headline claim (Bj\"orck regularity:
 proved on the symmetry-invariant subspace, open beyond it) is unchanged;
 this round sharpens what "open beyond it" precisely means, which is a
 Depth/rigor gain, not a Novelty one.
+
+## Independent research attempt on the cross-term (exploratory, off the
+## checkpointed record) finds the result already published
+
+As explicit follow-up, three independent forks attacked the Björck
+cross-term coincidence in parallel. One (a cyclotomic-field extension of
+the already-proved $\rho_R,\rho_N\ne0$ argument) produced a complete,
+correct proof that the coincidence is impossible for every
+$p\equiv1\bmod4$ — independently re-derived and confirmed by the
+coordinator and by a second, fully independent cold auditor (a fresh
+agent with no shared context), both reconstructing the algebra from
+scratch and reaching the same conclusion.
+
+A separate, independent literature-review pass (also fresh, cold) then
+found this exact result — full transversality/regularity at Björck's
+construction, for every prime and both residue classes, via the same
+general technique (Gauss sums, decimation-group isotypic decomposition,
+a Stickelberger-based nonvanishing lemma) — already published: Y. Benoist,
+*Fourier transform in cyclic groups*, arXiv:2406.11529 (2024), Prop. A.3.
+The coordinator fetched and read the actual proof (not an abstract) and
+confirmed it covers both residue classes unconditionally, closing the
+question this session's forks were attacking before any of it was
+written into `main.tex`.
+
+**Disposition**: the new derivation is not integrated as new content —
+it would only restate Benoist's result through a more roundabout route,
+with no new insight, which is the opposite of what was wanted. Instead,
+`main.tex`, `README.md`, and this ledger's own entries were corrected to
+stop describing Björck's full regularity as an open problem and to cite
+Benoist (2024) as the source that resolves it, while keeping this
+paper's own contribution (the connection to hypothesis (R) and Theorem
+C's rate) clearly separated from the underlying number-theoretic fact,
+which is not this paper's to claim. This is exactly the discipline the
+independent-literature-check step exists to enforce: a correct,
+independently-verified derivation is not the same question as whether it
+is new, and checking the second question before publication caught a
+real, previously-unnoticed inaccuracy in the already-shipped paper (it
+had called a now-known-resolved question open) — a more consequential
+finding than the exploratory attempt itself.
