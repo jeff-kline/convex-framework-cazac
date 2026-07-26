@@ -42,25 +42,27 @@ equality constraints to convex inequalities gives a compact convex body
 $C_\tau$ whose maximal-norm points, at $\tau=1$, are exactly the CAZAC
 systems, and the natural algorithm iterates a second-order cone program
 (SOCP) whose objective direction resets to the previous optimizer. The
-central technical content is Theorem D: a regularity hypothesis (R),
-needed for a sharp local convergence rate, is proved unconditionally at
-every Zadoff--Chu tuple and length $n$ (both parities; even $n$ was
-previously open), via a mechanism new to this problem --- the DFT of a
-Zadoff--Chu chirp is again a chirp, collapsing a rank computation to
-counting solutions of $t^2\equiv0\bmod n$, so (R) holds iff $n$ is
-squarefree. The mechanism is a reusable schema: a different closure fact
-(self-duality of the Legendre symbol) extends it to a partial regularity
-result at Bj\"orck's quadratic-phase construction, reduced to one
-unproved, numerically-confirmed (44 primes) determinant lemma; we prove
-it cannot reach cubic or higher-degree phase. This underwrites Theorem C
-(conditional on (R); unconditional at squarefree Zadoff--Chu lengths):
-near a regular CAZAC point the constraint slack grows \emph{linearly},
-not quadratically (KL exponent exactly $0$), and the iteration reaches
-the point exactly after finitely many steps. The theory rests on Theorem
-A (unconditional): every measurable selection converges to a single fixed
-point, via an Attouch--Bolte--Svaiter Kurdyka--{\L}ojasiewicz descent
-argument applied to a set-valued argmax update --- a known template also
-independently instantiated by Akta\c{s} and Kroer \cite{AK25} for general
+central technical content is Theorem D: a regularity hypothesis (R) needed
+for a sharp local convergence rate is pinned down exactly at every
+Zadoff--Chu tuple and length $n$ (both parities; even $n$ was previously
+open), via a mechanism new to this problem --- the DFT of a Zadoff--Chu
+chirp is again a chirp, collapsing a rank computation to counting
+solutions of $t^2\equiv0\bmod n$ --- so (R) holds iff $n$ is squarefree.
+The mechanism is a reusable schema: a different closure fact (self-duality
+of the Legendre symbol) extends it to a partial regularity result at
+Bj\"orck's quadratic-phase construction, reduced to one unproved,
+numerically-confirmed (44 primes) determinant lemma; the same specific
+mechanism, by contrast, provably cannot reach cubic or higher-degree
+phase (this does not rule out some other route). This underwrites Theorem
+C (conditional on (R); unconditional when Theorem A's limit lies on a
+Zadoff--Chu tuple's symmetry orbit and $n$ is squarefree): near a regular
+CAZAC point the constraint slack grows \emph{linearly}, not quadratically
+(KL exponent exactly $0$), and the iteration reaches the point exactly
+after finitely many steps. The theory rests on Theorem A (unconditional):
+every measurable selection converges to a single fixed point, via an
+Attouch--Bolte--Svaiter Kurdyka--{\L}ojasiewicz descent argument applied
+to a set-valued argmax update --- a known template, of which Akta\c{s} and
+Kroer \cite{AK25} (2025, prior art) give a general instance for arbitrary
 strongly convex objectives; our contribution is the reduction of CAZAC
 feasibility to $\max_{C_\tau}\|x\|^2$ (Prop.~\ref{prop:2}) that makes the
 template apply, not the descent argument itself. This reduction is
@@ -74,10 +76,11 @@ $140$-trial sweep finds no exceptions, and whether the exceptional set
 has measure zero remains open (Q7). Theorem B (unconditional,
 obstruction): non-CAZAC fixed points exist and some are exposed, so no
 deterministic selection rule can guarantee convergence to the CAZAC set
---- the correct target class of theorem is probabilistic over
-initializations. We close with the remaining open problems (Q1--Q7) and a
-tiered ledger disclosing exactly which claims are proved, proved
-conditionally, numerically verified, or conjectural.
+--- only a probabilistic statement over initializations is possible. We
+close with the open-problems ledger (Q1 settled here as Theorem A;
+Q2--Q7 open or partially resolved) and a tiered accounting of exactly
+which claims are proved, proved conditionally, numerically verified, or
+conjectural.
 \end{abstract}
 
 \section{Setup}
@@ -161,7 +164,8 @@ the convex maximization $\max_{x\in C_1}\|x\|^2$, whose optimal value $Nn$
 is known a priori: an iterate is $\delta$-suboptimal iff $Nn-\|x^\ell\|^2=\delta$.
 
 \begin{proposition}[Monotone ascent, square-summable increments]\label{prop:3}
-Along the iteration at fixed $\tau$, with $x^\ell\ne0$:
+Along the iteration at fixed $\tau$, with $x^\ell\ne0$ and \textbf{$x^0\in
+C_\tau$}:
 \begin{enumerate}
 \item[\rm(1)] $\langle x^\ell,x^{\ell+1}\rangle_\R\ge\|x^\ell\|^2$;
 \item[\rm(2)] $\|x^{\ell+1}\|\ge\|x^\ell\|$, and $\|x^\ell\|\uparrow\rho\le\sqrt{Nn}$;
@@ -171,13 +175,31 @@ $\|x^{\ell+1}-x^\ell\|\to0$.
 \end{enumerate}
 \end{proposition}
 \begin{proof}
+Parts (1)--(2) and the bound in (3) instantiate the argument of
+\cite{FKP21}'s Theorem~1 for this $C_\tau$; only the explicit telescoped
+constant $Nn-\|x^0\|^2$ in (3) is not in their statement, since it uses
+Prop.~\ref{prop:2}'s CAZAC-specific bound $Nn$ in place of a general
+compactness bound.
 (1) $x^\ell\in C_\tau$ is feasible for the SOCP whose optimizer is
-$x^{\ell+1}$, so the optimum is at least $\langle x^\ell,x^\ell\rangle_\R=\|x^\ell\|^2$.
+$x^{\ell+1}$, so the optimum is at least $\langle x^\ell,x^\ell\rangle_\R=\|x^\ell\|^2$;
+this is where $x^\ell\in C_\tau$ is used, which is why the hypothesis is
+stated for $x^0$ and not just $x^{\ell\ge1}$ (every $x^{\ell+1}$ for
+$\ell\ge0$ is automatically in $C_\tau$, being an argmax over $C_\tau$).
 (2) Cauchy--Schwarz: $\|x^\ell\|\|x^{\ell+1}\|\ge\langle x^\ell,x^{\ell+1}\rangle_\R\ge\|x^\ell\|^2$;
 divide by $\|x^\ell\|$; monotone and bounded above by Prop.~\ref{prop:2}.
 (3) $\|x^{\ell+1}-x^\ell\|^2=\|x^{\ell+1}\|^2+\|x^\ell\|^2-2\langle x^\ell,x^{\ell+1}\rangle_\R\le\|x^{\ell+1}\|^2-\|x^\ell\|^2$
 by (1); telescope and apply (2).
 \end{proof}
+
+The hypothesis $x^0\in C_\tau$ costs nothing: the paper's own presolve
+schedule (Section~1) hands the main phase a point in $C_{2.1}\setminus
+C_1$, not in $C_1$, but every $x^{\ell+1}$ for $\ell\ge0$ is by
+construction an argmax over $C_\tau$ and hence lies in $C_\tau$
+automatically --- so re-indexing the main phase to start from its own
+\emph{first} iterate (which is in $C_\tau$ regardless of where the
+presolve output sat) restores the hypothesis with no loss; every result
+below that depends on Prop.~\ref{prop:3} inherits this same one-step
+re-indexing.
 
 Square-summable increments alone do not imply convergence of the full
 sequence (harmonic-type sums can wander); closing exactly this gap is
@@ -270,9 +292,9 @@ $$\El=\{X\in\R^{n\times n}: X=X^\top,\ X\succeq0,\ X_{ii}=1\ \forall i\},$$
 the set of $n\times n$ correlation matrices, with iteration
 $X^{\ell+1}\in\arg\max_{X\in\El}\langle X^\ell,X\rangle$
 ($\langle A,B\rangle=\operatorname{tr}(AB)$). This is Felzenszwalb, Klivans,
-and Paul's own example \cite{FKP21}: the one case in their paper where they
-concede the fixed-point set is a continuum for $n>3$, and where their own
-worked instance stops at set-level convergence.
+and Paul's own example \cite{FKP21}: a case where they concede the
+fixed-point set is a continuum for $n>3$, and where their own worked
+instance stops at set-level convergence.
 
 \begin{proposition}[Proved]\label{prop:ell1}
 $\El$ is compact, convex, and semialgebraic.
@@ -301,19 +323,35 @@ which hold verbatim on $\El\subset\R^{\binom{n+1}2}$.
 \end{proof}
 
 \begin{proposition}[Proved]\label{prop:ell3}
-The fixed-point set of the elliptope iteration is a genuine continuum, not
-a singleton: $X^*=I_n$ is a fixed point whose optimal face at that
-direction is all of $\El$.
+The fixed-point set $\mathcal F=\{X\in\El:X\in\arg\max_{Y\in\El}\langle
+X,Y\rangle\}$ of the elliptope iteration is infinite, hence (being
+semialgebraic) a genuine positive-dimensional continuum, not a singleton
+or a finite set.
 \end{proposition}
 \begin{proof}
-For every $X\in\El$, $\operatorname{tr}(I_nX)=\sum_iX_{ii}=n$ identically ---
-the linear functional $\langle I_n,\cdot\rangle$ is constant on all of
-$\El$. Hence $\arg\max_{X\in\El}\langle I_n,X\rangle=\El$ itself: every
-feasible point, including every rank-1 correlation matrix $vv^\top$
-($v_i=\pm1$), is simultaneously optimal. This instantiates, with a
-machine-exact identity, the general fact already noted by Felzenszwalb,
-Klivans, and Paul \cite{FKP21}, who state that $\mathcal L_n$ (their name
-for $\El$) has infinitely many fixed points for $n>3$.
+$\mathcal F$ is semialgebraic: $\El$ is semialgebraic
+(Prop.~\ref{prop:ell1}) and $X\mapsto\sigma_{\El}(X):=\max_{Y\in\El}\langle
+X,Y\rangle$ is semialgebraic by the Tarski--Seidenberg theorem (a
+projection of a semialgebraic set), so $\mathcal F=\{X\in\El:\langle
+X,X\rangle=\sigma_{\El}(X)\}$ is cut out by polynomial (in)equalities. A
+semialgebraic subset of $\R^{\binom{n+1}2}$ that is infinite cannot be
+$0$-dimensional (an o-minimal set with finitely many points in every cell
+is finite), so it suffices to exhibit infinitely many fixed points.
+Felzenszwalb, Klivans, and Paul \cite{FKP21} state exactly this: $\mathcal
+L_n$ (their name for $\El$) has infinitely many fixed points for $n>3$.
+Concretely, $X^*=I_n$ is one such fixed point, and its optimal face is
+degenerate in the strongest possible sense: $\operatorname{tr}(I_nX)=\sum_iX_{ii}=n$
+identically on $\El$, so the linear functional $\langle I_n,\cdot\rangle$
+is constant there and $\arg\max_{X\in\El}\langle I_n,X\rangle=\El$ itself
+--- every feasible point, including every rank-$1$ correlation matrix
+$vv^\top$, is simultaneously optimal for $I_n$'s own direction, which in
+particular makes $I_n$ a fixed point with a machine-exact identity. This
+illustrates the phenomenon but is not itself the infinitude argument:
+membership of $vv^\top$ or other points in $\arg\max\langle I_n,\cdot\rangle$
+does not make them fixed points of the map, since a fixed point must be
+optimal for \emph{its own} direction, not $I_n$'s; the infinitude of
+$\mathcal F$ rests on \cite{FKP21}'s cited count, not on this example
+alone.
 \end{proof}
 
 \begin{proposition}[Verified numerically, $n=5$]\label{prop:ell4}
@@ -355,27 +393,34 @@ is exactly zero is \textbf{open} (Conjecture, filed as Q7 below).
 
 \begin{remark}[Relation to Felzenszwalb--Klivans--Paul]
 FKP's Theorem~1 (limit points exist, are fixed points, form a connected
-set) is the same starting point as Prop.~\ref{prop:4} here, but their only
-route to single-point convergence is an unnumbered remark that a connected
-\emph{finite} fixed-point set is a singleton --- structurally inapplicable
-whenever the fixed-point set is a positive-dimensional continuum, which is
-exactly the situation both here (the $N=1$ CAZAC phase circle) and in their
-own \S4.2 example. A full read of the paper's body, not merely its
-abstract, confirms no alternate route exists in their text: the proof of
-their Theorem~1 only ever derives connectedness and never separately
-invokes finiteness. Theorem~\ref{thm:ell} closes exactly this gap via the
-KL/finite-length route \cite{ABS13} rather than the connectedness-plus-
-finiteness route, and is therefore not subsumed by \cite{FKP21} even in the
+set) is the same starting point as Prop.~\ref{prop:4} here. From an
+\emph{arbitrary} initialization, on a fixed-point set that is a
+positive-dimensional continuum (Prop.~\ref{prop:ell3}), their only route
+to single-point convergence is an unnumbered remark that a connected
+\emph{finite} fixed-point set is a singleton, which is structurally
+inapplicable here; a full read of the proof of their Theorem~1 confirms it
+only ever derives connectedness and never separately invokes finiteness.
+(FKP's own Theorem~20 does give single-point convergence from a
+\emph{restricted} class of initializations --- any point within distance
+$1$ of a vertex converges to it in one step, per
+Remark~\ref{rem:fkp-thm20} below --- but this does not cover an arbitrary
+starting point, which is the setting Theorem~\ref{thm:ell} needs.)
+Theorem~\ref{thm:ell} closes exactly this gap via the KL/finite-length
+route \cite{ABS13} rather than the connectedness-plus-finiteness route,
+and is therefore not subsumed by \cite{FKP21} even in the
 positive-dimensional-face case. This route itself, as noted at Theorem~A,
-is not unique to this paper --- Aktaş--Kroer's \cite{AK25} independent
-KL/Frank-Wolfe framework (built on a different but interchangeable
-abstract descent theorem, Bolte--Sabach--Teboulle--Vaisbourd) would very
-plausibly deliver the same elliptope conclusion by the same general
-mechanism; \cite{AK25} does not discuss FKP, the elliptope, or
-positive-dimensional critical sets explicitly, so this is not independently
-confirmed here, but the comparison to FKP should be read as ``a route
-FKP's own paper does not take,'' not as ``a route no other paper could
-have taken.''
+is not unique to this paper: Aktaş--Kroer's \cite{AK25} KL/Frank-Wolfe
+framework (built on a different but interchangeable abstract descent
+theorem, Bolte--Sabach--Teboulle--Vaisbourd) directly delivers the same
+elliptope conclusion --- every hypothesis of their Theorem~3.2 (strongly
+convex smooth objective, nonempty compact constraint set, KL) is verified
+here by Prop.~\ref{prop:ell1}, so this is a second, independent route to
+Theorem~\ref{thm:ell}, not merely a plausible one. \cite{AK25} does not
+name FKP, does not run its framework on the elliptope itself under that
+name (its own Max-Cut application factorizes to a product of spheres via
+Burer--Monteiro, \S4.3), and does not discuss positive-dimensional
+critical sets; the comparison to FKP should be read as ``a route FKP's own
+paper does not take,'' not as ``a route no other paper could have taken.''
 \end{remark}
 
 \begin{remark}[FKP's own Theorem 20 bears directly on Q7]\label{rem:fkp-thm20}
@@ -414,10 +459,15 @@ measure-zero refinement, structurally the same gap as Q6.
 \begin{theorem}[Theorem B --- Proved, unconditional]\label{thm:B}
 \begin{enumerate}
 \item[\rm(a)] The fixed points of $(\star)$ at $\tau=1$ with every
-amplitude constraint slack are exactly the points whose Fourier transform
-has modulus $\sqrt n$ on some proper subset $K\subsetneq\{0,\dots,n-1\}$ of
-frequencies and vanishes off $K$, with time-domain modulus strictly less
-than $1$ everywhere; such a point has $\|x\|^2=|K|$.
+amplitude constraint slack are exactly the points whose \emph{coupled}
+spectral profile satisfies $S_x(k)=Nn$ on some proper subset
+$K\subsetneq\{0,\dots,n-1\}$ of frequencies and $S_x(k)=0$ off $K$ (i.e.\
+$\widehat x_j(k)=0$ for every $j$, when $k\notin K$), with time-domain
+modulus strictly less than $1$ everywhere; such a point has
+$\|x\|^2=N|K|$. For $N=1$ this forces $|\widehat x(k)|=\sqrt n$ exactly on
+$K$; for $N\ge2$ only the coupled sum is pinned, and the individual
+$|\widehat x_j(k)|$ are otherwise free subject to
+$\sum_j|\widehat x_j(k)|^2=Nn$ for $k\in K$.
 \item[\rm(b)] There exist non-CAZAC fixed points that are the
 \textbf{unique} maximizer of their own linear functional over $C_1$ ---
 exposed points. For $n=2$: $x^*=(1,t)$, $t=\sqrt2-1$, is such a point; for
@@ -427,26 +477,41 @@ is possible: every measurable selection rule in $(\star)$ retains the
 point of (b) exactly, once reached.
 \end{enumerate}
 \end{theorem}
-\begin{proof}[Proof of (a), $N=1$]
+\begin{proof}[Proof of (a), general $N$]
 By Prop.~\ref{prop:1}, $x^*\ne0$ is a fixed point iff it is a KKT point of
-$\max_y\langle x^*,y\rangle_\R$ subject to $g_m(y)=|y(m)|^2-1\le0$ and
-$h_k(y)=|\widehat y(k)|^2-n\le0$; this is a convex program (linear
-objective, convex constraints) and Slater's condition holds at $y=0$
-($g_m(0)=-1<0$, $h_k(0)=-n<0$ strictly), so KKT is necessary \emph{and}
-sufficient for optimality of $x^*$. The real gradients are
-$\nabla g_m(y)=2y(m)e_m$ and $\nabla h_k(y)=2F^*E_kFy$ ($E_k=e_ke_k^*$), so
-KKT at $x^*$ reads $x^*=\Lambda x^*+F^*MFx^*$ for diagonal $\Lambda,M\ge0$,
-complementary to the active sets. If every amplitude constraint is slack
-then $\Lambda=0$, so $x^*=F^*MFx^*$; applying $F$ and using $FF^*=nI$
-gives $\widehat x^*=nM\widehat x^*$ coordinatewise, i.e.\ for each $k$
-either $\widehat x^*(k)=0$ or $\mu_k=1/n$. Let
-$K=\{k:\widehat x^*(k)\ne0\}\ne\varnothing$; for $k\in K$ complementary
-slackness with $\mu_k=1/n>0$ forces $|\widehat x^*(k)|^2=n$. Parseval gives
-$\|x^*\|^2=|K|$; if $|K|=n$ this forces $\|x^*\|^2=n$, hence
-(Prop.~\ref{prop:2}) $x^*\in\CAZ(n,1)$, contradicting amplitude-slackness.
-So $K\subsetneq\{0,\dots,n-1\}$.
-Conversely, for such $x^*$ and any $y\in C_1$,
-$\langle x^*,y\rangle_\R=\tfrac1n\sum_{k\in K}\re(\widehat x^*(k)\overline{\widehat y(k)})\le\tfrac1n\sum_{k\in K}\sqrt n\sqrt n=|K|=\|x^*\|^2$,
+$\max_y\langle x^*,y\rangle_\R$ subject to $g_{j,m}(y)=|y_j(m)|^2-1\le0$
+(each block $j=1,\dots,N$) and the single \emph{shared} constraint
+$h_k(y)=S_y(k)-Nn\le0$; this is a convex program and Slater's condition
+holds at $y=0$, so KKT is necessary and sufficient. The real gradients are
+$\nabla_{y_j}g_{j,m}(y)=2y_j(m)e_m$ and, since $S_y(k)=\sum_j|\widehat
+y_j(k)|^2$ couples all blocks, $\nabla_{y_j}h_k(y)=2F^*E_kFy_j$ for
+\emph{every} $j$ with the \emph{same} multiplier $\mu_k$ --- this coupling
+is the source of the difference from $N=1$. KKT at $x^*$ reads, per block,
+$x^*_j=\Lambda_jx^*_j+F^*MFx^*_j$ for diagonal $\Lambda_j,M\ge0$
+complementary to the active sets, with $M$ shared across $j$. If every
+amplitude constraint is slack then each $\Lambda_j=0$, so
+$x^*_j=F^*MFx^*_j$ for every $j$; applying $F$ and using $FF^*=nI$ gives
+$\widehat x^*_j=nM\widehat x^*_j$ coordinatewise for every $j$, i.e.\ for
+each $k$ either $\widehat x^*_j(k)=0$ for every $j$, or $\mu_k=1/n$. Let
+$K=\{k:\exists j,\ \widehat x^*_j(k)\ne0\}\ne\varnothing$; for $k\in K$,
+complementary slackness on the \emph{shared} constraint $h_k$ with
+$\mu_k=1/n>0$ forces the active condition $S_x^*(k)=Nn$ --- the coupled
+sum, not each block's own modulus, since $h_k$ is one constraint shared by
+all $N$ blocks. Parseval (summed over blocks) gives
+$\|x^*\|^2=\tfrac1n\sum_kS_{x^*}(k)=\tfrac1n|K|\cdot Nn=N|K|$; if $|K|=n$
+this forces $\|x^*\|^2=Nn$, hence (Prop.~\ref{prop:2}) $x^*\in\CAZ(n,N)$,
+contradicting amplitude-slackness. So $K\subsetneq\{0,\dots,n-1\}$. For
+$N=1$, $S_x(k)=|\widehat x(k)|^2$, so the coupled condition $S_x(k)=n$
+collapses to the per-block statement $|\widehat x(k)|=\sqrt n$; for
+$N\ge2$ the individual $|\widehat x_j(k)|$ are unconstrained beyond
+$\sum_j|\widehat x_j(k)|^2=Nn$ (e.g.\ $N=2,n=2$: $\widehat
+x_0(0)=\sqrt3,\widehat x_1(0)=1$ satisfies $S_x(0)=4=Nn$ with neither
+modulus equal to $\sqrt n=\sqrt2$).
+Conversely, for such $x^*$ and any $y\in C_1$, Cauchy--Schwarz per
+frequency gives
+$\langle x^*,y\rangle_\R=\tfrac1n\sum_{k\in K}\sum_j\re(\widehat
+x^*_j(k)\overline{\widehat y_j(k)})\le\tfrac1n\sum_{k\in
+K}\sqrt{S_{x^*}(k)}\sqrt{S_y(k)}\le\tfrac1n\sum_{k\in K}\sqrt{Nn}\sqrt{Nn}=N|K|=\|x^*\|^2$,
 attained at $y=x^*$ --- a direct support-function argument, no KKT needed
 for sufficiency.
 \end{proof}
@@ -652,8 +717,8 @@ single-sequence and coupled formulations is therefore a global
 
 \begin{remark}[Novelty check against generic identifiability theory]
 Neither the Lewis--Luke--Malick theory of local linear convergence for
-averaged/alternating projections \cite{LLM09} nor the Bonnans--Shapiro /
-Drusvyatskiy--Lewis generic identifiability program \cite{DL12} delivers
+averaged/alternating projections \cite{LLM09} nor the Drusvyatskiy--Lewis
+generic identifiability program \cite{DL12} delivers
 Theorem~C. The former's core hypothesis, strongly regular (transversal)
 intersection, is exactly what Section~\ref{sec:zc} shows \emph{fails} at
 every CAZAC point (the universal Parseval dependency), and even where
@@ -697,15 +762,33 @@ exponents tracked mod $2n$: $\widehat x_u(k)=G_u\,\omega_{2n}^{us^2}$,
 using $\omega_{2n}^{v(j+n)^2}=\omega_{2n}^{vj^2}$ (an exact integer
 identity valid because $n$ is even).
 
-\textbf{Step 2 (reduction to a correlation equation).} Substituting Step 1
-into the dependency condition and reindexing $k=us\bmod n$ turns
-$c\in K$ into reality, for all $m$, of a convolution
-$\sum_sc'_s\,e(s+m)$, where $e$ is built from $G_u$ and the same phase.
+\textbf{Step 2 (reduction to a correlation equation).} Fix a block with
+root $u$ and write $q_m=\overline{x_u(m)}\,(F^*(c\odot\widehat x_u))(m)$.
+Substituting Step 1, reindexing $k=us\bmod n$ (a bijection; $c'_s:=c_{us}$
+again real), and using the same addition-law identity as Step 1 gives, in
+both parities, $q_m=G_u\sum_sc'_s\,\phi(s+m)$, where $\phi(j)=\omega^{uT_j}$
+(odd $n$) or $\phi(j)=\omega_{2n}^{uj^2}$ (even $n$). Since $c'$ is real,
+$q_m\in\R$ for all $m$ iff $q_m-\overline{q_m}=0$:
+$$\sum_sc'_s\,e(s+m)=0\quad\forall m,\qquad e(j):=G_u\,\phi(j)-\overline{G_u}\,\overline{\phi(j)}$$
+--- the vanishing of a convolution against the \emph{reality-defect}
+kernel $e$, not (a subtlety a compressed first pass can miss) mere reality
+of $\sum_sc'_s\phi(s+m)$ itself, which would be a strictly stronger, false
+requirement: $\phi$ alone is not conjugate-symmetric, and $\hat\phi$ never
+vanishes (it is a pure Gauss sum of constant modulus $\sqrt n$), so that
+reading would force $\hat c'\equiv0$, contradicting $\dim K\ge1$.
 
-\textbf{Step 3 (Fourier solve).} Taking the length-$n$ DFT in $m$ reduces
-this to $\hat c'(t)=0$ wherever $\hat e(-t)\ne0$. In both parities,
-$\hat e(t)=0$ exactly when $\sigma^2\equiv0\pmod n$ ($\sigma=u^{-1}t$): the
-zero set is the subgroup $Z_0=\{t: t^2\equiv0\bmod n\}=m_0\Z_n$,
+\textbf{Step 3 (Fourier solve).} Taking the length-$n$ DFT in $m$ turns the
+convolution into $\hat e(t)\,\widehat{c'}(-t)=0$ for every $t$, i.e.\
+$\hat c'(t)=0$ wherever $\hat e(-t)\ne0$. Writing $\sigma=u^{-1}t$ and using
+Step~1's formula for $\phi$ with $|G_u|^2=n$:
+$\hat e(t)=n\bigl(\omega^{u(\sigma-T_\sigma)}-\omega^{uT_\sigma}\bigr)$
+(odd $n$, using $T_{-\sigma}=T_\sigma-\sigma$) or
+$\hat e(t)=n\bigl(\omega_{2n}^{-u\sigma^2}-\omega_{2n}^{u\sigma^2}\bigr)$
+(even $n$). In both parities $\hat e(t)=0$ exactly when
+$\sigma^2\equiv0\pmod n$ (odd: divide the exponent congruence by $u$ to get
+$\sigma-T_\sigma\equiv T_\sigma$, i.e.\ $\sigma\equiv2T_\sigma=\sigma^2+\sigma$;
+even: $2u\sigma^2\equiv0\pmod{2n}\iff u\sigma^2\equiv0\pmod n$, and $u$ is a
+unit): the zero set is the subgroup $Z_0=\{t: t^2\equiv0\bmod n\}=m_0\Z_n$,
 $|Z_0|=n/m_0=d_{\max}$ where $m_0=\prod_pp^{\lceil a_p/2\rceil}$.
 
 \textbf{Step 4.} $\hat c'(t)=\hat c(u^{-1}t)$, so ``$\operatorname{supp}\hat c'\subseteq Z_0$''
@@ -721,19 +804,19 @@ here, since Steps 1--4 characterize $K$ by its Fourier support directly.
 \end{proof}
 
 \begin{remark}[Scope of the written derivation]
-Steps 2--3 compress a Gauss-sum completion-of-square computation of the
-same kind as Step 1's self-transform identity (the correlation $c'\star e$
-of Step 2 and its Fourier zero-set in Step 3 both reduce, by the same
-technique, to evaluating quadratic exponential sums); the symbol-by-symbol
-expansion is not spelled out here, in the same spirit as
-Lemma~\ref{lem:bjaffine} below, whose ``exact symbolic computation'' is
-likewise not displayed in full. The \emph{conclusion} $\dim K=d_{\max}$ is
-independently corroborated: by hand at $n=4$ (self-paired case) and $n=9$
-(odd, non-self-paired) via direct enumeration of $Z_0$, and numerically
-across all $21+43=64$ tested Zadoff--Chu configurations (both parities;
-Section~\ref{sec:zc}'s corollaries below cite the exact scripts). No
-counterexample or numerical discrepancy has been found at any tested
-configuration.
+Steps 2--3 evaluate the same kind of quadratic exponential sum as Step
+1's self-transform identity, via the same completion-of-square technique;
+the definition of the reality-defect kernel $e$ is the one place a
+compressed first pass is liable to drop the conjugate term and
+mis-simplify the zero set (an error the schema shares structurally with
+the naive, incorrect transfer attempt at Bj\"orck's construction below,
+Lemma~\ref{lem:bjaffine}'s own point of departure). The \emph{conclusion}
+$\dim K=d_{\max}$ is independently corroborated: by hand at $n=4$
+(self-paired case) and $n=9$ (odd, non-self-paired) via direct enumeration
+of $Z_0$, and numerically across all $21+43=64$ tested Zadoff--Chu
+configurations (both parities; Section~\ref{sec:zc}'s corollaries below
+cite the exact scripts). No counterexample or numerical discrepancy has
+been found at any tested configuration.
 \end{remark}
 
 \begin{corollary}\label{cor:D1}
@@ -777,20 +860,27 @@ $|g(\chi)|^2=p$): $\chi$ is, up to a scalar, its own DFT, the same closure
 shape used by Theorem~D, with trivial reindexing.
 \end{proposition}
 
-\begin{proposition}[Negative result --- Proved, standard exponential-sum
-theory, newly connected here]
+\begin{proposition}[Obstruction to this specific route --- not a general
+impossibility result]
 Cubic and higher-degree phase (``algebraic chirp'') sequences do not have
-this closure property: quadratic Gauss sums have an exact closed-form
-evaluation (magnitude $\sqrt n$ always), which is what underwrites
-Theorem~D's Step~1, but Weyl sums of degree $\ge3$ have no such exact
-evaluation, only upper bounds, and the addition law
-$(m+s)^d=m^d+s^d+(\text{nonlinear mixing})$ for $d\ge3$ does not reduce to
-a reindexing of the original phase. \textbf{The specific self-transform
-closure mechanism used in Theorem~D's proof --- an exact, modulus-$\sqrt n$
-evaluation of the underlying exponential sum --- does not extend to cubic
-or higher phase sequences}; this rules out the route used here, though it
-does not itself preclude some structurally different argument reaching
-the same conclusion by other means.
+Theorem~D's closure property, for the same reason completing the square
+is special to degree $2$: the addition law
+$(m+s)^d=m^d+dsm^{d-1}+\binom d2s^2m^{d-2}+\dots+s^d$ has a mixing term
+$dsm^{d-1}$ of degree $d-1$ in $m$, which is linear in $m$ (absorbable into
+a pure reindexing of the phase, exactly as Step~1 does) only when $d=2$;
+for $d\ge3$ and $\gcd(d,n)=1$, matching the cross term $-km$ (linear in
+$m$) forces $ds\equiv0\pmod n$, hence $s\equiv0$, so no nontrivial shift
+completes the $d$-th power the way Step~1 completes the square.
+Separately, quadratic Gauss sums have an exact closed-form evaluation
+(magnitude $\sqrt n$ always); Weyl sums of degree $\ge3$ have no such exact
+evaluation, only upper bounds, so even if some other closure map existed
+it would not obviously carry the exact-modulus property Step~1 needs.
+\textbf{Together these show the specific self-transform mechanism used in
+Theorem~D's proof does not extend to cubic or higher phase}; this is an
+obstruction to \emph{this} route, not a proof that no route exists, and
+the mixing-term argument itself is stated only for $\gcd(d,n)=1$ ---
+when $d$ and $n$ share a factor, $ds\equiv0\pmod n$ can have nontrivial
+solutions and the argument as given does not cover that case.
 \end{proposition}
 
 \subsection{The Bj\"orck case: a partial result, not a proof}
@@ -803,9 +893,14 @@ rescues part of the argument.
 
 \begin{lemma}[Proved, exact symbolic computation]\label{lem:bjaffine}
 $b$ is exactly \textbf{affine} in $\chi$: $b=A\cdot\mathbf1+B\cdot\chi+C\cdot\delta_0$
-with $C=1-A$, for explicit constants $A,B$ depending on $p\bmod4$. The
-$3$-dimensional space $T:=\operatorname{span}_\C\{\mathbf1,\chi,\delta_0\}$
-closes under the DFT: $\hat b=C\cdot\mathbf1+Bg\cdot\chi+Ap\cdot\delta_0$.
+with $C=1-A$, where
+$$p\equiv1\!\!\pmod4:\ A=\cos\alpha,\ B=i\sin\alpha,\ \alpha=\arccos\tfrac1{1+\sqrt p};
+\qquad p\equiv3\!\!\pmod4:\ A=\tfrac{1+e^{i\beta}}2,\ B=\tfrac{1-e^{i\beta}}2=C,\ \beta=\arccos\tfrac{1-p}{1+p}.$$
+The $3$-dimensional space $T:=\operatorname{span}_\C\{\mathbf1,\chi,\delta_0\}$
+closes under the DFT: $\hat b=C\cdot\mathbf1+Bg\cdot\chi+Ap\cdot\delta_0$
+(using $F(\mathbf1)=p\delta_0$, $F(\chi)=g\chi$, $F(\delta_0)=\mathbf1$,
+$g=g(\chi)$ the Gauss sum, $g=\sqrt p$ for $p\equiv1\pmod4$ and $g=i\sqrt p$
+for $p\equiv3\pmod4$).
 \end{lemma}
 
 \begin{lemma}[Proved]\label{lem:bjequiv}
@@ -828,31 +923,29 @@ $c=\alpha\mathbf1+\beta\chi+\gamma\delta_0\in T$ collapses --- since
 $b,\hat b\in T$ closes under pointwise product and $F$ --- to exactly
 three scalar equations, one evaluation each at $m=0$, $m\in$~QR,
 $m\in$~QNR (the condition depends on $m$ only through $\chi(m)\in\{0,1,-1\}$).
-Write $\alpha_0$ (resp.\ $\beta_0$) for the phase such that $Bg=s\sqrt p\,e^{i\alpha_0}$
-with $s=\pm1$ when $p\equiv1\pmod4$ (resp.\ the corresponding phase when
-$p\equiv3\pmod4$), using that the Gauss sum $g=g(\chi)$ is real for
-$p\equiv1\pmod4$ and purely imaginary ($g=i\sqrt p$, up to sign) for
-$p\equiv3\pmod4$ --- this parity of $g$ is exactly where the two residue
-classes diverge. The three equations reduce, after eliminating the
-$m=0$ equation (which involves only $\alpha,\gamma$ and is solved by
-$\alpha$ free), to:
-$$p\equiv1\!\!\pmod4:\quad s\sqrt p\,\beta=0,\qquad -s\gamma\bigl(1+c(p-1)\bigr)=0\quad(c=\cos\alpha_0=\pm1,\,s=\pm1\text{ the sign of }Bg);$$
+Use $\alpha_0:=\alpha$ and $\beta_0:=\beta$, the same angles fixed in
+Lemma~\ref{lem:bjaffine} (not a phase of $Bg$: for $p\equiv1\pmod4$,
+$Bg=i\sin\alpha\cdot\sqrt p$ is purely imaginary, never real, so no
+polar-decomposition phase of $Bg$ itself is what is meant here). The three
+equations reduce, after eliminating the $m=0$ equation (which involves
+only $\alpha,\gamma$ and is solved by $\alpha$ free), to:
+$$p\equiv1\!\!\pmod4:\quad s\sqrt p\,\beta=0,\qquad -s\gamma\bigl(1+c(p-1)\bigr)=0\quad(c=\cos\alpha_0=\tfrac1{1+\sqrt p},\,s=\sin\alpha_0);$$
 $$p\equiv3\!\!\pmod4:\quad \frac{\sqrt p(1-\cos\beta_0)}2\,\beta=\frac{p\sin\beta_0}2\,\gamma,
 \qquad \frac{\sqrt p(1-\cos\beta_0)}2\,\beta=-\frac{\sin\beta_0}2\,\gamma.$$
-In the first case, $s\ne0$ so $s\sqrt p\ne0$ forces $\beta=0$ directly.
-Since $Bg$ is real ($g$ is real for $p\equiv1\pmod4$), $\alpha_0\in\{0,\pi\}$
-exactly, so $c=\cos\alpha_0=\pm1$ exactly (not merely bounded); then
-$1+c(p-1)$ equals $p$ (if $c=1$) or $2-p$ (if $c=-1$), both nonzero for
-$p\ge5$, so $1+c(p-1)\ne0$ forces $\gamma=0$. In the second
-case, subtracting the two equations gives
-$\gamma\bigl(\tfrac{p\sin\beta_0}2+\tfrac{\sin\beta_0}2\bigr)=0$, i.e.\
-$\gamma\sin\beta_0(p+1)/2=0$; since $p+1\ne0$ and $\sin\beta_0\ne0$ (a
-degenerate $\beta_0\in\{0,\pi\}$ would force $g$ real, contradicting
-$g=i\sqrt p$), $\gamma=0$, and then $\beta=0$ from either equation
-(the coefficient $\sqrt p(1-\cos\beta_0)/2$ is nonzero unless
-$\beta_0=0$, again excluded). In both residue classes the system forces
-$\beta=\gamma=0$ with $\alpha$ free, giving $K\cap T=\operatorname{span}\{\mathbf1\}$
-exactly.
+In the first case, $\alpha_0=\arccos\frac1{1+\sqrt p}\in(0,\pi/2)$ since
+$\frac1{1+\sqrt p}\in(0,1)$, so $s=\sin\alpha_0>0$; $s\sqrt p\ne0$ forces
+$\beta=0$ directly. Also $c=\cos\alpha_0=\frac1{1+\sqrt p}\in(0,1)$
+exactly (not merely bounded, and not $\pm1$), so $1+c(p-1)>1>0$ for every
+$p\ge5$ (both terms of $c(p-1)$ positive), hence $1+c(p-1)\ne0$ forces
+$\gamma=0$. In the second case, $\beta_0=\arccos\frac{1-p}{1+p}$ with
+$\frac{1-p}{1+p}\in(-1,1)$ strictly for every $p\ge3$, so
+$\beta_0\in(0,\pi)$ and $\sin\beta_0>0$; subtracting the two equations
+gives $\gamma\bigl(\tfrac{p\sin\beta_0}2+\tfrac{\sin\beta_0}2\bigr)=0$,
+i.e.\ $\gamma\sin\beta_0(p+1)/2=0$, and since $p+1\ne0$ and
+$\sin\beta_0\ne0$, $\gamma=0$; then $\beta=0$ from either equation, since
+the coefficient $\sqrt p(1-\cos\beta_0)/2$ is nonzero (as $\beta_0\ne0$).
+In both residue classes the system forces $\beta=\gamma=0$ with $\alpha$
+free, giving $K\cap T=\operatorname{span}\{\mathbf1\}$ exactly.
 \end{proof}
 
 \begin{remark}[What is proved and what is not --- do not upgrade]
@@ -973,8 +1066,9 @@ reduction (Prop.~\ref{prop:2}) that makes that template apply, not the
 descent argument itself --- see the note at Theorem~A.
 \item Elliptope semialgebraicity and H1--H3 transfer
 (Props.~\ref{prop:ell1}--\ref{prop:ell2}): \emph{Unconditional}. Fixed-point
-continuum (Prop.~\ref{prop:ell3}): \emph{Unconditional} (cited fact plus a
-machine-exact identity). Single-point convergence despite that continuum
+continuum (Prop.~\ref{prop:ell3}): \emph{Unconditional} (infinitude by
+citation to \cite{FKP21}, positive-dimensionality by semialgebraicity, plus
+a machine-exact illustrative identity at $I_n$). Single-point convergence despite that continuum
 (Theorem~\ref{thm:ell}): \emph{Unconditional} --- this is a proved theorem,
 not a numerical finding. The pointwise vertex/non-vertex attractive
 dichotomy (Remark~\ref{rem:fkp-thm20}): \emph{Unconditional}, by direct
@@ -984,27 +1078,29 @@ specifically (Prop.~\ref{prop:ell4}): \emph{Verified numerically only}
 ($140$ trials, $n\in\{3,\dots,20\}$) --- this is not proved. The residual,
 measure-zero form of universal rank-1 convergence (Q7): \emph{Conjecture}.
 \item Theorem B (obstruction, exposed non-CAZAC fixed point):
-\emph{Unconditional}.
+\emph{Unconditional} for every $N$ (part (a)'s statement and proof cover
+general $N$: the coupled spectral condition $S_x(k)=Nn$ on $K$ is pinned,
+individual per-sequence moduli are not, and only $N=1$ collapses to a
+per-block modulus condition).
 \item Theorem C, parts (a),(b),(c), including the full contradiction-based
 proof of part (c): \emph{Proved conditional on hypothesis (R)}; all three
 parts carry the same status tag.
 \item Theorem D (regularity of Zadoff--Chu points, $\dim K=d_{\max}$),
 \textbf{both odd and even $n$}: \emph{Unconditional}, a complete proof for
-all $n$ regardless of parity, though Steps 2--3 of the written proof are a
-compressed Gauss-sum computation rather than a symbol-by-symbol expansion
-(see the ``Scope of the written derivation'' remark after the proof) ---
-independently corroborated by hand at $n=4,9$ and numerically at all 64
-tested configurations, but a reader wanting the full symbolic derivation
-must reconstruct Steps 2--3 by analogy with Step 1, as that remark
-discloses.
+all $n$ regardless of parity, with Steps 2--3 spelled out via the
+reality-defect kernel $e$ (see the ``Scope of the written derivation''
+remark after the proof) --- independently corroborated by hand at $n=4,9$
+and numerically at all 64 tested configurations.
 Corollaries~\ref{cor:D1}--\ref{cor:D2}: \emph{Unconditional} (Corollary~1
 conditionally activates Theorem~C, but is itself unconditional as a
 dimension/regularity statement).
 \item Legendre-symbol closure positive lead: classical fact, newly
 connected to the schema, \emph{Unconditional} as stated (no claim of
-Bj\"orck regularity is made from it alone). Cubic/higher-phase negative
-result: \emph{Unconditional} (a genuine proved negative, not a
-placeholder).
+Bj\"orck regularity is made from it alone). Cubic/higher-phase obstruction:
+\emph{proved for the specific completing-the-square mechanism} used in
+Theorem~D's proof, when $\gcd(d,n)=1$ (the mixing term becomes nonlinear
+in $m$ for $d\ge3$); \textbf{not} a general impossibility result, and not
+addressed when $\gcd(d,n)>1$.
 \item Bj\"orck partial result: Lemma~\ref{lem:bjaffine},
 Lemma~\ref{lem:bjequiv}, Theorem~\ref{thm:E0} ($K\cap T=\operatorname{span}\{\mathbf1\}$):
 \emph{Unconditional}. Full regularity (R) at Bj\"orck points:
@@ -1037,7 +1133,8 @@ Math. Program. \textbf{137} (2013), 91--129.
 \textbf{18}(2) (2007), 556--572. arXiv:math/0601530.
 
 \bibitem{FKP21} P. Felzenszwalb, C. Klivans, A. Paul, \emph{Iterated Linear
-Optimization}, Quarterly of Applied Mathematics (2021). arXiv:2012.02213.
+Optimization}, Quart. Appl. Math. \textbf{79}(4) (2021), 601--615.
+arXiv:2012.02213.
 
 \bibitem{AK25} F. S. Akta\c{s}, C. Kroer, \emph{Strongly Convex Maximization
 via the Frank-Wolfe Algorithm with the Kurdyka-{\L}ojasiewicz Inequality},
@@ -1052,7 +1149,8 @@ convergence for alternating and averaged nonconvex projections}, Found.
 Comput. Math. \textbf{9}(4) (2009), 485--513. arXiv:0709.0109.
 
 \bibitem{DL12} D. Drusvyatskiy, A. S. Lewis, \emph{Optimality,
-identifiability, and sensitivity}, arXiv:1207.6628.
+identifiability, and sensitivity}, Math. Program. \textbf{147} (2014),
+467--498. arXiv:1207.6628.
 
 \bibitem{Chu72} D. C. Chu, \emph{Polyphase codes with good periodic
 correlation properties}, IEEE Trans. Inform. Theory \textbf{18}(4) (1972),
@@ -1067,9 +1165,12 @@ Series C \textbf{315}, Kluwer, 1990, 131--140.
 research repository holding the {\tt theory/} derivations, the dated
 {\tt AUDIT-LEDGER.md}, and the {\tt experiments/} scripts (including
 {\tt verify\_zc\_regularity.py}, {\tt verify\_even\_n\_regularity.py},
-{\tt verify\_elliptope\_convergence.py}, {\tt verify\_bjorck\_regularity.py},
-{\tt verify\_bjorck\_isotypic.py}) that reproduce every numerical claim in
-this paper, 2026.
+{\tt verify\_elliptope\_convergence.py}, {\tt verify\_elliptope\_rank\_sweep.py},
+{\tt verify\_bjorck\_regularity.py}, {\tt verify\_bjorck\_isotypic.py}) that
+reproduce every numerical claim in this paper, 2026. \textbf{Not publicly
+hosted at time of writing} --- no location is asserted here because none
+can currently be given; a reader cannot yet independently fetch this
+repository.
 
 \end{thebibliography}
 

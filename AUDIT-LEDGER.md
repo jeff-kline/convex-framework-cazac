@@ -461,3 +461,139 @@ the LaTeX source/PDF and keep no retired-pointer markdown files. Fixed:
    variance, same matrix diagnostics.
 
 Round 5 (next) audits this state.
+
+## Round 5 — six-axis audit at commit `9f12034`, fixes applied
+
+Six fresh, cold subagents, one per axis, run in parallel against the
+abstract-tightened / `paper/`-restructured state (commit `9f12034`):
+mathematics (opus), citations (opus), numerics (sonnet), abstract/prose
+(sonnet), privacy (sonnet), README (sonnet) — leveled per the
+`adversarial-audit` skill's model table. Every must-fix finding below was
+independently checked by the coordinator against the source (re-deriving
+the two most serious math claims by hand, reading the cited papers'
+verbatim text, or re-running scripts in a venv) before any fix was
+applied — the discipline established after round 4.
+
+### Mathematics axis (opus) — 23/23 theorem-environment statements checked, 7 must-fix
+
+This is the first round where a from-scratch proof reconstruction (rather
+than a plausibility read) found genuine errors in previously-"Unconditional"
+proofs, not just prose imprecision. All seven fixed in `main.tex`:
+
+| ID | finding | fix |
+|---|---|---|
+| M1 | **Thm B(a) false for $N\ge2$.** Stated (and tagged "Proved, unconditional") for all $N$, but the proof was headed "Proof of (a), $N=1$" and the $N=1$ per-frequency-modulus conclusion does not hold once blocks are coupled. Explicit counterexample at $N=2,n=2$: $x=((\sqrt3/2,\sqrt3/2),(1/2,1/2))$ has every amplitude constraint strictly slack, is a genuine fixed point (verified by hand and by SLSQP from 40 starts), yet $\lvert\hat x_0(0)\rvert=\sqrt3\ne\sqrt n$. | Restated (a) for general $N$: the *coupled* spectrum $S_x(k)=Nn$ is pinned on $K$, not each block's own modulus; $\lVert x\rVert^2=N\lvert K\rvert$; $N=1$ recovers the old per-block statement as a special case. Reproved via the shared-multiplier KKT argument for general $N$. |
+| M2 | **Thm D Steps 2–3 don't compose.** Step 2's "reality of $\sum_sc'_se(s+m)$" forces $e(j)=G_u\omega^{uT_j}$, a pure Gauss sum whose DFT never vanishes — making Step 3's stated zero-set literally false and, if taken literally, giving $\dim K=0$, contradicting the theorem's own answer. | Replaced $e$ with the correct reality-\emph{defect} kernel $e(j):=G_u\phi(j)-\overline{G_u}\,\overline{\phi(j)}$ and recomputed $\hat e$ for both parities; the same final congruence $\sigma^2\equiv0\bmod n$ (hence the same $\dim K=d_{\max}$) falls out correctly. Ported from the companion repo's already-correct derivation (`theory/06-zc-regularity.md:100-114`), independently re-derived by the auditor from scratch first. |
+| M3 | **Thm E0, $p\equiv1\bmod4$: "$Bg$ is real" is false.** $B=i\sin\alpha$, $g=\sqrt p$ real, so $Bg$ is purely imaginary — the companion repo's own notes record catching and fixing this exact error in an earlier draft; this round re-introduced it. | Lemma bjaffine's statement now gives $\alpha,\beta$ explicitly; Thm E0's proof uses $\alpha_0=\alpha$, $\beta_0=\beta$ directly (not a phase of $Bg$), giving $c=\cos\alpha_0=1/(1+\sqrt p)\in(0,1)$ exactly, so $1+c(p-1)>1>0$ unconditionally — a *more* robust argument than the one it replaces. |
+| M4 | **Thm E0, $p\equiv3\bmod4$: non sequitur.** "$\sin\beta_0\ne0$ … would force $g$ real" — $\beta_0$ is the Björck angle, not a phase of $g$ or $Bg$. | Same fix as M3: $\beta_0=\beta=\arccos\frac{1-p}{1+p}\in(0,\pi)$ directly from $\frac{1-p}{1+p}\in(-1,1)$ for $p\ge3$, so $\sin\beta_0>0$ with no appeal to $g$. |
+| M5 | **Prop ell3 doesn't prove its own headline.** The proof showed only that $\arg\max_X\langle I_n,X\rangle=\El$ (non-uniqueness at one point), not that the fixed-point *set* is a continuum — a different statement, and load-bearing for Thm ell's "despite an infinite continuum" claim. | Added the missing step: the fixed-point set is semialgebraic (Tarski–Seidenberg), and an infinite semialgebraic set cannot be $0$-dimensional; infinitude is FKP's own cited count ($n>3$). The $I_n$ example is kept as an illustration, explicitly marked as not itself the infinitude argument. |
+| M6 | **Cubic-phase "negative result" overclaimed.** Abstract said "we prove it cannot reach cubic or higher-degree phase" and the ledger tagged it "a genuine proved negative"; the actual argument only cited the absence of known exact Weyl-sum evaluations in the literature — a statement about the literature, not a nonexistence proof. | Demoted the tag to an explicit obstruction, and added the one piece of real rigor available: for $d\ge3$ with $\gcd(d,n)=1$, the addition-law mixing term $dsm^{d-1}$ is nonlinear in $m$ (unlike $d=2$'s linear mixing term), so no shift can complete the $d$-th power the way Step 1 completes the square — stated honestly as an obstruction to *this* route, not a general impossibility, and explicitly not addressed when $\gcd(d,n)>1$. |
+| M7 | **Prop 3's unstated $x^0\in C_\tau$ hypothesis**, violated by the paper's own presolve schedule (which hands the main phase a point in $C_{2.1}\setminus C_1$); propagates to Thm A's finite-length constant and Thm C(c)'s step count. Abstract also dropped Cor D1's symmetry-orbit conjunct, overclaiming "unconditional at squarefree lengths" alone. | Added $x^0\in C_\tau$ as an explicit hypothesis plus a one-line re-indexing argument (every $x^{\ell+1}$ is automatically in $C_\tau$, so start the count from the main phase's own first iterate) that restores it at no cost. Abstract now says "unconditional when Theorem A's limit lies on a Zadoff–Chu tuple's symmetry orbit and $n$ is squarefree," matching Cor D1 exactly. |
+
+**What survived independent reconstruction, unchanged:** Theorem A (all
+four ABS13 hypotheses re-derived, the exact-identity H2 confirmed genuinely
+exact), `lem:newton` (every constant re-checked), Theorem C(a),(b),(c)
+conditional on (R) exactly as advertised (Case-1/Case-2 constants match to
+the digit), Theorem D's *conclusion* $\dim K=d_{\max}$ (re-derived from
+scratch, both parities, before the Step 2–3 bug was found), and the FKP
+Theorem~20 remark (checked against FKP's verbatim Definitions 6/7,
+Proposition 19, Theorem 20 — correct as written, no fix needed).
+
+Cosmetic findings not fixed (accepted as low-priority): Thm B(b)'s
+"coordinatewise" gloss for the $N=2$ doubling is glib but the conclusion
+holds; Thm C never states its own $\tau=1$ scoping; Cor D1's
+symmetry-invariance of $\dim K$ is true but unargued; "Theorem A's general
+form" is never given its own numbered statement; `lem:bjaffine`/`lem:bjequiv`
+still don't print full proofs (only the now-explicit constants); the real-
+vs-complex isotypic count in the "do not upgrade" remark; a notational
+collision between Thm B's $K$ and \S`sec:zc`'s $K$ (different objects,
+same letter).
+
+### Citations axis (opus) — 10/10 bibliography entries, 31/31 in-text sites, 7 must-fix
+
+No fabricated citation, arXiv ID, theorem number, or URL — contrary to the
+audit brief's own expectation, the companion-repo bibitem asserted no URL
+at all, so the anticipated fabrication risk did not materialize. All
+pinpoint claims about ABS13, JNRS10, LLM09, DL12, Chu72, Bjorck90, BDLS07
+were verified verbatim against the source and confirmed correct. The
+AK25 attribution (Lemma 3.1, eqs. 27–28) was singled out as unusually
+scrupulous — the paper volunteers that its own exact-equality observation
+is a corollary of AK25's general lemma, not a discovery.
+
+| ID | finding | fix |
+|---|---|---|
+| C1 | **Prop 3 is FKP21's Theorem-1 proof, restated with no citation** — the most serious possible finding category on this axis. Parts (1)–(3) reproduce FKP's proof step for step; only the telescoped constant is new. | Added an explicit credit line at the start of Prop 3's proof. |
+| C2 | "Their only route to single-point convergence" (FKP) overclaimed: FKP's own Theorem 20 gives a second route, from a restricted (not arbitrary) set of initializations. | Qualified to "from an arbitrary initialization," with a parenthetical noting Theorem 20's restricted route explicitly. |
+| C3 | "AK25 does not discuss … the elliptope" — imprecise; AK25 §4.3 writes the elliptope out explicitly, just factorizes it via Burer–Monteiro without using the word. | Reworded to state precisely what AK25 does and doesn't do. |
+| C4 | AK25's framework "would very plausibly deliver" the elliptope conclusion, hedged as "not independently confirmed here" — every hypothesis of AK25's Theorem 3.2 is in fact verified inside this paper's own Prop ell1. | Restated as a direct, second, independent route to Theorem ell, not a plausibility claim. |
+| C5 | "Independently instantiated by Aktaş and Kroer" (abstract, README) — AK25 is dated prior art (April 2025), not simultaneous work; the paper's own body text elsewhere already gets this right. | Both abstract and README reworded to "a known template, of which Aktaş and Kroer (2025, prior art) give a general instance." |
+| C6 | CazacAlgorithmRepo bibitem asserted no URL but also no disclosure of *why*; `verify_elliptope_rank_sweep.py` (the actual 140-trial script) was missing from its script list. | Added an explicit "not publicly hosted at time of writing" disclosure and the missing script name. |
+| C7 | README's "How to cite" BibTeX cites a GitHub URL that currently returns HTTP 404 (repo configured but not yet pushed, per this session's standing instruction to keep it local). | Added a note in README flagging the URL doesn't yet resolve and suggesting a commit-hash citation in the interim; not "fixed" by pushing, since pushing remains out of scope this session. |
+
+Cosmetic, fixed anyway (cheap): FKP21/DL12 bibitem metadata filled in
+(volume/pages); a phantom uncited "Bonnans–Shapiro" name removed from a
+novelty-check remark; "the one case in \[FKP's\] paper" corrected (FKP's
+own §3 Example 5 also has a fixed-point continuum, so "the one case" was
+wrong). Not fixed (cosmetic, low-priority): Prop 19's escaping-curve
+description slightly understates the source (a full curve, not "one
+point" — the logical conclusion drawn is unaffected).
+
+### Numerics axis (sonnet) — 10/11 threads reproduced, 1 must-fix (cosmetic)
+
+All headline numbers independently reproduced by executing the actual
+scripts in a fresh venv: the 140-trial elliptope sweep (exactly 7×20,
+zero rank-$>1$ exceptions, the script's separate unrelated 40-trial part
+is never cited in `main.tex`), the 44-prime Björck determinant check
+(all 44 pass, $p=71$ ratio $\approx4.08\times10^3$ matching the stated
+figure), the SOCP quickstart diagnostics, and the $21+43=64$ Zadoff–Chu
+configuration counts. One must-fix, cosmetic: the SOCP script's own
+in-file docstring sample output said "Time (s): 5.7," a stale 10x-off
+figure never propagated into `main.tex` or `README.md` (both already had
+the correct ~57s). **Fixed** in `code/cazac-socp-solver.py`.
+
+### Abstract/prose axis (sonnet) — 10/10 abstract claims checked, 2 must-fix
+
+Confirmed: the 30% word-count cut (586→412 words) dropped no
+mathematical claim — every theorem, tier label, and attribution disclosure
+in the trimmed abstract traces to a specific, correctly-tiered body
+result. Two must-fix precision defects, both fixed: (1) the closing
+sentence grouped Q1 into "the remaining open problems" despite the body
+tagging Q1 "(settled)" two sentences before — reworded to name Q1 as
+settled explicitly; (2) Theorem D's abstract sentence gave no hint that
+Steps 2–3 were, at the time of this audit, a compressed (and, per the
+mathematics axis, actually broken) derivation — moot now that Steps 2–3
+are fixed and fully spelled out in the body (see M2 above).
+
+### Privacy axis (sonnet) — 10/10 tracked files checked, 1 must-fix
+
+`.claude/settings.local.json` is untracked and currently gitignored only
+by this machine's *global* git ignore, not this repo's own `.gitignore` —
+a real portability gap (a clone on another machine would track it) even
+though there was no live exposure today. **Fixed**: added `.claude/` to
+this repo's own `.gitignore`, matching the sibling repos'
+`extremal-eigenvalues`/`geometric-difference-families` convention.
+Everything else clean: no leaked paths, emails, or session metadata in
+any tracked file (including the committed PDF blob's metadata); License,
+citation URL vs. `git remote -v`, and the retired-file removal all
+verified consistent.
+
+### README axis (sonnet) — 0 must-fix
+
+Every command in the README actually runs as written (rebuilt `paper/`
+clean, reran the code quickstart in a fresh venv, diagnostics matched
+exactly). No stale references to the removed `theorems/`/`problems/`/
+`STATUS.md` survive. One cosmetic house-style gap noted, not fixed: this
+README's "How to use this repository" section doesn't fold in a direct
+`AUDIT-LEDGER.md` pointer the way both sibling repos' equivalent sections
+do (the pointer exists elsewhere in the same file, so this is a
+discoverability nit, not a broken reference).
+
+### Convergence tracking
+
+Round 5 found real, load-bearing math defects — the audit is doing its
+job, and the fixes here are the first ones this session that came from an
+adversarial *reconstruction* of a proof rather than a plausibility read.
+Per the round-4 convergence criterion (**two consecutive full rounds with
+zero must-fix findings**), round 5 is not clean, so the count is still at
+zero. A round 6 is warranted before treating this repository as
+audit-converged.

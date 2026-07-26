@@ -14,14 +14,16 @@ even $n$ was not previously closed), via a new mechanism: the DFT of a
 Zadoff–Chu chirp is again a chirp, collapsing a dependency-rank computation
 to counting solutions of a congruence. The same mechanism extends to a
 partial result at Björck's quadratic-phase construction, reducing that case
-to one unproved, numerically-confirmed lemma, and is proved *not* to extend
-to cubic or higher phase. This underwrites **Theorem C** (proved conditional
-on the hypothesis; unconditional at squarefree lengths): near a regular
-CAZAC point the iteration lands on it **exactly** after finitely many steps.
-The theory rests on **Theorem A** (unconditional): the iterate sequence
-always converges to a single fixed point, not merely a set of limit points —
-via a KL/Frank-Wolfe descent mechanism that is itself a known template (also
-independently instantiated by Aktaş and Kroer, 2025); the paper's own
+to one unproved, numerically-confirmed lemma; that same specific mechanism
+(not every conceivable route) provably cannot reach cubic or higher phase.
+This underwrites **Theorem C** (proved conditional on the hypothesis;
+unconditional when Theorem A's limit lies on a Zadoff–Chu tuple's symmetry
+orbit at squarefree $n$): near a regular CAZAC point the iteration lands on
+it **exactly** after finitely many steps. The theory rests on **Theorem A**
+(unconditional): the iterate sequence always converges to a single fixed
+point, not merely a set of limit points — via a KL/Frank-Wolfe descent
+mechanism that is itself a known template, of which Aktaş and Kroer (2025,
+prior art) give a general instance; the paper's own
 contribution is the reduction of CAZAC feasibility to a norm-maximization
 problem that makes the template apply. This reduction transfers verbatim to
 a second example, the elliptope of correlation matrices, closing a gap
@@ -115,7 +117,11 @@ above. See `code/README.md` for both scripts' parameters.)
 
 ## How to cite
 
-If you reference this work, please cite the repository:
+If you reference this work, please cite the repository. **Note:** the
+remote below is this repository's configured `origin`, but at the time of
+writing this repository has not yet been pushed there, so the URL does
+not yet resolve publicly — check before citing, or cite a local commit
+hash in the interim.
 
 ```bibtex
 @misc{kline2026cazacconvergence,
