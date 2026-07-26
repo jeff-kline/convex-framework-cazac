@@ -1020,7 +1020,24 @@ whether $K$ meets any of the $q-1$ nontrivial isotypic pieces of $\R^p$
 under $G$: by Schur's lemma the dependency operator restricted to each
 such (complex $2$-dimensional) block is a $2\times2$ matrix, structurally a
 Jacobi-sum-type bilinear expression, and its nonvanishing was not proved.
-A second, independent attempt at a clean closed-form nonvanishing argument
+A further reduction sharpens this open question and unifies it across
+both residue classes: writing $\lambda_k$ for the order-$(p-1)$ character
+with $\lambda_k(g_0)=e(k/(p-1))$ ($g_0$ a primitive root mod $p$) that
+enters the isotypic decomposition, the block's determinant vanishes
+exactly when $g(\lambda_k)=\pm g(\lambda_k\chi)$; the classical
+Gauss--Jacobi identity $g(\psi)g(\chi)=J(\psi,\chi)\,g(\psi\chi)$ (for
+nontrivial $\psi,\chi,\psi\chi$, verified here to machine precision)
+re-expresses this as $J(\lambda_k,\chi)=\pm g(\chi)$ --- a single
+condition independent of $p\bmod4$, where the prior reduction had only
+been carried through for $p\equiv1\pmod4$, the residue class \emph{not}
+containing $p=71$. Checked against all $44$ tested primes and every
+nontrivial $k$ ($2045$ pairs total), no exact coincidence is found, and
+$p=71,k=17$ remains the single closest approach in the now-unified range
+(relative gap $\approx10^{-6}$, next-nearest $p=157$ at $\approx3\times10^{-3}$).
+This is a genuine sharpening of the open question, not a resolution:
+$J(\lambda_k,\chi)\ne\pm g(\chi)$ for every prime and every nontrivial $k$
+remains open and unproved (script: {\tt experiments/verify\_bjorck\_jacobi\_unification.py}
+in the companion repository \cite{CazacAlgorithmRepo}). A second, independent attempt at a clean closed-form nonvanishing argument
 also failed: the relevant determinants are confirmed numerically nonzero
 at every one of $44$ tested primes $p\in[5,200)$ (both residue classes,
 $\dim K=1$ throughout), but with no uniform lower bound of the shape a
@@ -1262,7 +1279,8 @@ research repository holding the {\tt theory/} derivations, the dated
 {\tt AUDIT-LEDGER.md}, and the {\tt experiments/} scripts (including
 {\tt verify\_zc\_regularity.py}, {\tt verify\_even\_n\_regularity.py},
 {\tt verify\_elliptope\_convergence.py}, {\tt verify\_elliptope\_rank\_sweep.py},
-{\tt verify\_bjorck\_regularity.py}, {\tt verify\_bjorck\_isotypic.py}) that
+{\tt verify\_bjorck\_regularity.py}, {\tt verify\_bjorck\_isotypic.py},
+{\tt verify\_bjorck\_jacobi\_unification.py}) that
 reproduce every numerical claim in this paper, 2026. \textbf{Not publicly
 hosted at time of writing} --- no location is asserted here because none
 can currently be given; a reader cannot yet independently fetch this
