@@ -761,3 +761,74 @@ Recompiled clean, 18 pages, no errors, no undefined references.
 
 Companion repo: also committed `cazac-algorithm/AUDIT-LEDGER.md` (was
 untracked, per the Evidence finding above).
+
+## Follow-up research attempt on the Björck determinant-nonvanishing gap
+
+Off the back of the limited-scope Novelty pulse check above, the user
+asked to attempt real progress on this paper's own open Björck
+determinant-nonvanishing lemma (not the general Bj\"orck--Saffari
+conjecture, which a separate parallel fork judged too large to attempt
+honestly). Two threads, run in parallel; both independently verified by
+the coordinator before anything was written into `main.tex` — this is
+exactly the discipline the round-5 process fixes were meant to enforce,
+and it caught a real error (below) before publication.
+
+**Thread A (proved): $\rho_R(k),\rho_N(k)\ne0$, unconditionally, for
+every prime and every nontrivial $k$.** Via the classical Gauss--Jacobi
+identity $g(\psi)g(\chi)=J(\psi,\chi)g(\psi\chi)$, the condition
+$g(\lambda_k)=\pm g(\lambda_k\chi)$ (N7.8's stated open sub-question)
+re-expresses as $J(\lambda_k,\chi)=\pm g(\chi)$; since
+$J(\lambda_k,\chi)\in\Q(\zeta_{p-1})$ while $g(\chi)\in\Q(\zeta_p)$ is
+never rational, and $\Q(\zeta_{p-1})\cap\Q(\zeta_p)=\Q$ ($\gcd(p-1,p)=1$
+always), equality is impossible. Independently re-derived and verified
+by the coordinator (not just accepted from the subagent report), including
+the general cyclotomic-field-intersection fact (checked against
+$\mathbb Q(\zeta_3)\cap\mathbb Q(\zeta_4)=\mathbb Q$ by degree-counting).
+Persisted as a new proved theorem, `theory/06-zc-regularity.md` \S N7.9.
+
+**Thread B (checked, not resolved): does Thread A settle the full
+determinant?** No. The full block determinant is
+$\det=-\tfrac14[e(-k/q)\rho_R^2uv-\rho_N^2p_fw]$ — a *difference* of two
+terms — and ruling out $\rho_R=0$/$\rho_N=0$ does not rule out the two
+terms coinciding via the sequence-specific factors $u,v,w,p_f$. A second
+parallel fork derived closed forms for $u,v,w,p_f$ from Bj\"orck's own
+constants and found, by direct symbolic expansion (sympy, independently
+re-run by the coordinator and confirmed exactly):
+$$uv-wp_f=-16\,a\,\epsilon\,g\,\gamma\sin^2\alpha,$$
+not identically zero. Numerically confirmed the cross-term is doing real,
+independent work: sweeping every $k_0$ at every $p\equiv1\bmod4$ in
+$[5,60)$, $\min(|\rho_R|,|\rho_N|)/\sqrt p$ stays in $[0.11,0.6]$ even as
+$|\det|/p^2$ shrinks by three orders of magnitude — the near-degeneracy
+traces to the cross-term, not to $\rho_R$ or $\rho_N$. **The full
+determinant-nonvanishing lemma remains open.**
+
+**Error caught before publication.** An earlier round's addition to
+`main.tex` (from the prior Jacobi-unification pass) had stated the block
+determinant "vanishes exactly when $g(\lambda_k)=\pm g(\lambda_k\chi)$" —
+this is now known to be **wrong**: that condition is necessary for
+$\rho_R=0$ or $\rho_N=0$ individually, not equivalent to $\det=0$, which
+also depends on the cross-term. Corrected in `main.tex`'s Björck remark
+to state precisely what is proved (Thread A), what remains open (the
+cross-term coincidence), and what is still only numerically verified (the
+overall $44$-prime determinant check). This is exactly the "reconstruct
+before publishing, don't rescue with a rushed claim" discipline from the
+`adversarial-audit` skill working as intended — the fix came from the
+coordinator independently re-deriving the determinant formula from the
+companion notes before trusting a subagent's summary of it.
+
+New scripts, both run and verified by the coordinator (not just the
+subagent that produced them): `experiments/verify_bjorck_jacobi_unification.py`
+(Thread A's numerical corroboration) and
+`experiments/verify_bjorck_crossterm_gap.py` (Thread B's symbolic
+identity plus the cross-term-not-explained-by-rho sweep). `main.tex`
+recompiles clean, 18 pages.
+
+**Novelty impact (informal pulse checks, not a formal re-score, per the
+user's explicit request):** unmoved. Thread A is a genuine, elementary,
+previously-unapplied proof, which is more substantive than the earlier
+Jacobi-sum reformulation alone — but it settles only one of two ways the
+open determinant lemma could fail, and Thread B confirms the other way is
+real and still open. The paper's headline claim (Bj\"orck regularity:
+proved on the symmetry-invariant subspace, open beyond it) is unchanged;
+this round sharpens what "open beyond it" precisely means, which is a
+Depth/rigor gain, not a Novelty one.

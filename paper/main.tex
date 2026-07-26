@@ -21,6 +21,7 @@
 \newcommand{\R}{\mathbb R}
 \newcommand{\C}{\mathbb C}
 \newcommand{\Z}{\mathbb Z}
+\newcommand{\Q}{\mathbb Q}
 \newcommand{\CAZ}{\mathrm{CAZ}}
 \newcommand{\dist}{\operatorname{dist}}
 \newcommand{\re}{\operatorname{Re}}
@@ -1020,46 +1021,61 @@ whether $K$ meets any of the $q-1$ nontrivial isotypic pieces of $\R^p$
 under $G$: by Schur's lemma the dependency operator restricted to each
 such (complex $2$-dimensional) block is a $2\times2$ matrix, structurally a
 Jacobi-sum-type bilinear expression, and its nonvanishing was not proved.
-A further reduction sharpens this open question and unifies it across
-both residue classes: writing $\lambda_k$ for the order-$(p-1)$ character
-with $\lambda_k(g_0)=e(k/(p-1))$ ($g_0$ a primitive root mod $p$) that
-enters the isotypic decomposition, the block's determinant vanishes
-exactly when $g(\lambda_k)=\pm g(\lambda_k\chi)$; the classical
-Gauss--Jacobi identity $g(\psi)g(\chi)=J(\psi,\chi)\,g(\psi\chi)$ (for
-nontrivial $\psi,\chi,\psi\chi$, verified here to machine precision)
-re-expresses this as $J(\lambda_k,\chi)=\pm g(\chi)$ --- a single
-condition independent of $p\bmod4$, where the prior reduction had only
-been carried through for $p\equiv1\pmod4$, the residue class \emph{not}
-containing $p=71$. Checked against all $44$ tested primes and every
-nontrivial $k$ ($2045$ pairs total), no exact coincidence is found, and
-$p=71,k=17$ remains the single closest approach in the now-unified range
-(relative gap $\approx10^{-6}$, next-nearest $p=157$ at $\approx3\times10^{-3}$).
-This is a genuine sharpening of the open question, not a resolution:
-$J(\lambda_k,\chi)\ne\pm g(\chi)$ for every prime and every nontrivial $k$
-remains open and unproved (script: {\tt experiments/verify\_bjorck\_jacobi\_unification.py}
-in the companion repository \cite{CazacAlgorithmRepo}). A second, independent attempt at a clean closed-form nonvanishing argument
-also failed: the relevant determinants are confirmed numerically nonzero
-at every one of $44$ tested primes $p\in[5,200)$ (both residue classes,
-$\dim K=1$ throughout), but with no uniform lower bound of the shape a
-classical single-Gauss/Jacobi-sum-modulus argument would give --- at
-$p=71$ the relevant gap is a factor of $\approx4\times10^3$ smaller than
-at the next-nearest tested prime, a genuine near-degeneracy; the same
-script now also runs an independent $60$-digit-precision (mpmath)
-recomputation of this specific block, confirming the near-degeneracy is
-not a floating-point artifact: the top singular value matches to
-$\sim10^{-15}$ relative precision and the near-zero singular value moves
-by only $\sim1\%$ of its own scale between float64 and $60$-digit
-precision --- not by orders of magnitude, as a genuine cancellation
-artifact would. Script: {\tt experiments/verify\_bjorck\_isotypic.py} in the
-companion repository \cite{CazacAlgorithmRepo} (the $44$-prime
-determinant check; a separately-run set of $14$ primes, all contained in
-this same tested range, is used for the affine-closure check of
-Lemma~\ref{lem:bjaffine}, in {\tt experiments/verify\_bjorck\_regularity.py}).
+For $p\equiv1\pmod4$, an exact closed form for the block (in terms of
+twisted Gaussian periods $\rho_R(k),\rho_N(k)$ and sequence-specific
+factors $u,v,w,p_f$) gives $\det=-\tfrac14[e(-k/q)\rho_R(k)^2u(k)v(k)-\rho_N(k)^2p_f(k)w(k)]$;
+$\rho_R(k)=\tfrac12[g(\lambda_k)+g(\lambda_k\chi)]$,
+$\rho_N(k)=e(-k/2q)\tfrac12[g(\lambda_k)-g(\lambda_k\chi)]$ for
+$\lambda_k$ the order-$(p-1)$ character with $\lambda_k(g_0)=e(k/(p-1))$
+($g_0$ a primitive root mod $p$). \textbf{One necessary condition for
+$\det=0$ is now proved impossible, unconditionally}: $\rho_R(k)=0$ or
+$\rho_N(k)=0$ requires $g(\lambda_k)=\pm g(\lambda_k\chi)$, and the
+classical Gauss--Jacobi identity $g(\psi)g(\chi)=J(\psi,\chi)g(\psi\chi)$
+re-expresses this as $J(\lambda_k,\chi)=\pm g(\chi)$; since
+$J(\lambda_k,\chi)\in\Q(\zeta_{p-1})$ (a $\Z$-linear combination of
+$(p-1)$-th roots of unity) while $g(\chi)\in\Q(\zeta_p)\setminus\Q$
+(classically $\pm\sqrt p$ or $\pm i\sqrt p$, never rational) and
+$\Q(\zeta_{p-1})\cap\Q(\zeta_p)=\Q$ (since $\gcd(p-1,p)=1$), the equality
+$J(\lambda_k,\chi)=\pm g(\chi)$ would force $g(\chi)\in\Q$, a
+contradiction. So $\rho_R(k),\rho_N(k)\ne0$ for every prime and every
+nontrivial $k$, \textbf{proved}, not merely checked (script: {\tt
+experiments/verify\_bjorck\_jacobi\_unification.py} in the companion
+repository \cite{CazacAlgorithmRepo}). \textbf{This does not, however,
+resolve $\det\ne0$}: $\det$ is a \emph{difference} of two terms, and
+$u(k)v(k)-w(k)p_f(k)$ is a separate, nonzero quantity (an explicit closed
+form, $-16\,a\,\epsilon\,g\,\gamma\sin^2\alpha$ for Bj\"orck's own
+constants $a,\gamma,g$, itself never zero), so $\det=0$ remains logically
+possible via $e(-k/q)\rho_R(k)^2u(k)v(k)=\rho_N(k)^2p_f(k)w(k)$ even
+though every individual factor is nonzero --- and this cross-term
+coincidence is checked directly, not assumed away: at the $k$ minimizing
+$|\det|/p^2$ for each tested prime $p\equiv1\pmod4$ in $[5,60)$,
+$\min(|\rho_R(k)|,|\rho_N(k)|)/\sqrt p$ stays in $[0.11,0.6]$ ---
+\textbf{not small} --- even as $|\det|/p^2$ itself shrinks by three
+orders of magnitude, showing the near-degeneracy traces to this
+cross-term, not to $\rho_R$ or $\rho_N$ (script: {\tt
+experiments/verify\_bjorck\_crossterm\_gap.py}, same repository). The
+cross-term coincidence remains open and unresolved. Separately, the
+relevant determinants are confirmed numerically nonzero at every one of
+$44$ tested primes $p\in[5,200)$ (both residue classes, $\dim K=1$
+throughout) --- at $p=71$ the gap is a factor of $\approx4\times10^3$
+smaller than at the next-nearest tested prime, a genuine near-degeneracy,
+independently confirmed not to be a floating-point artifact by a
+$60$-digit-precision (mpmath) recomputation of this specific block (top
+singular value matches to $\sim10^{-15}$ relative precision, the
+near-zero singular value moves by only $\sim1\%$ of its own scale between
+float64 and $60$-digit precision, not by orders of magnitude). Script:
+{\tt experiments/verify\_bjorck\_isotypic.py} in the companion repository
+\cite{CazacAlgorithmRepo} (the $44$-prime determinant check; a
+separately-run set of $14$ primes, all contained in this same tested
+range, is used for the affine-closure check of Lemma~\ref{lem:bjaffine},
+in {\tt experiments/verify\_bjorck\_regularity.py}).
 \textbf{The overall regularity
-claim at Bj\"orck points is therefore still open, not proved}, despite this
-genuine partial progress: what is established is a full proof restricted
-to the symmetry-invariant subspace, plus strong (but non-uniform)
-numerical evidence, not a proof, for the complementary directions.
+claim at Bj\"orck points is therefore still open, not proved}, despite
+this genuine partial progress: what is established is a full proof
+restricted to the symmetry-invariant subspace, an unconditional proof
+that one necessary condition for the remaining determinant to vanish is
+never met, and strong (but non-uniform) numerical evidence, not a proof,
+for the complementary directions as a whole.
 \end{remark}
 
 \section{Open problems}\label{sec:open}
@@ -1280,7 +1296,8 @@ research repository holding the {\tt theory/} derivations, the dated
 {\tt verify\_zc\_regularity.py}, {\tt verify\_even\_n\_regularity.py},
 {\tt verify\_elliptope\_convergence.py}, {\tt verify\_elliptope\_rank\_sweep.py},
 {\tt verify\_bjorck\_regularity.py}, {\tt verify\_bjorck\_isotypic.py},
-{\tt verify\_bjorck\_jacobi\_unification.py}) that
+{\tt verify\_bjorck\_jacobi\_unification.py},
+{\tt verify\_bjorck\_crossterm\_gap.py}) that
 reproduce every numerical claim in this paper, 2026. \textbf{Not publicly
 hosted at time of writing} --- no location is asserted here because none
 can currently be given; a reader cannot yet independently fetch this
