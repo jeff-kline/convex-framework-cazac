@@ -42,23 +42,43 @@ the equality constraints with convex inequalities (bounded amplitude,
 bounded spectral energy) yields a compact convex semialgebraic body
 $C_\tau$ on which CAZAC systems are exactly the maximal-norm points; the
 natural algorithm is to iterate a second-order cone program (SOCP) whose
-objective direction resets to the previous optimizer. We give a complete
-convergence theory for this iteration. Theorem A (unconditional): every
-measurable selection from the iteration has finite length and converges to
-a single fixed point, via the Attouch--Bolte--Svaiter Kurdyka--{\L}ojasiewicz
-(KL) descent framework, applied here to a set-valued argmax update rather
-than a proximal step. This mechanism --- KL descent for a Frank-Wolfe-type
-greedy update, with a strongly convex smooth objective supplying the
-sufficient-decrease and relative-error conditions --- is itself a known,
-general-purpose template, independently instantiated by Akta\c{s} and
-Kroer \cite{AK25} via a different (but interchangeable) citation to the
-same family of abstract descent theorems; the CAZAC-specific content of
-Theorem A is the reduction of CAZAC feasibility to $\max_{C_\tau}\|x\|^2$
-(Prop.~\ref{prop:2}) that makes the template applicable here, not the
-descent argument itself. Since neither that reduction nor the descent
-argument uses CAZAC-specific structure beyond compactness, convexity, and
-semialgebraicity, the argument transfers verbatim to a second example, the
-elliptope $\El=\{X\succeq0: X_{ii}=1\}$ --- Felzenszwalb--Klivans--Paul's
+objective direction resets to the previous optimizer. This paper's
+central technical content is Theorem D: a \emph{regularity} hypothesis
+(R), needed to get a sharp local convergence rate near a CAZAC point, is
+proved unconditionally at every Zadoff--Chu tuple, for every length $n$
+(both parities, not previously closed for even $n$), via an elementary
+mechanism new to this problem --- the discrete Fourier transform of a
+Zadoff--Chu chirp is again a chirp, which collapses a linear-dependency
+rank computation to counting solutions of $t^2\equiv0\bmod n$, so (R)
+holds iff $n$ is squarefree. We show this closure mechanism is a
+reusable schema, not a one-off: it extends (with a genuinely different
+closure fact, the self-duality of the Legendre symbol) to give a partial
+regularity result at Bj\"orck's quadratic-phase construction at prime
+$n$ --- proved, on the symmetry-invariant subspace, and reduced elsewhere
+to one unproved, numerically-confirmed (44 primes) determinant-nonvanishing
+lemma --- and we prove, by contrast, that the same mechanism provably
+cannot reach cubic or higher-degree phase sequences. This regularity
+result underwrites Theorem C (proved conditional on hypothesis (R),
+unconditional at Zadoff--Chu points of squarefree length): near a regular
+CAZAC point the $\ell^1$ constraint slack has \emph{sharp linear}, not
+merely quadratic, growth; the KL exponent is exactly $0$; and the
+iteration lands on the point \emph{exactly} after finitely many steps
+(we give the complete proof of part (c), finite exact arrival). The
+convergence theory this rests on is Theorem A (unconditional): every
+measurable selection from the iteration has finite length and converges
+to a single fixed point, via the Attouch--Bolte--Svaiter
+Kurdyka--{\L}ojasiewicz (KL) descent framework, applied here to a
+set-valued argmax update rather than a proximal step; this descent
+mechanism is itself a known, general-purpose template --- Akta\c{s} and
+Kroer \cite{AK25} independently instantiate the same KL/Frank-Wolfe
+argument for a general strongly convex smooth objective, of which our
+$f=\tfrac12\|x\|^2$ is a special case --- and the paper's own contribution
+here is the reduction of CAZAC feasibility to $\max_{C_\tau}\|x\|^2$
+(Prop.~\ref{prop:2}) that makes the template applicable, not the descent
+argument itself. Since neither that reduction nor the descent argument
+uses CAZAC-specific structure beyond compactness, convexity, and
+semialgebraicity, the argument transfers verbatim to a second example,
+the elliptope $\El=\{X\succeq0: X_{ii}=1\}$ --- Felzenszwalb--Klivans--Paul's
 (2021) own worked case, where their finiteness-dependent
 single-point-convergence mechanism does not apply and their own example
 stalls at set-level convergence; we prove single-point convergence there
@@ -68,23 +88,10 @@ rank-1 point, a phenomenon we leave as Conjecture (Q7). Theorem B
 (unconditional, obstruction): non-CAZAC fixed points exist and some are
 exposed (unique maximizers of their own functional), so no deterministic
 selection rule can guarantee convergence to the CAZAC set; the correct
-target class of theorem is probabilistic over initializations. Theorem C
-(proved conditional on a checkable regularity hypothesis (R), unconditional
-at Zadoff--Chu points of squarefree length): near a regular CAZAC point the
-$\ell^1$ constraint slack has \emph{sharp linear}, not merely quadratic,
-growth; the KL exponent is exactly $0$; and the iteration lands on the
-point \emph{exactly} after finitely many steps. We give the complete proof
-of part (c) (finite exact arrival), and prove hypothesis (R) at
-Zadoff--Chu points for all $n$: $\dim K=\max\{d: d^2\mid n\}$ regardless
-of parity, so (R) holds iff $n$ is squarefree. Beyond Zadoff--Chu points we
-report a partial result at Bj\"orck's quadratic-phase construction at prime
-$n$: an affine-in-Legendre-symbol closure argument proves the dependency
-space meets the decimation-symmetry-invariant subspace only in the constant
-direction, reducing regularity there to one unproved, numerically-confirmed
-(44 primes) determinant-nonvanishing lemma. We close with a precise
-statement of the remaining open problems (Q1--Q7) and a tiered
-verification ledger disclosing exactly which claims are proved, proved
-conditionally, numerically verified, or conjectural.
+target class of theorem is probabilistic over initializations. We close
+with a precise statement of the remaining open problems (Q1--Q7) and a
+tiered verification ledger disclosing exactly which claims are proved,
+proved conditionally, numerically verified, or conjectural.
 \end{abstract}
 
 \section{Setup}
@@ -333,7 +340,15 @@ continuum entirely and converge to a rank-1 correlation matrix $vv^\top$
 $X^0=I_5$ is an edge case in which the solver's own deterministic tie-break
 returns $I_5$ again, a valid fixed point, not a counterexample. Script:
 {\tt experiments/verify\_elliptope\_convergence.py} in the companion
-repository \cite{CazacAlgorithmRepo}.
+repository \cite{CazacAlgorithmRepo}. A broader sweep (same repository,
+{\tt experiments/verify\_elliptope\_rank\_sweep.py}) of $140$ random and
+Gaussian-perturbed trials across $n\in\{3,4,5,8,10,15,20\}$ finds
+\textbf{every trajectory converges to rank $1$}, no exceptions; a further
+$68$ trials perturbing away from a family of exact higher-rank fixed
+points generalizing $I_n$ (one exact fixed point per set partition of
+$\{1,\dots,n\}$, of rank equal to the number of blocks) also all escape to
+rank $1$. This remains \emph{verified numerically only}, at these tested
+$n$ and trial counts, not a proof for every $n$ or every trajectory.
 \end{proposition}
 
 \begin{theorem}[Elliptope convergence --- tiers as stated]\label{thm:ell}
@@ -341,13 +356,16 @@ Because $\El$ is compact, convex, and semialgebraic (Prop.~\ref{prop:ell1}),
 Theorem A's general form applies to it directly: the iterated-linear-
 optimization sequence on the elliptope converges to a single fixed point
 for every initialization, \textbf{despite the fixed-point set being an
-infinite continuum} (Prop.~\ref{prop:ell3}) --- \textbf{Proved}. That
-generic nearby trajectories escape the continuum and settle onto a single
-point rather than merely having a connected limit set is
-\textbf{verified numerically} (Prop.~\ref{prop:ell4}, $n=5$, four starts),
-not established for every $n$ or every trajectory. Whether \emph{every}
-trajectory converges specifically to a rank-1 extreme point is
-\textbf{open} (Conjecture, filed as Q7 below).
+infinite continuum} (Prop.~\ref{prop:ell3}) --- \textbf{Proved}. Which
+fixed point is reached is settled only partially: the vertices (rank-$1$
+points) are exactly the fixed points whose full neighborhood converges to
+them, and no other fixed point has this property, \textbf{by direct
+citation} to \cite{FKP21}'s own Theorem~20 (Remark~\ref{rem:fkp-thm20}
+below). That generic nearby trajectories escape the continuum and settle
+specifically onto a rank-$1$ point is \textbf{verified numerically} (208
+trials, Prop.~\ref{prop:ell4}), not established for every $n$ or every
+trajectory. Whether the measure of initializations converging elsewhere
+is exactly zero is \textbf{open} (Conjecture, filed as Q7 below).
 \end{theorem}
 
 \begin{remark}[Relation to Felzenszwalb--Klivans--Paul]
@@ -373,6 +391,31 @@ positive-dimensional critical sets explicitly, so this is not independently
 confirmed here, but the comparison to FKP should be read as ``a route
 FKP's own paper does not take,'' not as ``a route no other paper could
 have taken.''
+\end{remark}
+
+\begin{remark}[FKP's own Theorem 20 bears directly on Q7]\label{rem:fkp-thm20}
+Although \cite{FKP21} cannot prove Theorem~\ref{thm:ell}'s single-point
+convergence claim, its own Theorem~20 answers a large part of Q7 (below)
+by direct citation, without any new argument here: \emph{the vertices of
+$\El$ (the rank-$1$ sign matrices $vv^\top$) are exactly the
+\textbf{attractive} fixed points of the map $X\mapsto\arg\max_{Y\in\El}\langle
+X,Y\rangle$}, in the pointwise sense that an entire neighborhood of a
+vertex converges to it, while every non-vertex fixed point admits (their
+Prop.~19) an explicit curve of nearby points whose norm strictly
+increases, so it cannot attract a full neighborhood either. This is a
+genuine dichotomy, not a numerical observation, and it is stronger than
+what either paper's abstract convergence machinery gives alone: it says
+which fixed points \emph{can} be limits of nearby trajectories, complementing
+(not overlapping) Theorem~\ref{thm:ell}'s unconditional guarantee that
+\emph{some} single limit exists. It falls short of Q7 as literally stated
+only in one respect: ``attractive'' here is a pointwise notion (a full
+$\varepsilon$-ball converges), not a measure-theoretic one, and
+\cite{FKP21}'s own \S4.2 exhibits fixed points that are individually
+neither attractive nor repelling yet jointly form an attractive
+\emph{set} --- so Theorem~20 does not by itself rule out a positive-measure
+set of initializations converging to a non-vertex point through such a
+collective mechanism. Q7's residual open content is exactly this
+measure-zero refinement, structurally the same gap as Q6.
 \end{remark}
 
 \section{Theorem B --- obstruction: the limit need not be CAZAC}
@@ -408,8 +451,9 @@ gives $\widehat x^*=nM\widehat x^*$ coordinatewise, i.e.\ for each $k$
 either $\widehat x^*(k)=0$ or $\mu_k=1/n$. Let
 $K=\{k:\widehat x^*(k)\ne0\}\ne\varnothing$; for $k\in K$ complementary
 slackness with $\mu_k=1/n>0$ forces $|\widehat x^*(k)|^2=n$. Parseval gives
-$\|x^*\|^2=|K|$; if $|K|=n$ this forces $\|x^*\|^2=n$, hence (Prop.~2)
-$x^*\in\CAZ(n,1)$, contradicting amplitude-slackness. So $K\subsetneq\{0,\dots,n-1\}$.
+$\|x^*\|^2=|K|$; if $|K|=n$ this forces $\|x^*\|^2=n$, hence
+(Prop.~\ref{prop:2}) $x^*\in\CAZ(n,1)$, contradicting amplitude-slackness.
+So $K\subsetneq\{0,\dots,n-1\}$.
 Conversely, for such $x^*$ and any $y\in C_1$,
 $\langle x^*,y\rangle_\R=\tfrac1n\sum_{k\in K}\re(\widehat x^*(k)\overline{\widehat y(k)})\le\tfrac1n\sum_{k\in K}\sqrt n\sqrt n=|K|=\|x^*\|^2$,
 attained at $y=x^*$ --- a direct support-function argument, no KKT needed
@@ -849,7 +893,7 @@ to the symmetry-invariant subspace, plus strong (but non-uniform)
 numerical evidence, not a proof, for the complementary directions.
 \end{remark}
 
-\section{Open problems}
+\section{Open problems}\label{sec:open}
 
 \noindent\textbf{Q1 (settled).} Does $x^\ell$ converge to a single point? Yes ---
 Theorem~\ref{thm:A}.
@@ -888,22 +932,31 @@ and a basin/measure argument. For $N=1$, empirical success probability
 decays from $\approx1$ at small $n$ to $\approx0.3$ at $n=167$; whether
 this decay is exponential or polynomial in $n$ is unresolved.
 
-\noindent\textbf{Q7 (open, newly raised).} Does every trajectory of the elliptope
-iteration converge to a rank-1 point? Theorem~\ref{thm:ell} proves
-single-point convergence unconditionally but not convergence to an extreme
-point. Conjecture: for a.e.\ (e.g.\ Gaussian-perturbed) initialization on
-$\El$, attracting fixed points are exactly the rank-1 extreme points, and
-the higher-rank fixed-point continuum (containing $I_n$) is a measure-zero
-repelling set. This is structurally the same conjecture as Q6 in a second,
-unrelated domain: if true, it is independent evidence for Q6's general
-shape; if false, CAZAC's extra structure (the dimension count of
+\noindent\textbf{Q7 (partially settled by citation, residual part open).}
+Does every trajectory of the elliptope iteration converge to a rank-1
+point? Theorem~\ref{thm:ell} proves single-point convergence
+unconditionally but not convergence to an extreme point specifically.
+The \emph{pointwise} half of this question is already settled ---
+Remark~\ref{rem:fkp-thm20} cites \cite{FKP21}'s own Theorem~20: rank-1
+points are exactly the fixed points whose full neighborhood converges to
+them, and every other fixed point admits an explicit escaping direction.
+What remains open is the \emph{measure-theoretic} refinement: does the
+set of initializations whose trajectory converges to a non-vertex fixed
+point have Gaussian measure zero (equivalently, does the ``attractive
+set'' phenomenon \cite{FKP21} documents at non-vertex points --- a set of
+individually-neither-attractive-nor-repelling points that is collectively
+attracting --- ever capture a positive-measure basin)? This residual
+question is structurally the same conjecture as Q6 in a second, unrelated
+domain: if the measure is zero, it is independent evidence for Q6's
+general shape; if not, CAZAC's extra structure (the dimension count of
 Corollary~\ref{cor:D2}) may be doing more work than currently credited.
-\emph{Attack plan:} extend Prop.~\ref{prop:ell4}'s experiment to
-$n\in\{5,10,20\}$ with many Gaussian-perturbed starting points per $n$, and
-histogram the rank of the limit point; a rank-1 outcome in every trial
-would support attempting a basin/measure argument analogous to Q6's, while
-a robust fraction of non-rank-1 limits would falsify the conjecture as
-stated and make the counterexamples themselves the next object of study.
+The numerical evidence (Prop.~\ref{prop:ell4}, $208$ trials total across
+$n\in\{3,\dots,20\}$, including perturbations away from genuine
+higher-rank fixed points) shows zero exceptions, consistent with --- but
+not a proof of --- the measure-zero reading. \emph{Attack plan:} a
+basin/measure argument analogous to Q6's, using the pointwise dichotomy
+of Theorem~20 as the starting classification of which points can even be
+candidates for a positive-measure limit.
 
 \section{Verification status and provenance}
 
@@ -930,10 +983,13 @@ descent argument itself --- see the note at Theorem~A.
 continuum (Prop.~\ref{prop:ell3}): \emph{Unconditional} (cited fact plus a
 machine-exact identity). Single-point convergence despite that continuum
 (Theorem~\ref{thm:ell}): \emph{Unconditional} --- this is a proved theorem,
-not a numerical finding. \emph{Separately}, that generic trajectories
-escape onto a rank-1 point specifically (Prop.~\ref{prop:ell4}):
-\emph{Verified numerically only} ($n=5$, four trajectories) --- this is
-not proved. Universal rank-1 convergence (Q7): \emph{Conjecture}.
+not a numerical finding. The pointwise vertex/non-vertex attractive
+dichotomy (Remark~\ref{rem:fkp-thm20}): \emph{Unconditional}, by direct
+citation to \cite{FKP21} Theorem~20 (not a new argument here).
+\emph{Separately}, that generic trajectories escape onto a rank-1 point
+specifically (Prop.~\ref{prop:ell4}): \emph{Verified numerically only}
+($208$ trials, $n\in\{3,\dots,20\}$) --- this is not proved. The residual,
+measure-zero form of universal rank-1 convergence (Q7): \emph{Conjecture}.
 \item Theorem B (obstruction, exposed non-CAZAC fixed point):
 \emph{Unconditional}.
 \item Theorem C, parts (a),(b),(c), including the full contradiction-based
@@ -956,7 +1012,7 @@ Lemma~\ref{lem:bjequiv}, Theorem~\ref{thm:E0} ($K\cap T=\operatorname{span}\{\ma
 \textbf{open}, reduced to one unproved determinant-nonvanishing lemma,
 \emph{verified numerically only} at 44 primes, $p\in[5,200)$. Do not read
 this as ``proved'' --- the reduction is real but incomplete.
-\item Q1--Q7: precise open-problem statements as in Section~6; Q1 is
+\item Q1--Q7: precise open-problem statements as in Section~\ref{sec:open}; Q1 is
 settled (restated as a theorem above), the rest range from ``partially
 answered'' to fully open conjectures, as stated there.
 \end{itemize}

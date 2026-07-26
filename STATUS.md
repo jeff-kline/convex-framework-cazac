@@ -18,7 +18,7 @@ Tiers, in decreasing strength:
 | $\mathrm{CAZ}(n,N)=\arg\max_{C_1}\|\cdot\|$, optimal value $Nn$, attained for every $n,N$ (Prop. 2) | Proved |
 | Monotone norm ascent, square-summable increments (Prop. 3) | Proved |
 | Limit points of the iteration are fixed points; CAZAC points are fixed points (Prop. 4) | Proved |
-| **Theorem A** — full-sequence convergence to a single fixed point, any measurable selection, any $\tau\ge1$ | **Proved, unconditional** |
+| **Theorem A** — full-sequence convergence to a single fixed point, any measurable selection, any $\tau\ge1$ | **Proved, unconditional** (descent mechanism is a special case of Aktaş–Kroer 2025, arXiv:2505.00221; CAZAC-specific content is the reduction to $\max\|x\|^2$, Prop. 2) |
 | **Theorem B(a)** — census of slack-amplitude ("flat-spectrum") fixed points | Proved |
 | **Theorem B(b)** — exposed non-CAZAC fixed point exists at $n=2$ (and its $N=2$ doubling) | Proved |
 | **Theorem B(c)** — no deterministic convergence-to-CAZAC theorem is possible | Proved (immediate from B(b)) |
@@ -35,8 +35,9 @@ Tiers, in decreasing strength:
 | Elliptope: semialgebraicity + H1–H3 transfer for the iteration on $\mathcal E_n=\{X\succeq0:X_{ii}=1\}$ | **Proved, unconditional** |
 | Elliptope: fixed-point set is a genuine continuum (e.g. $I_n$) | **Proved** (cited fact + machine-exact identity) |
 | Elliptope: single-point convergence despite the continuum (Theorem A transferred verbatim) | **Proved, unconditional** |
-| Elliptope: generic trajectories escape the continuum onto a rank-1 point | **Numerically verified only** ($n=5$, 4 trajectories) |
-| Elliptope: *every* trajectory converges to a rank-1 point (Q7) | **Conjecture** |
+| Elliptope: pointwise vertex/non-vertex attractive dichotomy | **Proved**, by direct citation to FKP21 Theorem 20 (no new argument here) |
+| Elliptope: generic trajectories escape the continuum onto a rank-1 point | **Numerically verified only** (208 trials, $n\in\{3,\dots,20\}$) |
+| Elliptope: *every* trajectory converges to a rank-1 point, measure-zero form (Q7) | **Conjecture** |
 | $n$-uniformity of the true sharp-growth constant $\sigma_s$ | Conjecture — proved bound scales like $c_N/n$; sampled ratios show no decay (P5) |
 | Local rate is identical for $N=1$ and $N=2$ (the empirical gap is global/basin, not local) | Proved (immediate from Theorem C's constants) |
 | Known exposed bad point at $n=2$ is repelling off the global-phase direction | Proved (Jacobian spectrum computed directly at that point) |

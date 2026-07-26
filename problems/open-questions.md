@@ -153,27 +153,63 @@ cyclic shift, modulation); the next-largest eigenvalue would be the rate.
 
 `theorems/convergence.md` §3.1 applies Theorem A's general (non-CAZAC-
 specific) form to the elliptope $\mathcal E_n=\{X\succeq0:X_{ii}=1\}$ —
-Felzenszwalb–Klivans–Paul's (2021) own worked example, where they concede a
-continuum of fixed points for $n>3$ and their own example stalls at
-set-level convergence. Theorem A proves single-point convergence there
+Felzenszwalb–Klivans–Paul's (2021, "FKP21") own worked example, where they
+concede a continuum of fixed points for $n>3$ and their own example stalls
+at set-level convergence. Theorem A proves single-point convergence there
 unconditionally (semialgebraicity + H1–H3 transfer verbatim; no CAZAC
-structure used) — proved, not numerical. What is **not** proved: which
-single point the trajectory lands on. Numerical experiments on
-$\mathcal E_5$ (4 starting configurations) show 3 of 4 escape the
-fixed-point continuum entirely and converge to a rank-1 extreme point
-$vv^\top$; the trajectory started exactly at the fixed point $I_5$ stays
-there (a valid tie-break, not a counterexample). Conjecture:
+structure used) — proved, not numerical. What is **not** proved by Theorem
+A alone: which single point the trajectory lands on.
+
+**Pointwise half: settled by direct citation, no new argument needed.**
+FKP21's own Theorem 20 (arXiv:2012.02213) proves: the vertices of
+$\mathcal E_n$ (rank-1 sign matrices $vv^\top$) are exactly the fixed
+points whose full neighborhood converges to them ("attractive" in their
+Definition 6); every non-vertex fixed point admits an explicit escaping
+curve (their Proposition 19, along which $\|X\|_F^2$ strictly increases),
+so it cannot attract a full neighborhood either (their Definition 7,
+"repelling," or neither — see below). This repo had already cited FKP21's
+Theorem 20 (`theory/04-literature.md`, `theory/02-established-results.md`
+R7) to argue the opposite direction — that FKP's machinery *cannot*
+transfer to the original CAZAC set $C_1$ — but nobody had pointed the
+theorem at this question about FKP's *own* elliptope. This gap is now
+closed: independently re-verified against the primary arXiv text
+(Theorem 20, Proposition 19, Definitions 6–7, all quoted and checked).
+
+**Conjecture, now precisely scoped to what remains:**
 
 > For a.e. (e.g. Gaussian-perturbed) initialization on $\mathcal E_n$, the
-> iteration converges to a rank-1 point — i.e. attracting fixed points are
-> exactly the rank-1 extreme points, and the higher-rank fixed-point
-> continuum (e.g. $I_n$ and its neighbors) is a measure-zero repelling set.
+> iteration converges to a rank-1 point — i.e. the set of initializations
+> converging to a non-vertex fixed point (whether individually repelling,
+> per FKP21 Prop. 19, or part of a collectively-attractive but
+> individually-neither set, as FKP21 §4.2 shows can occur) has Gaussian
+> measure zero.
 
-This is structurally the same conjecture as P1 ("attracting fixed points =
-extreme points, up to measure zero" is the mechanism P1 needs) in a
-second, structurally unrelated domain. If true, it is independent
-evidence for P1's general shape; if false, the CAZAC case's extra
-structure (the dimension count in P3/Theorem D) may be doing more work
-than currently credited. Attack plan: extend the elliptope experiment to
-$n\in\{5,10,20\}$ with many random/Gaussian-perturbed starts per $n$, and
-histogram the rank of the limit point.
+FKP21's own §4.2 is the reason this doesn't collapse to "already proved":
+they exhibit fixed points that are individually neither attractive nor
+repelling (Defs. 6/7 both fail) yet jointly form an "attractive set" that
+a positive-measure neighborhood can converge into. Theorem 20's dichotomy
+rules out any *individual* non-vertex point attracting a full ball, but
+does not itself rule out this collective mechanism capturing positive
+measure. This residual gap is structurally the same conjecture as P1
+("attracting fixed points = extreme points, up to measure zero" is the
+mechanism P1 needs) in a second, structurally unrelated domain. If the
+measure is zero, it is independent evidence for P1's general shape; if
+not, the CAZAC case's extra structure (the dimension count in P3/Theorem
+D) may be doing more work than currently credited.
+
+**Numerical evidence (2026-07-26): 208 trials, zero exceptions, still not
+a proof.** `experiments/verify_elliptope_rank_sweep.py`: 140 random/
+Gaussian-perturbed trials across $n\in\{3,4,5,8,10,15,20\}$ all converge to
+rank 1. A further 68 trials perturb away from a newly-identified family of
+*exact* higher-rank fixed points generalizing $I_n$ — for any partition of
+$\{1,\dots,n\}$ into $m$ blocks, $X^*_\pi=\sum_ju_ju_j^\top$ ($u_j$ = block
+indicator) is an exact rank-$m$ fixed point ($I_n$ is the $m=n$ case) — and
+all 68 escape to rank 1 as well. No counterexample found at any tested
+$n$; consistent with, not a proof of, the measure-zero reading.
+
+**Attack plan (updated):** the sweep called for above is done; the
+remaining route is a basin/measure argument, using Theorem 20's pointwise
+dichotomy as the starting classification (only non-vertex points are
+candidates for a positive-measure basin at all) and attempting to bound
+the measure of FKP21 §4.2-style "collectively attractive" sets directly,
+analogous to whatever mechanism eventually resolves P1.

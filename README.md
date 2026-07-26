@@ -7,23 +7,42 @@ paper proving a convergence theory for a convex relaxation of that
 feasibility problem: replace the equality constraints with convex
 inequalities (bounded amplitude, bounded spectral energy) and iterate a
 second-order cone program (SOCP) against a running reference direction
-that resets to each new optimizer. Four named results. **Theorem A**
-(unconditional): the iterate sequence always converges to a single fixed
-point, not merely to a set of limit points — and, because the proof never
-uses CAZAC-specific structure, it transfers verbatim to a second example,
-the elliptope of correlation matrices, closing a gap Felzenszwalb–Klivans–
-Paul's (2021) own machinery leaves open on their own worked example.
-**Theorem B** (unconditional, obstruction): the limit need not be a CAZAC
-point — there exist non-CAZAC fixed points that no measurable selection
-rule can escape, so no *deterministic* convergence-to-CAZAC theorem is
-possible. **Theorem C** (proved conditional on a checkable regularity
-hypothesis; unconditional at squarefree lengths of either parity): near a
-regular CAZAC point the iteration lands on it **exactly** after finitely
-many steps, including a complete contradiction-based proof of the finite-
-arrival step. **Theorem D**: the regularity hypothesis is proved at
-Zadoff–Chu points for *all* lengths $n$; a related partial result at
-Björck's quadratic-phase construction reduces the same question to one
-unproved, numerically-confirmed number-theoretic lemma.
+that resets to each new optimizer. Four named results. The central
+technical content is **Theorem D**: a regularity hypothesis needed for a
+sharp local convergence rate is proved unconditionally at Zadoff–Chu
+points for *all* lengths $n$ (both parities — even $n$ was not previously
+closed), via a new mechanism for this problem: the DFT of a Zadoff–Chu
+chirp is again a chirp, collapsing a dependency-rank computation to
+counting solutions of a congruence. The same mechanism extends (via a
+different closure fact) to a partial result at Björck's quadratic-phase
+construction, reducing that case to one unproved, numerically-confirmed
+number-theoretic lemma, and is proved *not* to extend to cubic or higher
+phase sequences. This regularity result underwrites **Theorem C** (proved
+conditional on the hypothesis; unconditional at squarefree lengths of
+either parity): near a regular CAZAC point the iteration lands on it
+**exactly** after finitely many steps, including a complete
+contradiction-based proof of the finite-arrival step. The convergence
+theory this rests on is **Theorem A** (unconditional): the iterate
+sequence always converges to a single fixed point, not merely to a set
+of limit points — via a KL/Frank-Wolfe-type descent mechanism that is
+itself a known template (also independently instantiated by Aktaş
+and Kroer, 2025); the paper's own contribution is the reduction of CAZAC
+feasibility to a norm-maximization problem that makes the template apply.
+Since neither that reduction nor the descent argument uses CAZAC-specific
+structure, the argument transfers verbatim to a second example, the
+elliptope of correlation matrices, closing a gap Felzenszwalb–Klivans–
+Paul's (2021, "FKP") own machinery leaves open on their own worked
+example. FKP's own Theorem 20 in turn settles, by direct citation, the
+*pointwise* half of "does every trajectory converge to a rank-1 point?":
+vertices are exactly the fixed points whose full neighborhood converges
+to them, and every non-vertex point provably cannot attract one either.
+A 208-trial numerical sweep finds zero exceptions to full rank-1
+convergence; the residual *measure-zero* form of the claim is open
+(Q7/P8), structurally the same conjecture as the paper's own central open
+question (Q6) in a second domain. **Theorem B** (unconditional,
+obstruction): the limit need not be a CAZAC point — there exist
+non-CAZAC fixed points that no measurable selection rule can escape, so
+no *deterministic* convergence-to-CAZAC theorem is possible.
 
 ## Read this first
 

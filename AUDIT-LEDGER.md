@@ -204,3 +204,70 @@ determined to be false positives (the "dead self-citation" and "no git
 remote" claims) — recorded here rather than silently dropped, so a future
 re-audit doesn't re-litigate them from scratch. Recompiled clean,
 `pdflatex main.tex` twice, no errors, no undefined references, 14 pages.
+
+---
+
+## Round 3 — new research results integrated, self-consistency review, before re-audit
+
+Two research tasks were run in parallel against the sibling `cazac-algorithm`
+repo (not this one), plus an abstract rewrite here. Before re-launching the
+full audit, I did a careful line-by-line re-read of the entire `main.tex`
+(not just diffs) specifically looking for staleness introduced by this
+session's many incremental edits — the failure mode the user flagged.
+
+### New research results, independently verified before integration
+
+- **Q7 (elliptope rank-1 conjecture)**: a research agent found that FKP21's
+  own Theorem 20 (already cited in this paper, but never pointed at Q7)
+  proves the pointwise vertex/non-vertex attractive dichotomy directly. I
+  independently re-verified this myself against the primary arXiv text
+  (Theorem 20, Proposition 19, Definitions 6-7, quoted and checked) before
+  integrating it. **Integrated**: new Remark (`rem:fkp-thm20`) after
+  Theorem~ell, Q7's open-problem entry rewritten to the narrower residual
+  (measure-zero refinement, not the whole conjecture), Prop.~ell4 extended
+  with a new 208-trial numerical sweep (`experiments/verify_elliptope_rank_sweep.py`,
+  companion repo), closing ledger updated. Also propagated to `README.md`,
+  `theorems/convergence.md`, `STATUS.md`, `problems/open-questions.md`
+  (renamed there to P8) for four-way consistency.
+- **Björck determinant-nonvanishing lemma**: a research agent produced a
+  genuinely sharper characterization (an exact closed form, a proved
+  sub-lemma for $p\equiv1\pmod4$, and an explanation of the $p=71$
+  near-degeneracy as a Gauss-sum phase-collision) but did **not** close the
+  gap. **Not integrated into `main.tex`** — the paper's existing "open,
+  reduced to one unproved lemma" tier is still accurate, and the sharper
+  characterization doesn't change any conclusion; it's recorded only in the
+  companion repo (`theory/06-zc-regularity.md` §N7.8) to avoid adding
+  complexity to the paper without a corresponding change in what's provable.
+
+### Self-consistency bugs found and fixed (this is what the user asked to check)
+
+Three real staleness/consistency bugs, found only by re-reading the whole
+document rather than trusting the diffs:
+
+1. **Theorem~ell's own statement was stale** relative to its own immediately-following
+   remark: it still said "verified numerically (Prop.~ell4, $n=5$, four
+   starts)" and "[open, Conjecture]" with no qualification, after the Q7
+   integration above had already added a remark two paragraphs later saying
+   part of that "open" claim is actually proved by citation, and Prop.~ell4
+   itself had already been extended to 208 trials. Fixed: Theorem~ell's
+   statement now names the FKP20 dichotomy explicitly and says "the residual
+   measure-zero form" is open, matching the rest of the document.
+2. **A real section-number bug**: the closing ledger cited "Section~6" for
+   the Open Problems section, which is actually Section~7 (Setup, GPM,
+   Thm A, Thm B, Thm C, Thm D, Open problems, Verification = 8 sections in
+   order). This was a hardcoded number, not a `\ref` — exactly the kind of
+   thing that silently drifts as sections get added/reordered. Fixed by
+   both correcting the number and adding a `\label{sec:open}` +
+   `\ref{sec:open}` so it can't drift silently again.
+3. **A hardcoded `(Prop.~2)` reference** (in Theorem B(a)'s proof) that
+   should have been `\ref{prop:2}` like every other cross-reference in the
+   document — same class of bug as #2, same fix (converted to `\ref`).
+
+None of these three affected any mathematical conclusion — all three were
+exposition/consistency bugs, caught by systematic re-reading rather than
+by trusting that prior incremental edits had been applied correctly
+everywhere they needed to be. Recompiled clean after each fix,
+`pdflatex main.tex` twice, no errors, no undefined references, 15 pages.
+
+A full fresh 6-axis adversarial audit + 4-axis blind score (round 4) is
+launched next, cold and in parallel, against this corrected state.
