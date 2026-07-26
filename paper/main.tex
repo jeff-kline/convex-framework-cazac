@@ -273,6 +273,27 @@ exactly where Theorem B enters. Selection-independence, and the fact that
 the presolve is finitely many extra solves, mean the conclusion applies
 verbatim to any concrete implementation of $(\star)$.
 
+\begin{remark}[Novelty check against existing CAZAC-construction
+algorithms]
+The closest prior iterative CAZAC-construction method is IPUC (Iterative
+Projection onto Unit Circle) \cite{Amis25}: alternate projecting onto the
+unit-modulus constraint in time and in frequency, from a random seed.
+IPUC's own authors report, at length $n=50$, $8$ of $20$ trajectories
+with discrepancy frozen above $10^{-3}$ after $10^5$ iterations, and
+state plainly that ``the analysis of this iterative function is beyond
+the scope of this paper''; their practical remedy is to restart from a
+new random seed rather than continue iterating. Theorem~A gives what
+IPUC's own presentation explicitly does not attempt: an unconditional
+proof that (a different, convex-relaxation-based) iteration converges,
+from every initialization, to a single fixed point, with finite total
+path length. The two algorithms are not the same iteration --- IPUC
+projects directly onto the nonconvex unimodular constraint in both
+domains, while $(\star)$ relaxes to the convex body $C_\tau$ --- so this
+is not a convergence proof for IPUC itself, but it is, as far as we have
+found, the first provable convergence guarantee for an iterative
+CAZAC-construction method in this literature.
+\end{remark}
+
 \subsection{A second worked example: the elliptope}\label{sec:elliptope}
 
 The proof of Theorem~\ref{thm:A} uses nothing about $C_\tau$ beyond
@@ -936,9 +957,10 @@ shape used by Theorem~D, with trivial reindexing.
 
 \begin{proposition}[Obstruction to this specific route --- not a general
 impossibility result]
-Cubic and higher-degree phase (``algebraic chirp'') sequences do not have
-Theorem~D's closure property, for the same reason completing the square
-is special to degree $2$: the addition law
+For cubic and higher-degree phase (``algebraic chirp'') sequences,
+Theorem~D's specific closure mechanism --- completing the phase by a
+shift, the way Step~1 completes the square --- fails, for the same
+reason completing the square is special to degree $2$: the addition law
 $(m+s)^d=m^d+dsm^{d-1}+\binom d2s^2m^{d-2}+\dots+s^d$ has a mixing term
 $dsm^{d-1}$ of degree $d-1$ in $m$, which is linear in $m$ (absorbable into
 a pure reindexing of the phase, exactly as Step~1 does) only when $d=2$;
@@ -1115,9 +1137,10 @@ in {\tt experiments/verify\_bjorck\_regularity.py}).
 claim at Bj\"orck points is therefore still open, not proved}, despite
 this genuine partial progress: what is established is a full proof
 restricted to the symmetry-invariant subspace, an unconditional proof
-that one necessary condition for the remaining determinant to vanish is
-never met, and strong (but non-uniform) numerical evidence, not a proof,
-for the complementary directions as a whole.
+ruling out one route (both twisted periods vanishing at once) by which
+the remaining determinant could fail, and strong (but non-uniform)
+numerical evidence, not a proof, for the complementary directions as a
+whole.
 \end{remark}
 
 \section{Open problems}\label{sec:open}
@@ -1148,8 +1171,9 @@ convergence near $\CAZ(n,N)$: settled by Theorem~C at regular points, and
 Theorem~D now makes regularity unconditional at Zadoff--Chu points of
 either parity for squarefree $n$. Remaining: (R) at non-Zadoff--Chu CAZAC
 points is open beyond the Bj\"orck partial result above; $n$-uniformity of
-the true sharp-growth constant is conjectural (proved bounds scale like
-$c_N/n$, sampled ratios show no decay). This remaining gap is not a new
+the true sharp-growth constant is conjectural (the proved bound scales
+like $c_N/n$; whether the true constant does too is open and not backed
+here by a specific numerical check). This remaining gap is not a new
 question: it is the natural generalization of Bj\"orck and Saffari's own
 still-open finiteness conjecture (\S\ref{sec:zc}, remark after
 Corollary~\ref{cor:D2}) --- settled only at prime $n$, by Haagerup \cite{Haagerup08}.
@@ -1270,8 +1294,11 @@ Lemma~\ref{lem:bjequiv}, Theorem~\ref{thm:E0} ($K\cap T=\operatorname{span}\{\ma
 directions: $\rho_R(k),\rho_N(k)\ne0$ for every prime and every nontrivial
 $k$ is \emph{Unconditional} (proved, an elementary cyclotomic-field
 argument, not merely checked --- \S\ref{sec:zc}, Björck subsection), but
-this is only a necessary condition for the full isotypic-block determinant
-to be nonzero, not a sufficient one. Full regularity (R) at Bj\"orck points:
+neither $\rho_R(k)=0$ nor $\rho_N(k)=0$ was ever a necessary or a
+sufficient condition for the full isotypic-block determinant to vanish
+on its own --- this rules out only the sub-case where both vanish at
+once, not the actual (separate, still-open) cross-term condition. Full
+regularity (R) at Bj\"orck points:
 \textbf{open}, reduced to one unproved determinant-nonvanishing lemma
 (specifically, a cross-term coincidence not addressed by the proved
 sub-result above), \emph{verified numerically only} at 44 primes,
@@ -1286,8 +1313,10 @@ answered'' to fully open conjectures, as stated there.
 from large language models (Claude, Anthropic) under the direction of
 Jeffery Kline, drawing on a longer working record of derivations kept in
 the companion repository \cite{CazacAlgorithmRepo}'s {\tt theory/}
-directory; every numerical claim above is backed by a named script in
-that repository's {\tt experiments/} directory. Every claim above carries
+directory; every numerical claim above is backed either by a named
+script in that repository's {\tt experiments/} directory or, where noted
+explicitly (Q6), by direct citation to a table in an earlier paper draft
+kept in that repository's {\tt docs/} directory. Every claim above carries
 the status tag most consistent with that record; none has been upgraded
 in the writing of this paper.
 
@@ -1326,6 +1355,10 @@ identifiability, and sensitivity}, Math. Program. \textbf{147} (2014),
 correlation properties}, IEEE Trans. Inform. Theory \textbf{18}(4) (1972),
 531--532.
 
+\bibitem{Amis25} K. Amis, E. Boutillon, E. Boutillon, \emph{CAZAC sequence
+generation of any length with iterative projection onto unit circle:
+principle and first results}, arXiv:2509.05097 (2025).
+
 \bibitem{Backelin89} J. Backelin, \emph{Square multiples $n$ give
 infinitely many cyclic $n$-roots}, Reports, Matematiska Institutionen
 \textbf{8}, Stockholms Universitet, 1989.
@@ -1354,7 +1387,9 @@ research repository holding the {\tt theory/} derivations, the dated
 {\tt verify\_elliptope\_convergence.py}, {\tt verify\_elliptope\_rank\_sweep.py},
 {\tt verify\_bjorck\_regularity.py}, {\tt verify\_bjorck\_isotypic.py},
 {\tt verify\_bjorck\_jacobi\_unification.py},
-{\tt verify\_bjorck\_crossterm\_gap.py}, {\tt verify\_popovic\_n4.py}) that
+{\tt verify\_bjorck\_crossterm\_gap.py}, {\tt verify\_popovic\_n4.py}), and
+a {\tt docs/} directory holding an earlier paper draft that backs one
+figure (Q6) by direct citation rather than a script; together these
 reproduce every numerical claim in this paper, 2026. \textbf{Not publicly
 hosted at time of writing} --- no location is asserted here because none
 can currently be given; a reader cannot yet independently fetch this
