@@ -7,9 +7,12 @@ parallel, each with its own per-claim findings table; this file is the
 merged, durable record — see `adversarial-audit` skill conventions
 (splitting by axis, forced verdict blocks, per-claim IDs).
 
-Graded object: working tree of `/Users/klinellc/Documents/convex-framework-cazac`,
-git HEAD `4a356c2` + uncommitted `main.tex`/`main.pdf` and supporting files
-(same commit as all scoring passes this session). All fixes below were
+Graded object, at the time this round started: this repository's working
+tree, git HEAD `4a356c2` + uncommitted `main.tex`/`main.pdf` and supporting
+files (same commit as all scoring passes that round). This file is a
+chronological log, not a live pointer — each "Round N" section below
+states the HEAD it graded; the current HEAD as of the most recent round
+is recorded at the end of this file. All fixes below were
 applied by the coordinator after independently validating each auditor's
 report against the artifact (re-reading source material, in one case
 re-deriving proofs from the sibling repo's `results/` directory) — no fix
@@ -95,7 +98,7 @@ cosmetic findings:
 No secrets, no email/phone leakage beyond the intended `\author{Jeffery Kline}`
 (matches the author's own house style), no stray off-topic files, clean PDF
 metadata. Two findings:
-- **Must-fix:** no `.gitignore` existed; `main.log` embeds the local username `klinellc` via TeX font-cache paths, one `git add -A` away from being committed. **Fixed** — added `.gitignore` covering `*.aux .log .out .toc .fls .fdb_latexmk .synctex.gz`.
+- **Must-fix:** no `.gitignore` existed; `main.log` embeds the local machine's username via TeX font-cache paths, one `git add -A` away from being committed. **Fixed** — added `.gitignore` covering `*.aux .log .out .toc .fls .fdb_latexmk .synctex.gz`.
 - Cosmetic: provenance paragraph's internal jargon (same finding as the abstract axis, independently) — **fixed**, same edit.
 
 ## Per-claim findings — README/front door (15/15 checked)
@@ -270,4 +273,116 @@ everywhere they needed to be. Recompiled clean after each fix,
 `pdflatex main.tex` twice, no errors, no undefined references, 15 pages.
 
 A full fresh 6-axis adversarial audit + 4-axis blind score (round 4) is
-launched next, cold and in parallel, against this corrected state.
+launched next, cold and in parallel, against this corrected state
+(committed as `621fd11`).
+
+## Round 4 — full fresh audit + score, cold and parallel, against `621fd11`
+
+Ten agents (six adversarial axes + a fresh blind 4-axis score), all cold,
+no memory of prior rounds. This round found genuinely new problems — all
+of them introduced by round 3's own edits (the FKP-Theorem-20 integration
+and the abstract rewrite), not new discoveries about the older material.
+The root cause, named plainly: round 3 wrote two claims into the paper
+based on a research agent's report (a numerical trial count, and a
+citation to a specific FKP21 section) without independently verifying
+either against a primary source before publishing them — exactly the
+verification gap this audit process exists to catch. Both are fixed below.
+
+### Axis verdicts
+
+| Axis | Verdict | Must-fix | Cosmetic |
+|---|---|---|---|
+| Mathematics/logic | MATERIAL_ISSUES | 4 | 3 |
+| Citations/attribution | FAIL | 1 | 2 |
+| Numerics/reproduction | FAIL (partial) | 1 | 0 |
+| Abstract/prose | 2 real defects found | 2 | 0 |
+| Privacy | MINOR_ISSUES | 0 | 1 |
+| README/front door | Staleness PASS, completeness FAIL (minor) | 2 | 0 |
+
+Fresh 4-axis score: Novelty 7/10 (stable), Depth 7/10 (down 1, cause fixed
+below), Reach 7/10 (stable), Evidence 4/10 (scored *before* the fixes
+below landed — the false numerical claim was the entire reason for the
+low score; expect this to recover once re-graded).
+
+### The two real errors, both independently verified by me before fixing
+
+1. **A fabricated-in-effect numerical claim.** Round 3 added "a further 68
+   trials perturbing away from a family of exact higher-rank fixed points
+   generalizing $I_n$ ... all escape to rank 1," making the headline
+   figure "208 trials" (repeated 4+ times across `main.tex`,
+   `theorems/convergence.md`, `STATUS.md`, `README.md`,
+   `problems/open-questions.md`). **This did not reproduce.** I ran
+   `experiments/verify_elliptope_rank_sweep.py` myself: Part 1 (the
+   140-trial sweep) is real and matches exactly; Part 2 runs only 40
+   trials (not 68), on a *different* construction (a generic rank-2
+   circular-configuration point, unrelated to set partitions), and the
+   script's own diagnostic explicitly states these constructed points are
+   **not fixed points** — directly contradicting what was written. Two
+   independent round-4 auditors (numerics, mathematics) caught this
+   independently. Traced the source: a companion-repo research agent's
+   report described this experiment, and it was written into the paper
+   without re-running the script first. **Fixed**: struck the false
+   claim everywhere (5 files), reverted to the verified 140-trial figure.
+2. **A citation misattribution.** The remark integrating FKP21's Theorem
+   20 claimed FKP21's "own §4.2 exhibits fixed points that are
+   individually neither attractive nor repelling yet jointly form an
+   attractive set" — implying FKP showed this *for the elliptope*. I
+   fetched FKP21's primary text again and confirmed: this phenomenon
+   appears exactly once in the paper, describing an unrelated
+   three-dimensional cone example in **§3** (Example 5), not the
+   elliptope-specific **§4.2**, which is pure algebraic enumeration and
+   never uses the words "attractive"/"repelling" at all. Further
+   precision gained from the citations auditor: FKP21's own escaping-curve
+   proof (Prop. 19) only produces *one* escaping point per neighborhood,
+   which is sufficient to show "not attractive" (their Def. 6) but not
+   sufficient to show "repelling" (Def. 7, which needs *every* nearby
+   point to escape) — so the correct, precisely-scoped statement is that
+   FKP's own machinery leaves open whether non-vertex points are repelling
+   outright or could be neither, by analogy by their own (unrelated) cone
+   example, not because they showed it for the elliptope. **Fixed**:
+   reworded in `main.tex` (two places: the remark, and Q7) and
+   `theorems/convergence.md` and `problems/open-questions.md`, with the
+   more precise Def.-6-vs-Def.-7 distinction now stated explicitly.
+
+### Other fixes from this round
+
+- Abstract said CAZAC systems are "exactly the maximal-norm points" on
+  $C_\tau$ generally; Prop. 2 only proves this at $\tau=1$. Fixed.
+- Abstract's Q7 sentence still said "four trajectories on $\mathcal E_5$"
+  as the evidence for rank-1 escape, stale relative to the 140-trial sweep
+  and the FKP Theorem 20 citation added in round 3's own edits to the body.
+  Fixed — abstract now states the FKP20 dichotomy and the 140-trial figure.
+- A hardcoded `(Sec.~2)` reference in Theorem A's proof was wrong (Section
+  2 never discusses critical points of $F$; the actual justification is
+  local to the proof, combined with Section 1's Fixed-point definition).
+  Fixed by writing out the equivalence chain explicitly instead of citing
+  a section number at all.
+- The closing ledger's Theorem D entry didn't carry forward its own
+  "Steps 2-3 are compressed" disclosure, unlike the Björck entry's
+  parallel treatment — an inconsistency in the ledger's own disclosure
+  standard (the Depth-axis finding). Fixed.
+- `AUDIT-LEDGER.md` itself: contained the literal local path and username
+  in plaintext (privacy finding); the "graded object" HEAD reference was
+  stale relative to later commits (README finding). Both fixed — path/
+  username scrubbed, and a chronological framing added so each round's
+  HEAD is self-contained rather than implying a single "current" pointer
+  that goes stale as soon as the next commit lands.
+- `README.md`'s Layout section didn't mention `AUDIT-LEDGER.md` (it exists
+  at repo root, mentioned only in "Read this first"). Fixed.
+- Cosmetic: `\S\ref{sec:elliptope}` was called "Section" though the label
+  is on a `\subsection`. Fixed to the parity-agnostic `\S`.
+
+Two citations-axis cosmetic items (FKP21 and DL12's bibitems omit
+volume/page numbers, unlike sibling entries) were investigated but
+**not** fixed: I attempted to independently confirm FKP21's exact
+published page range (a candidate "79(4):601-615" surfaced by a
+WebSearch) against a primary source and could not get a reliable direct
+confirmation within this session. Per this repo's own discipline against
+fabricating precise-looking but unverified citation details, the bibitems
+are left incomplete-but-accurate rather than complete-but-guessed.
+
+Recompiled clean after every fix, `pdflatex main.tex` twice, no errors,
+no undefined references, 15 pages throughout.
+
+**Current HEAD as of this line: `621fd11`.** (Will be updated again once
+this round's fixes are committed.)

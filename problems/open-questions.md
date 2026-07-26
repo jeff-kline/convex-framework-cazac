@@ -180,36 +180,43 @@ closed: independently re-verified against the primary arXiv text
 > For a.e. (e.g. Gaussian-perturbed) initialization on $\mathcal E_n$, the
 > iteration converges to a rank-1 point — i.e. the set of initializations
 > converging to a non-vertex fixed point (whether individually repelling,
-> per FKP21 Prop. 19, or part of a collectively-attractive but
-> individually-neither set, as FKP21 §4.2 shows can occur) has Gaussian
-> measure zero.
+> or part of a collectively-attractive but individually-neither set, the
+> way FKP21's unrelated cone example §3 Example 5 shows can occur in
+> general) has Gaussian measure zero.
 
-FKP21's own §4.2 is the reason this doesn't collapse to "already proved":
-they exhibit fixed points that are individually neither attractive nor
-repelling (Defs. 6/7 both fail) yet jointly form an "attractive set" that
-a positive-measure neighborhood can converge into. Theorem 20's dichotomy
-rules out any *individual* non-vertex point attracting a full ball, but
-does not itself rule out this collective mechanism capturing positive
-measure. This residual gap is structurally the same conjecture as P1
+This doesn't collapse to "already proved" for a precise reason: FKP21's
+Proposition 19 produces, in every neighborhood of a non-vertex fixed
+point, *at least one* escaping nearby point — exactly what "not
+attractive" (their Def. 6) requires — but not that *every* nearby point
+escapes, which "repelling" (Def. 7) additionally requires. Whether
+non-vertex elliptope fixed points are repelling outright, or could
+instead be individually-neither-yet-collectively-attracting (as FKP21
+shows can happen for their unrelated three-dimensional cone example, §3
+Example 5 — not demonstrated for the elliptope itself), is not settled by
+Theorem 20 either way. This residual gap is structurally the same
+conjecture as P1
 ("attracting fixed points = extreme points, up to measure zero" is the
 mechanism P1 needs) in a second, structurally unrelated domain. If the
 measure is zero, it is independent evidence for P1's general shape; if
 not, the CAZAC case's extra structure (the dimension count in P3/Theorem
 D) may be doing more work than currently credited.
 
-**Numerical evidence (2026-07-26): 208 trials, zero exceptions, still not
-a proof.** `experiments/verify_elliptope_rank_sweep.py`: 140 random/
-Gaussian-perturbed trials across $n\in\{3,4,5,8,10,15,20\}$ all converge to
-rank 1. A further 68 trials perturb away from a newly-identified family of
-*exact* higher-rank fixed points generalizing $I_n$ — for any partition of
-$\{1,\dots,n\}$ into $m$ blocks, $X^*_\pi=\sum_ju_ju_j^\top$ ($u_j$ = block
-indicator) is an exact rank-$m$ fixed point ($I_n$ is the $m=n$ case) — and
-all 68 escape to rank 1 as well. No counterexample found at any tested
-$n$; consistent with, not a proof of, the measure-zero reading.
+**Numerical evidence (2026-07-26): 140 trials, zero exceptions, still not
+a proof.** `experiments/verify_elliptope_rank_sweep.py`, Part 1: 140
+random/Gaussian-perturbed trials across $n\in\{3,4,5,8,10,15,20\}$ all
+converge to rank 1. No counterexample found at any tested $n$; consistent
+with, not a proof of, the measure-zero reading. (The same script's Part 2
+probes a targeted rank-2 construction, but its own diagnostic confirms
+that construction is *not* a fixed point of the iteration, so it does not
+bear on this question as currently written — a genuine test of
+perturbations away from a non-trivial higher-rank fixed point, such as
+the block-partition family $X^*_\pi=\sum_ju_ju_j^\top$ generalizing $I_n$,
+remains a natural next step, not yet carried out by a verified script.)
 
 **Attack plan (updated):** the sweep called for above is done; the
 remaining route is a basin/measure argument, using Theorem 20's pointwise
 dichotomy as the starting classification (only non-vertex points are
 candidates for a positive-measure basin at all) and attempting to bound
-the measure of FKP21 §4.2-style "collectively attractive" sets directly,
-analogous to whatever mechanism eventually resolves P1.
+the measure of any FKP21-cone-example-style "collectively attractive" set
+that might occur at a non-vertex elliptope point, analogous to whatever
+mechanism eventually resolves P1.

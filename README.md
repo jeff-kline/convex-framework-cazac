@@ -36,7 +36,7 @@ example. FKP's own Theorem 20 in turn settles, by direct citation, the
 *pointwise* half of "does every trajectory converge to a rank-1 point?":
 vertices are exactly the fixed points whose full neighborhood converges
 to them, and every non-vertex point provably cannot attract one either.
-A 208-trial numerical sweep finds zero exceptions to full rank-1
+A 140-trial numerical sweep finds zero exceptions to full rank-1
 convergence; the residual *measure-zero* form of the claim is open
 (Q7/P8), structurally the same conjecture as the paper's own central open
 question (Q6) in a second domain. **Theorem B** (unconditional,
@@ -121,6 +121,9 @@ above. See `code/README.md` for both scripts' parameters.)
 - `code/` — reference implementations of the algorithm the theorems
   analyze, plus a projection-based comparison baseline (see
   `code/README.md`).
+- `AUDIT-LEDGER.md` — the record of adversarial audits run against this
+  repo (per-claim findings across mathematics, citations, numerics,
+  prose, privacy, and this file), with fixes applied and cross-referenced.
 
 ## How to cite
 

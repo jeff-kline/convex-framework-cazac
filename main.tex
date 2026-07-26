@@ -40,8 +40,8 @@ constant-modulus condition in time and a flat-spectrum condition in
 frequency simultaneously, a nonconvex intersection of two tori. Replacing
 the equality constraints with convex inequalities (bounded amplitude,
 bounded spectral energy) yields a compact convex semialgebraic body
-$C_\tau$ on which CAZAC systems are exactly the maximal-norm points; the
-natural algorithm is to iterate a second-order cone program (SOCP) whose
+$C_\tau$; at $\tau=1$, CAZAC systems are exactly its maximal-norm points.
+The natural algorithm is to iterate a second-order cone program (SOCP) whose
 objective direction resets to the previous optimizer. This paper's
 central technical content is Theorem D: a \emph{regularity} hypothesis
 (R), needed to get a sharp local convergence rate near a CAZAC point, is
@@ -82,9 +82,13 @@ the elliptope $\El=\{X\succeq0: X_{ii}=1\}$ --- Felzenszwalb--Klivans--Paul's
 (2021) own worked case, where their finiteness-dependent
 single-point-convergence mechanism does not apply and their own example
 stalls at set-level convergence; we prove single-point convergence there
-unconditionally and verify numerically (four trajectories on $\mathcal
-E_5$) that generic trajectories escape the fixed-point continuum onto a
-rank-1 point, a phenomenon we leave as Conjecture (Q7). Theorem B
+unconditionally. Which fixed point is reached is settled only in part:
+Felzenszwalb--Klivans--Paul's own Theorem~20 already proves, by direct
+citation and no new argument here, that rank-1 points are exactly the
+fixed points whose full neighborhood converges to them; a $140$-trial
+numerical sweep finds every trajectory converging to rank~1 with no
+exceptions; whether the complementary set of initializations has
+Gaussian measure zero remains open (Q7). Theorem B
 (unconditional, obstruction): non-CAZAC fixed points exist and some are
 exposed (unique maximizers of their own functional), so no deterministic
 selection rule can guarantee convergence to the CAZAC set; the correct
@@ -215,7 +219,7 @@ by Cauchy--Schwarz and Prop.~\ref{prop:2}, with equality at $y=x^*$.
 The same Cauchy--Schwarz argument shows any maximal-norm point of \emph{any}
 compact convex set is a fixed point of iterated linear optimization;
 nothing CAZAC-specific is used beyond Prop.~\ref{prop:2} itself --- a fact
-that drives the elliptope corollary in Section~\ref{sec:elliptope}.
+that drives the elliptope corollary in \S\ref{sec:elliptope}.
 
 \section{Theorem A --- global convergence}
 
@@ -252,9 +256,11 @@ $F$ is continuous there.
 and $F$ is polynomial plus the indicator of a semialgebraic set, hence
 semialgebraic, hence KL \cite{BDLS07}.
 \end{itemize}
-Critical points of $F$ are exactly the fixed points of $(\star)$
-(Sec.~2). The theorem then gives finite length and convergence to a single
-critical point.
+Critical points of $F$ are exactly the fixed points of $(\star)$: $0\in\partial F(x^*)$
+iff $x^*\in N_{C_\tau}(x^*)$ (the sum rule above) iff $x^*$ maximizes
+$\langle x^*,\cdot\rangle_\R$ over $C_\tau$, which is the Fixed-point
+Definition of Section~1. The theorem then gives finite length and
+convergence to a single critical point.
 \end{proof}
 
 The theorem is silent on \emph{which} fixed point the limit is; that is
@@ -343,12 +349,9 @@ returns $I_5$ again, a valid fixed point, not a counterexample. Script:
 repository \cite{CazacAlgorithmRepo}. A broader sweep (same repository,
 {\tt experiments/verify\_elliptope\_rank\_sweep.py}) of $140$ random and
 Gaussian-perturbed trials across $n\in\{3,4,5,8,10,15,20\}$ finds
-\textbf{every trajectory converges to rank $1$}, no exceptions; a further
-$68$ trials perturbing away from a family of exact higher-rank fixed
-points generalizing $I_n$ (one exact fixed point per set partition of
-$\{1,\dots,n\}$, of rank equal to the number of blocks) also all escape to
-rank $1$. This remains \emph{verified numerically only}, at these tested
-$n$ and trial counts, not a proof for every $n$ or every trajectory.
+\textbf{every trajectory converges to rank $1$}, no exceptions. This
+remains \emph{verified numerically only}, at these tested $n$ and trial
+counts, not a proof for every $n$ or every trajectory.
 \end{proposition}
 
 \begin{theorem}[Elliptope convergence --- tiers as stated]\label{thm:ell}
@@ -362,7 +365,7 @@ points) are exactly the fixed points whose full neighborhood converges to
 them, and no other fixed point has this property, \textbf{by direct
 citation} to \cite{FKP21}'s own Theorem~20 (Remark~\ref{rem:fkp-thm20}
 below). That generic nearby trajectories escape the continuum and settle
-specifically onto a rank-$1$ point is \textbf{verified numerically} (208
+specifically onto a rank-$1$ point is \textbf{verified numerically} (140
 trials, Prop.~\ref{prop:ell4}), not established for every $n$ or every
 trajectory. Whether the measure of initializations converging elsewhere
 is exactly zero is \textbf{open} (Conjecture, filed as Q7 below).
@@ -408,13 +411,19 @@ what either paper's abstract convergence machinery gives alone: it says
 which fixed points \emph{can} be limits of nearby trajectories, complementing
 (not overlapping) Theorem~\ref{thm:ell}'s unconditional guarantee that
 \emph{some} single limit exists. It falls short of Q7 as literally stated
-only in one respect: ``attractive'' here is a pointwise notion (a full
-$\varepsilon$-ball converges), not a measure-theoretic one, and
-\cite{FKP21}'s own \S4.2 exhibits fixed points that are individually
-neither attractive nor repelling yet jointly form an attractive
-\emph{set} --- so Theorem~20 does not by itself rule out a positive-measure
-set of initializations converging to a non-vertex point through such a
-collective mechanism. Q7's residual open content is exactly this
+for a precise reason: \cite{FKP21}'s Prop.~19 produces, in every
+neighborhood of a non-vertex fixed point, \emph{at least one} nearby point
+that escapes it --- exactly what ``not attractive'' (their Def.~6)
+requires --- but this does not show \emph{every} nearby point escapes,
+which is what ``repelling'' (their Def.~7) would additionally require.
+Whether non-vertex elliptope fixed points are repelling outright, or can
+be neither attractive nor repelling (as \cite{FKP21}'s own \S3, Example~5,
+shows can happen in general iterated-linear-optimization systems, for an
+unrelated three-dimensional cone, not the elliptope itself) is not settled
+by Theorem~20 either way. If some non-vertex elliptope point is neither,
+Theorem~20 alone would not rule out a positive-measure set of
+initializations converging to it through a collective, not individually
+attractive, mechanism. Q7's residual open content is exactly this
 measure-zero refinement, structurally the same gap as Q6.
 \end{remark}
 
@@ -942,17 +951,19 @@ points are exactly the fixed points whose full neighborhood converges to
 them, and every other fixed point admits an explicit escaping direction.
 What remains open is the \emph{measure-theoretic} refinement: does the
 set of initializations whose trajectory converges to a non-vertex fixed
-point have Gaussian measure zero (equivalently, does the ``attractive
-set'' phenomenon \cite{FKP21} documents at non-vertex points --- a set of
-individually-neither-attractive-nor-repelling points that is collectively
-attracting --- ever capture a positive-measure basin)? This residual
+point have Gaussian measure zero? \cite{FKP21}'s own escaping-curve
+argument (Prop.~19, Remark~\ref{rem:fkp-thm20}) only produces one
+escaping point per neighborhood, not universal escape, so it leaves open
+whether non-vertex elliptope points are repelling outright or could
+instead be collectively (not individually) attracting, the way
+\cite{FKP21}'s unrelated cone example (\S3, Example~5) shows can happen
+in general for this style of iteration. This residual
 question is structurally the same conjecture as Q6 in a second, unrelated
 domain: if the measure is zero, it is independent evidence for Q6's
 general shape; if not, CAZAC's extra structure (the dimension count of
 Corollary~\ref{cor:D2}) may be doing more work than currently credited.
-The numerical evidence (Prop.~\ref{prop:ell4}, $208$ trials total across
-$n\in\{3,\dots,20\}$, including perturbations away from genuine
-higher-rank fixed points) shows zero exceptions, consistent with --- but
+The numerical evidence (Prop.~\ref{prop:ell4}, $140$ trials across
+$n\in\{3,\dots,20\}$) shows zero exceptions, consistent with --- but
 not a proof of --- the measure-zero reading. \emph{Attack plan:} a
 basin/measure argument analogous to Q6's, using the pointwise dichotomy
 of Theorem~20 as the starting classification of which points can even be
@@ -988,7 +999,7 @@ dichotomy (Remark~\ref{rem:fkp-thm20}): \emph{Unconditional}, by direct
 citation to \cite{FKP21} Theorem~20 (not a new argument here).
 \emph{Separately}, that generic trajectories escape onto a rank-1 point
 specifically (Prop.~\ref{prop:ell4}): \emph{Verified numerically only}
-($208$ trials, $n\in\{3,\dots,20\}$) --- this is not proved. The residual,
+($140$ trials, $n\in\{3,\dots,20\}$) --- this is not proved. The residual,
 measure-zero form of universal rank-1 convergence (Q7): \emph{Conjecture}.
 \item Theorem B (obstruction, exposed non-CAZAC fixed point):
 \emph{Unconditional}.
@@ -997,7 +1008,13 @@ proof of part (c): \emph{Proved conditional on hypothesis (R)}; all three
 parts carry the same status tag.
 \item Theorem D (regularity of Zadoff--Chu points, $\dim K=d_{\max}$),
 \textbf{both odd and even $n$}: \emph{Unconditional}, a complete proof for
-all $n$ regardless of parity.
+all $n$ regardless of parity, though Steps 2--3 of the written proof are a
+compressed Gauss-sum computation rather than a symbol-by-symbol expansion
+(see the ``Scope of the written derivation'' remark after the proof) ---
+independently corroborated by hand at $n=4,9$ and numerically at all 64
+tested configurations, but a reader wanting the full symbolic derivation
+must reconstruct Steps 2--3 by analogy with Step 1, as that remark
+discloses.
 Corollaries~\ref{cor:D1}--\ref{cor:D2}: \emph{Unconditional} (Corollary~1
 conditionally activates Theorem~C, but is itself unconditional as a
 dimension/regularity statement).

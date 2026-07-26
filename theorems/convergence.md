@@ -240,11 +240,9 @@ continuum entirely and converge to a rank-1 correlation matrix $vv^\top$
 $X^0=I_5$ is the edge case where the solver's own tie-break returns $I_5$
 again — a valid fixed point, not a counterexample. A broader sweep
 (`experiments/verify_elliptope_rank_sweep.py`, same repository) of 140
-random/Gaussian-perturbed trials across $n\in\{3,4,5,8,10,15,20\}$, plus 68
-further trials perturbing away from a family of exact higher-rank fixed
-points generalizing $I_n$ (one per set-partition of $\{1,\dots,n\}$),
-finds **every trajectory converges to rank 1**, no exceptions — still
-verified numerically only, not a proof.
+random/Gaussian-perturbed trials across $n\in\{3,4,5,8,10,15,20\}$ finds
+**every trajectory converges to rank 1**, no exceptions — still verified
+numerically only, not a proof.
 
 **[Proved by direct citation]** FKP's own Theorem 20 settles the
 *pointwise* half of the rank-1 question without any new argument here:
@@ -254,11 +252,16 @@ non-vertex fixed point admits an explicit escaping curve (their
 Proposition 19), so it cannot attract a full neighborhood either. This
 complements, rather than overlaps, the single-point-convergence guarantee
 below (which fixed point is reached vs. that some single fixed point is
-reached). It falls short of settling Q7 as stated only because
-"attractive" there is pointwise, not measure-theoretic — FKP's own §4.2
-shows individually-neither-attractive-nor-repelling points can jointly
-form an attractive *set*, so a positive-measure basin for a non-vertex
-point is not ruled out by Theorem 20 alone.
+reached). It falls short of settling Q7 as stated for a precise reason:
+FKP's Proposition 19 produces, in every neighborhood of a non-vertex
+fixed point, *at least one* escaping nearby point — exactly what
+"not attractive" requires — but this does not show *every* nearby point
+escapes, which "repelling" would additionally require. Whether non-vertex
+elliptope points are repelling outright, or could instead be collectively
+(not individually) attracting — the way FKP's own unrelated cone example
+(§3, Example 5) shows can happen in general for this style of iteration —
+is not settled by Theorem 20 either way, so a positive-measure basin for
+a non-vertex point is not ruled out.
 
 **Conclusion.** Because $\mathcal E_n$ is compact, convex, and
 semialgebraic, Theorem A's general form applies to it directly: the
@@ -266,7 +269,7 @@ iteration converges to a single fixed point for every initialization
 **despite the fixed-point set being an infinite continuum** — **Proved**,
 unconditional. That generic nearby trajectories converge to a single point
 rather than merely having a connected limit set, and that they tend to
-escape onto a rank-1 extreme point, is **verified numerically only** (208
+escape onto a rank-1 extreme point, is **verified numerically only** (140
 trials total, $n\in\{3,\dots,20\}$) — not a general proof that every
 trajectory on $\mathcal E_n$ converges to a rank-1 point. The pointwise
 attractive/repelling dichotomy is **proved** by direct citation (above).
@@ -478,7 +481,7 @@ local curvature.
 | **Theorem A** — full-sequence convergence to a single fixed point | **Proved, unconditional** |
 | Elliptope corollary — semialgebraicity, H1–H3 transfer, single-point convergence despite a fixed-point continuum | **Proved, unconditional** |
 | Elliptope corollary — pointwise vertex/non-vertex attractive dichotomy | **Proved**, by direct citation to FKP21 Theorem 20 (no new argument) |
-| Elliptope corollary — generic trajectories escape to a rank-1 point | **Numerically verified only** (208 trials, $n\in\{3,\dots,20\}$) |
+| Elliptope corollary — generic trajectories escape to a rank-1 point | **Numerically verified only** (140 trials, $n\in\{3,\dots,20\}$) |
 | Elliptope corollary — every trajectory converges to a rank-1 point, measure-zero form (Q7) | Conjecture |
 | **Theorem B** — non-CAZAC fixed points exist and trap every selection rule | **Proved, unconditional** |
 | **Theorem C** — sharp growth / KL-exponent-0 / finite exact termination at regular CAZAC limits, including the full proof of part (c) | **Proved under regularity (R)** |
