@@ -51,8 +51,9 @@ chirp is again a chirp, collapsing a rank computation to counting
 solutions of $t^2\equiv0\bmod n$ --- so (R) holds iff $n$ is squarefree.
 The mechanism is a reusable schema: a different closure fact (self-duality
 of the Legendre symbol) extends it to a partial regularity result at
-Bj\"orck's Legendre-symbol-phase construction, reduced to one unproved,
-numerically-confirmed (44 primes) determinant lemma; the same specific
+Bj\"orck's Legendre-symbol-phase construction, proved here only on a
+symmetry-invariant subspace (full regularity is available in the
+literature \cite{Benoist24}, not proved in this paper); the same specific
 mechanism, by contrast, provably cannot reach cubic or higher-degree
 phase (this does not rule out some other route). This underwrites Theorem
 C (conditional on (R); unconditional when Theorem A's limit lies on a
@@ -1133,14 +1134,19 @@ float64 and $60$-digit precision, not by orders of magnitude). Script:
 separately-run set of $14$ primes, all contained in this same tested
 range, is used for the affine-closure check of Lemma~\ref{lem:bjaffine},
 in {\tt experiments/verify\_bjorck\_regularity.py}).
-\textbf{The overall regularity
-claim at Bj\"orck points is therefore still open, not proved}, despite
-this genuine partial progress: what is established is a full proof
-restricted to the symmetry-invariant subspace, an unconditional proof
-ruling out one route (both twisted periods vanishing at once) by which
-the remaining determinant could fail, and strong (but non-uniform)
-numerical evidence, not a proof, for the complementary directions as a
-whole.
+\textbf{The overall regularity claim at Bj\"orck points is not proved in
+this paper}: what is established here is a full proof restricted to the
+symmetry-invariant subspace, an unconditional proof ruling out one route
+(both twisted periods vanishing at once) by which the remaining
+determinant could fail, and strong (but non-uniform) numerical evidence,
+not a proof, for the complementary directions as a whole. Full regularity
+--- for every prime and both residue classes --- is proved in the
+literature by an independent argument of the same general character
+(decimation-group isotypic decomposition, a Gauss-sum ratio shown never
+to be a root of unity via Stickelberger's theorem): Benoist
+\cite{Benoist24}, Prop.~A.3. This paper's own contribution regarding
+Bj\"orck's construction is the connection to hypothesis (R) and
+Theorem~C's convergence rate, not the underlying regularity fact itself.
 \end{remark}
 
 \section{Open problems}\label{sec:open}
@@ -1170,7 +1176,9 @@ is about basin measure, not existence, and remains open.
 convergence near $\CAZ(n,N)$: settled by Theorem~C at regular points, and
 Theorem~D now makes regularity unconditional at Zadoff--Chu points of
 either parity for squarefree $n$. Remaining: (R) at non-Zadoff--Chu CAZAC
-points is open beyond the Bj\"orck partial result above; $n$-uniformity of
+points in general is open in this paper (Bj\"orck's own construction is
+resolved in the literature, \cite{Benoist24}, though not by this paper's
+methods); $n$-uniformity of
 the true sharp-growth constant is conjectural (the proved bound scales
 like $c_N/n$; whether the true constant does too is open and not backed
 here by a specific numerical check). This remaining gap is not a new
@@ -1297,13 +1305,11 @@ argument, not merely checked --- \S\ref{sec:zc}, Björck subsection), but
 neither $\rho_R(k)=0$ nor $\rho_N(k)=0$ was ever a necessary or a
 sufficient condition for the full isotypic-block determinant to vanish
 on its own --- this rules out only the sub-case where both vanish at
-once, not the actual (separate, still-open) cross-term condition. Full
-regularity (R) at Bj\"orck points:
-\textbf{open}, reduced to one unproved determinant-nonvanishing lemma
-(specifically, a cross-term coincidence not addressed by the proved
-sub-result above), \emph{verified numerically only} at 44 primes,
-$p\in[5,200)$. Do not read this as ``proved'' --- the reduction is real
-but incomplete.
+once, not the actual cross-term condition, which this paper's own methods
+do not resolve (verified numerically only, at 44 primes, $p\in[5,200)$).
+Full regularity (R) at Bj\"orck points is \textbf{not proved in this
+paper}; it is available in the literature \cite{Benoist24}, via a similar
+Gauss-sum technique, for every prime and both residue classes.
 \item Q1--Q7: precise open-problem statements as in Section~\ref{sec:open}; Q1 is
 settled (restated as a theorem above), the rest range from ``partially
 answered'' to fully open conjectures, as stated there.
@@ -1376,6 +1382,9 @@ Series C \textbf{315}, Kluwer, 1990, 131--140.
 finite unimodular sequences with unimodular Fourier transforms. Circulant
 Hadamard matrices with complex entries}, C. R. Acad. Sci. Paris S\'er. I
 \textbf{320}(3) (1995), 319--324.
+
+\bibitem{Benoist24} Y. Benoist, \emph{Fourier transform in cyclic groups},
+arXiv:2406.11529 (2024).
 
 \bibitem{Haagerup08} U. Haagerup, \emph{Cyclic $p$-roots of prime lengths
 $p$ and related complex Hadamard matrices}, arXiv:0803.2629 (2008).

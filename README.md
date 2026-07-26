@@ -24,9 +24,11 @@ unconditionally at Zadoff–Chu points for *all* lengths $n$ (both parities —
 even $n$ was not previously closed), via a new mechanism: the DFT of a
 Zadoff–Chu chirp is again a chirp, collapsing a dependency-rank computation
 to counting solutions of a congruence. The same mechanism extends to a
-partial result at Björck's Legendre-symbol-phase construction, reducing that case
-to one unproved, numerically-confirmed lemma; that same specific mechanism
-(not every conceivable route) provably cannot reach cubic or higher phase.
+partial result at Björck's Legendre-symbol-phase construction, proved here
+only on a symmetry-invariant subspace (full regularity there is proved
+elsewhere in the literature, not in this paper — see `paper/main.tex`);
+that same specific mechanism (not every conceivable route) provably
+cannot reach cubic or higher phase.
 This underwrites **Theorem C** (proved conditional on the hypothesis;
 unconditional when Theorem A's limit lies on a Zadoff–Chu tuple's symmetry
 orbit at squarefree $n$): near a regular CAZAC point the iteration lands on
