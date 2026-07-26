@@ -322,11 +322,14 @@ Cauchy--Schwarz, and the normal-cone characterization of the argmax, all of
 which hold verbatim on $\El\subset\R^{\binom{n+1}2}$.
 \end{proof}
 
-\begin{proposition}[Proved]\label{prop:ell3}
-The fixed-point set $\mathcal F=\{X\in\El:X\in\arg\max_{Y\in\El}\langle
+\begin{proposition}[Proved, $n>3$]\label{prop:ell3}
+For $n>3$, the fixed-point set $\mathcal F=\{X\in\El:X\in\arg\max_{Y\in\El}\langle
 X,Y\rangle\}$ of the elliptope iteration is infinite, hence (being
 semialgebraic) a genuine positive-dimensional continuum, not a singleton
-or a finite set.
+or a finite set. (This restriction is load-bearing, not cosmetic: at
+$n=2$, $\El=\{[\begin{smallmatrix}1&r\\r&1\end{smallmatrix}]:|r|\le1\}$ and
+one checks directly that $\mathcal F=\{r\in\{-1,0,1\}\}$ is finite, so the
+statement is false without $n>3$.)
 \end{proposition}
 \begin{proof}
 $\mathcal F$ is semialgebraic: $\El$ is semialgebraic
@@ -338,8 +341,10 @@ semialgebraic subset of $\R^{\binom{n+1}2}$ that is infinite cannot be
 $0$-dimensional (an o-minimal set with finitely many points in every cell
 is finite), so it suffices to exhibit infinitely many fixed points.
 Felzenszwalb, Klivans, and Paul \cite{FKP21} state exactly this: $\mathcal
-L_n$ (their name for $\El$) has infinitely many fixed points for $n>3$.
-Concretely, $X^*=I_n$ is one such fixed point, and its optimal face is
+L_n$ (their name for $\El$) has infinitely many fixed points for $n>3$ ---
+this, not the example below, is where the hypothesis $n>3$ enters and
+cannot be dropped. Concretely, $X^*=I_n$ is one such fixed point (for any
+$n$), and its optimal face is
 degenerate in the strongest possible sense: $\operatorname{tr}(I_nX)=\sum_iX_{ii}=n$
 identically on $\El$, so the linear functional $\langle I_n,\cdot\rangle$
 is constant there and $\arg\max_{X\in\El}\langle I_n,X\rangle=\El$ itself
@@ -376,10 +381,13 @@ counts, not a proof for every $n$ or every trajectory.
 
 \begin{theorem}[Elliptope convergence --- tiers as stated]\label{thm:ell}
 Because $\El$ is compact, convex, and semialgebraic (Prop.~\ref{prop:ell1}),
-Theorem A's general form applies to it directly: the iterated-linear-
-optimization sequence on the elliptope converges to a single fixed point
-for every initialization, \textbf{despite the fixed-point set being an
-infinite continuum} (Prop.~\ref{prop:ell3}) --- \textbf{Proved}. Which
+Theorem A's general form applies to it directly, for every $n$: the
+iterated-linear-optimization sequence on the elliptope converges to a
+single fixed point for every initialization --- \textbf{Proved}. For $n>3$
+this holds \textbf{despite the fixed-point set being an infinite
+continuum} (Prop.~\ref{prop:ell3}; for $n\le3$ the fixed-point set is
+finite, so the continuum caveat is vacuous there but convergence is still
+unconditional, by the same general argument). Which
 fixed point is reached is settled only partially: the vertices (rank-$1$
 points) are exactly the fixed points whose full neighborhood converges to
 them, and no other fixed point has this property, \textbf{by direct
@@ -395,9 +403,10 @@ is exactly zero is \textbf{open} (Conjecture, filed as Q7 below).
 FKP's Theorem~1 (limit points exist, are fixed points, form a connected
 set) is the same starting point as Prop.~\ref{prop:4} here. From an
 \emph{arbitrary} initialization, on a fixed-point set that is a
-positive-dimensional continuum (Prop.~\ref{prop:ell3}), their only route
-to single-point convergence is an unnumbered remark that a connected
-\emph{finite} fixed-point set is a singleton, which is structurally
+positive-dimensional continuum for $n>3$ (Prop.~\ref{prop:ell3}), their
+only route to single-point convergence is an unnumbered remark that a
+connected \emph{finite} fixed-point set is a singleton, which is
+structurally
 inapplicable here; a full read of the proof of their Theorem~1 confirms it
 only ever derives connectedness and never separately invokes finiteness.
 (FKP's own Theorem~20 does give single-point convergence from a
@@ -522,9 +531,18 @@ $$\langle x^*,y\rangle_\R=(1-t)\,\re y(0)+t\,\re F(y)(0)\le(1-t)+t\sqrt2=1+t^2=\
 with equality iff $y(0)=1$ and $F(y)(0)=\sqrt2$, which forces
 $y(1)=\sqrt2-1=t$, i.e.\ $y=x^*$ --- a genuine separating functional
 exposing $x^*$ as a vertex-like point of $C_1$ even though
-$x^*\notin\CAZ(2,1)$ ($\|x^*\|^2=4-2\sqrt2<2$). The $N=2$ doubling repeats
-the argument coordinatewise. Part (c) follows immediately from the
-existence of one such retained point.
+$x^*\notin\CAZ(2,1)$ ($\|x^*\|^2=4-2\sqrt2<2$). For the $N=2$ doubling
+$((1,t),(1,t))$, the amplitude constraints are still per-block
+($\re y_j(0)\le|y_j(0)|\le1$ for $j=0,1$), but the spectral constraint is
+\emph{coupled} ($S_y(0)=\sum_j|F(y_j)(0)|^2\le4$, not two separate
+per-block bounds of $2$), so the argument is not a coordinatewise repeat:
+$$\langle x^*,y\rangle_\R=(1-t)\bigl[\re y_0(0)+\re y_1(0)\bigr]+t\bigl[\re F(y_0)(0)+\re F(y_1)(0)\bigr]
+\le(1-t)\cdot2+t\sqrt2\sqrt{S_y(0)}\le2(1-t)+2\sqrt2\,t=2(1+t^2),$$
+using the amplitude bound directly on the first bracket and
+Cauchy--Schwarz ($\re F(y_0)(0)+\re F(y_1)(0)\le\sqrt2\sqrt{S_y(0)}$) only
+on the coupled second bracket, matching $\|x^*\|^2=2(1+t^2)$ for the
+doubled point. Part (c) follows immediately from the existence of one such
+retained point.
 \end{proof}
 
 \begin{remark}
@@ -841,6 +859,36 @@ argument is needed: the DFT of a chirp is a chirp, collapsing the
 dependency analysis to counting solutions of $t^2\equiv0\bmod n$. Both
 scripts are in the companion repository \cite{CazacAlgorithmRepo}.
 
+\begin{remark}[Prior art bearing on the lower bound: Popovi\'c's
+generalized chirp-like sequences]
+When $n=sm^2$ for positive integers $s,m$ (the largest valid $m$ is
+$d_{\max}$ itself), Popovi\'c's 1992 construction \cite{Popovic92} gives an
+explicit, elementary route to \emph{part} of Theorem~D: modulating a
+Zadoff--Chu sequence of length $n$ by an \emph{arbitrary} unimodular
+sequence of period $m$ (an $m$-real-parameter family, one free phase per
+period) again satisfies the ideal periodic autocorrelation property ---
+Popovi\'c's own Theorem~1, proved by an entirely different, purely
+combinatorial argument with no DFT-closure or Gauss-sum machinery. At
+$m=d_{\max}$ this gives an explicit $d_{\max}$-real-parameter family of
+CAZAC points through every Zadoff--Chu tuple; we confirmed numerically
+that this family exists exactly as claimed and has the predicted
+dimension at $n=4$ ($d_{\max}=2$: an arbitrary period-$2$ phase pair gives
+a verified $2$-parameter family of exact CAZAC points). This is real,
+previously uncited prior art bearing on the \emph{existence} half of
+Theorem~D --- that $\dim K$ can be as large as $d_{\max}$, not just $1$
+--- via a route substantially different from, and more elementary than,
+this paper's own. We have \textbf{not} worked out the precise
+identification between Popovi\'c's explicit tangent family and this
+paper's dependency space $K$ (a natural next step; the dimension match at
+$n=4$ is evidence for, not proof of, such an identification), so this
+disclosure is conservative: what Theorem~D adds beyond \cite{Popovic92} is
+the \emph{exact} count (no more than $d_{\max}$, not merely at least
+$d_{\max}$), the reusable chirp-DFT-closure mechanism itself --- which
+extends, unlike Popovi\'c's construction, to Bj\"orck's non-Zadoff--Chu
+sequences and to ruling out cubic-or-higher phase --- and the connection
+to hypothesis (R) and Theorem~C's convergence rate.
+\end{remark}
+
 \subsection{The chirp-argument schema, and where it does and does not generalize}
 
 Stripped of Zadoff--Chu-specific notation, Theorem~D's proof needs exactly:
@@ -961,11 +1009,14 @@ at every one of $44$ tested primes $p\in[5,200)$ (both residue classes,
 $\dim K=1$ throughout), but with no uniform lower bound of the shape a
 classical single-Gauss/Jacobi-sum-modulus argument would give --- at
 $p=71$ the relevant gap is a factor of $\approx4\times10^3$ smaller than
-at the next-nearest tested prime, a genuine near-degeneracy; the script
-itself reports this was independently confirmed not to be a floating-point
-artifact by a separate $60$-digit-precision recomputation at that specific
-prime (performed once, outside the script's own run, and recorded in its
-output). Script: {\tt experiments/verify\_bjorck\_isotypic.py} in the
+at the next-nearest tested prime, a genuine near-degeneracy; the same
+script now also runs an independent $60$-digit-precision (mpmath)
+recomputation of this specific block, confirming the near-degeneracy is
+not a floating-point artifact: the top singular value matches to
+$\sim10^{-15}$ relative precision and the near-zero singular value moves
+by only $\sim1\%$ of its own scale between float64 and $60$-digit
+precision --- not by orders of magnitude, as a genuine cancellation
+artifact would. Script: {\tt experiments/verify\_bjorck\_isotypic.py} in the
 companion repository \cite{CazacAlgorithmRepo} (the $44$-prime
 determinant check; a separately-run set of $14$ primes, all contained in
 this same tested range, is used for the affine-closure check of
@@ -1065,12 +1116,17 @@ case of Akta\c{s}--Kroer's \cite{AK25} general Frank-Wolfe/KL framework
 reduction (Prop.~\ref{prop:2}) that makes that template apply, not the
 descent argument itself --- see the note at Theorem~A.
 \item Elliptope semialgebraicity and H1--H3 transfer
-(Props.~\ref{prop:ell1}--\ref{prop:ell2}): \emph{Unconditional}. Fixed-point
-continuum (Prop.~\ref{prop:ell3}): \emph{Unconditional} (infinitude by
-citation to \cite{FKP21}, positive-dimensionality by semialgebraicity, plus
-a machine-exact illustrative identity at $I_n$). Single-point convergence despite that continuum
-(Theorem~\ref{thm:ell}): \emph{Unconditional} --- this is a proved theorem,
-not a numerical finding. The pointwise vertex/non-vertex attractive
+(Props.~\ref{prop:ell1}--\ref{prop:ell2}): \emph{Unconditional}, every $n$.
+Fixed-point continuum (Prop.~\ref{prop:ell3}): \emph{Unconditional, $n>3$
+only} (infinitude by citation to \cite{FKP21}, positive-dimensionality by
+semialgebraicity, plus a machine-exact illustrative identity at $I_n$); at
+$n\le3$ the fixed-point set is finite (per \cite{FKP21}'s own count), so
+the statement is restricted to $n>3$, not vacuously true for all $n$.
+Single-point convergence (Theorem~\ref{thm:ell}): \emph{Unconditional for
+every $n$} --- this is a proved theorem, not a numerical finding; the
+``despite an infinite continuum'' framing is specific to $n>3$, but
+convergence itself does not depend on that framing. The pointwise
+vertex/non-vertex attractive
 dichotomy (Remark~\ref{rem:fkp-thm20}): \emph{Unconditional}, by direct
 citation to \cite{FKP21} Theorem~20 (not a new argument here).
 \emph{Separately}, that generic trajectories escape onto a rank-1 point
@@ -1090,7 +1146,12 @@ parts carry the same status tag.
 all $n$ regardless of parity, with Steps 2--3 spelled out via the
 reality-defect kernel $e$ (see the ``Scope of the written derivation''
 remark after the proof) --- independently corroborated by hand at $n=4,9$
-and numerically at all 64 tested configurations.
+and numerically at all 64 tested configurations. Prior art disclosed
+(remark after Corollary~\ref{cor:D2}): Popovi\'c's 1992 construction
+\cite{Popovic92} gives, by an unrelated elementary method, an explicit
+family matching the \emph{existence} half of this count ($\dim K$ can
+reach $d_{\max}$) at $n=sm^2$; Theorem~D's own contribution is the exact
+count and the reusable mechanism, not the existence of degeneracy per se.
 Corollaries~\ref{cor:D1}--\ref{cor:D2}: \emph{Unconditional} (Corollary~1
 conditionally activates Theorem~C, but is itself unconditional as a
 dimension/regularity statement).
@@ -1155,6 +1216,10 @@ identifiability, and sensitivity}, Math. Program. \textbf{147} (2014),
 \bibitem{Chu72} D. C. Chu, \emph{Polyphase codes with good periodic
 correlation properties}, IEEE Trans. Inform. Theory \textbf{18}(4) (1972),
 531--532.
+
+\bibitem{Popovic92} B. M. Popovi\'c, \emph{Generalized chirp-like
+polyphase sequences with optimum correlation properties}, IEEE Trans.
+Inform. Theory \textbf{38}(4) (1992), 1406--1409.
 
 \bibitem{Bjorck90} G. Bj\"orck, \emph{Functions of modulus $1$ on $\Z_n$
 whose Fourier transforms have constant modulus, and ``cyclic $n$-roots''},

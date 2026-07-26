@@ -597,3 +597,84 @@ Per the round-4 convergence criterion (**two consecutive full rounds with
 zero must-fix findings**), round 5 is not clean, so the count is still at
 zero. A round 6 is warranted before treating this repository as
 audit-converged.
+
+The three lessons this round taught — reconstruct before reading, the
+coordinator's own capability is a gating requirement, and a ported proof
+can regress to a source's already-fixed draft — are now recorded in
+`~/.claude/skills/adversarial-audit/SKILL.md` for future sessions.
+
+## Scoring pass (repo-rank) at commit `3359063`, plus two more findings
+
+Four fresh, cold, blind agents (opus for Novelty/Depth, sonnet for
+Reach/Evidence, per the `repo-rank` skill) scored the repo independently
+in parallel, immediately after round 5's fixes landed:
+
+| Axis | Score | Note |
+|---|---|---|
+| Novelty | 5/10 | Theorem A/elliptope are honestly-disclosed instances of AK25; Theorem D is the real novelty candidate, and the auditor flagged possible uncited prior art (see below). |
+| Depth | 8/10 | Both load-bearing arguments (Thm A, Thm D) re-derived from scratch and held up. Found two more real bugs (below), both fixed. |
+| Reach | 7/10 | Genuine cross-domain transfer to the elliptope with a real payoff; Q1-Q7 are concrete and partially attacked. |
+| Evidence | 6/10 | Both flagship numerical claims reproduced exactly; found the companion repo's scripts were untracked in git, and the "60-digit recomputation" for the Björck $p=71$ near-degeneracy was a hardcoded print statement, not runnable code. |
+
+**Two more real bugs found by the Depth pass (independent re-derivation),
+both fixed in `main.tex`:**
+- **Prop ell3 was false as stated for $n\le3$** — claimed the elliptope
+  fixed-point set is an infinite continuum for every $n$, but FKP's own
+  cited fact (and a direct check at $n=2$: fixed points are exactly
+  $\{-1,0,1\}$) restricts this to $n>3$. Restated with the correct scope;
+  Theorem ell's convergence claim itself is unaffected and still holds for
+  every $n$.
+- **Theorem B(b)'s $N=2$ "repeats the argument coordinatewise" was wrong**
+  — the coupled spectral constraint requires an extra Cauchy-Schwarz step,
+  not a per-block repeat. Fixed and numerically confirmed (SLSQP:
+  max $=2(1+t^2)$ exactly).
+
+**Follow-up on the Novelty finding, requested by the user and completed
+this round:**
+
+1. **Popovi\'c (1992) prior art.** The user supplied the actual PDF
+   (*Generalized Chirp-Like Polyphase Sequences with Optimum Correlation
+   Properties*, IEEE Trans. Inform. Theory 38(4), 1406-1409). Read in
+   full. Verdict: genuinely relevant, previously uncited prior art bearing
+   on \emph{part} of Theorem D — Popovi\'c's Theorem 1 shows that
+   modulating a Zadoff-Chu sequence of length $n=sm^2$ by an arbitrary
+   unimodular sequence of period $m$ again satisfies the ideal
+   periodic-autocorrelation (CAZAC) property, via an elementary
+   combinatorial argument unrelated to this paper's DFT-closure machinery.
+   Since the largest valid $m$ with $m^2\mid n$ is exactly $d_{\max}$, this
+   gives an explicit $d_{\max}$-parameter family of CAZAC points through
+   every Zadoff-Chu tuple at non-squarefree $n$ — independently confirmed
+   numerically here at $n=4$ ($d_{\max}=2$: a random period-2 phase pair
+   gives an exact CAZAC point, matching Popovi\'c's Theorem 1 and the
+   predicted dimension). This bears on the \emph{existence} half of
+   Theorem D (that $\dim K$ can reach $d_{\max}$, not just $1$), via a
+   substantially different and more elementary route. **Disclosed
+   conservatively**: a new remark and bibliography entry were added after
+   Corollary D2, stating plainly what is and is not verified — the
+   dimension match at $n=4$ is evidence for, not proof of, an exact
+   identification between Popovi\'c's explicit tangent family and this
+   paper's dependency space $K$; that identification was not attempted.
+   What Theorem D retains as new: the exact count (not merely a lower
+   bound), the reusable chirp-DFT mechanism itself, and its extension to
+   Björck's construction and the cubic-phase negative result, none of
+   which Popovi\'c's paper addresses.
+2. **The 60-digit recomputation is now real, runnable code.** The
+   companion repo's `experiments/verify_bjorck_isotypic.py` previously
+   only printed a claim about an independent 60-digit mpmath cross-check
+   "performed once, outside the script's own run" — exactly the numerics
+   auditor's finding. Added `isotypic_block_mpmath()` and
+   `singular_values_2x2()`, an actual `mpmath`-based (dps=60) recomputation
+   of the $p=71,k=17$ isotypic block, called from `main()`. First attempt
+   had a real bug (pulled `Im(...)` outside a sum over a complex vector,
+   which is invalid since `Im` is only $\R$-linear) that produced numbers
+   matching neither the float64 computation nor anything sensible; caught
+   by comparing against the float64 block entrywise before trusting the
+   result, fixed, and re-verified: entries match float64 to 12 significant
+   figures, the top singular value matches to $\sim10^{-15}$ relative
+   precision, and the near-zero singular value matches to
+   $\sim10^{-10}$ (relative to the top) — moving by about $1\%$ of its own
+   scale between float64 and 60-digit precision, not by orders of
+   magnitude, confirming the $p=71$ near-degeneracy is genuine and not a
+   float64 rounding artifact. `main.tex`'s disclosure text updated to
+   match (no longer describes this as performed "outside the script's own
+   run").
