@@ -2,60 +2,50 @@
 
 CAZAC sequences satisfy a constant-modulus condition in time and a flat
 spectral-magnitude condition in frequency — a nonconvex intersection of two
-tori. This repository's primary artifact is `main.tex`, a self-contained
-paper proving a convergence theory for a convex relaxation of that
-feasibility problem: replace the equality constraints with convex
-inequalities (bounded amplitude, bounded spectral energy) and iterate a
-second-order cone program (SOCP) against a running reference direction
-that resets to each new optimizer. Four named results. The central
-technical content is **Theorem D**: a regularity hypothesis needed for a
-sharp local convergence rate is proved unconditionally at Zadoff–Chu
-points for *all* lengths $n$ (both parities — even $n$ was not previously
-closed), via a new mechanism for this problem: the DFT of a Zadoff–Chu
-chirp is again a chirp, collapsing a dependency-rank computation to
-counting solutions of a congruence. The same mechanism extends (via a
-different closure fact) to a partial result at Björck's quadratic-phase
-construction, reducing that case to one unproved, numerically-confirmed
-number-theoretic lemma, and is proved *not* to extend to cubic or higher
-phase sequences. This regularity result underwrites **Theorem C** (proved
-conditional on the hypothesis; unconditional at squarefree lengths of
-either parity): near a regular CAZAC point the iteration lands on it
-**exactly** after finitely many steps, including a complete
-contradiction-based proof of the finite-arrival step. The convergence
-theory this rests on is **Theorem A** (unconditional): the iterate
-sequence always converges to a single fixed point, not merely to a set
-of limit points — via a KL/Frank-Wolfe-type descent mechanism that is
-itself a known template (also independently instantiated by Aktaş
-and Kroer, 2025); the paper's own contribution is the reduction of CAZAC
-feasibility to a norm-maximization problem that makes the template apply.
-Since neither that reduction nor the descent argument uses CAZAC-specific
-structure, the argument transfers verbatim to a second example, the
-elliptope of correlation matrices, closing a gap Felzenszwalb–Klivans–
-Paul's (2021, "FKP") own machinery leaves open on their own worked
-example. FKP's own Theorem 20 in turn settles, by direct citation, the
-*pointwise* half of "does every trajectory converge to a rank-1 point?":
-vertices are exactly the fixed points whose full neighborhood converges
-to them, and every non-vertex point provably cannot attract one either.
-A 140-trial numerical sweep finds zero exceptions to full rank-1
-convergence; the residual *measure-zero* form of the claim is open (Q7),
-structurally the same conjecture as the paper's own central open question
-(Q6) in a second domain. **Theorem B** (unconditional, obstruction): the
-limit need not be a CAZAC point — there exist non-CAZAC fixed points that
-no measurable selection rule can escape, so no *deterministic*
-convergence-to-CAZAC theorem is possible.
+tori. This repository's primary artifact is `paper/main.tex`, a
+self-contained paper proving a convergence theory for a convex relaxation of
+that feasibility problem: replace the equality constraints with convex
+inequalities and iterate a second-order cone program (SOCP) against a
+running reference direction that resets to each new optimizer. Four named
+results. The central technical content is **Theorem D**: a regularity
+hypothesis needed for a sharp local convergence rate is proved
+unconditionally at Zadoff–Chu points for *all* lengths $n$ (both parities —
+even $n$ was not previously closed), via a new mechanism: the DFT of a
+Zadoff–Chu chirp is again a chirp, collapsing a dependency-rank computation
+to counting solutions of a congruence. The same mechanism extends to a
+partial result at Björck's quadratic-phase construction, reducing that case
+to one unproved, numerically-confirmed lemma, and is proved *not* to extend
+to cubic or higher phase. This underwrites **Theorem C** (proved conditional
+on the hypothesis; unconditional at squarefree lengths): near a regular
+CAZAC point the iteration lands on it **exactly** after finitely many steps.
+The theory rests on **Theorem A** (unconditional): the iterate sequence
+always converges to a single fixed point, not merely a set of limit points —
+via a KL/Frank-Wolfe descent mechanism that is itself a known template (also
+independently instantiated by Aktaş and Kroer, 2025); the paper's own
+contribution is the reduction of CAZAC feasibility to a norm-maximization
+problem that makes the template apply. This reduction transfers verbatim to
+a second example, the elliptope of correlation matrices, closing a gap
+Felzenszwalb–Klivans–Paul's (2021, "FKP") own machinery leaves open on their
+own worked example. FKP's own Theorem 20 in turn settles, by direct
+citation, the *pointwise* half of "does every trajectory converge to a
+rank-1 point?"; a 140-trial numerical sweep finds zero exceptions, and the
+residual *measure-zero* form of the claim is open (Q7). **Theorem B**
+(unconditional, obstruction): the limit need not be a CAZAC point, so no
+*deterministic* convergence-to-CAZAC theorem is possible.
 
 ## Read this first
 
-`main.tex` / `main.pdf` is the only content artifact — the paper (build
-with `pdflatex main.tex`), including its own proof-tier ledger and open-
-problems list. `theorems/convergence.md`, `STATUS.md`, and `problems/`
-are retired pointer files (kept only so old links don't 404) — they used
-to independently restate the paper's content and, across several audit
-rounds, drifted out of sync with it; `main.tex` is now the single source
-of truth. `AUDIT-LEDGER.md` is the record of the adversarial audits run
-against this repo (per-claim findings across mathematics, citations,
-numerics, prose, privacy, and the README), with fixes applied and
-cross-referenced.
+`paper/main.tex` / `paper/main.pdf` is the only content artifact — the
+paper (build with `pdflatex main.tex` from inside `paper/`), including its
+own proof-tier ledger and open-problems list. Earlier drafts kept the same
+claims independently restated across several markdown files
+(`theorems/convergence.md`, `STATUS.md`, `problems/open-questions.md`);
+every one of several audit rounds found at least one place where those
+copies had drifted out of sync, so they have been removed and `main.tex`
+is the single source of truth. `AUDIT-LEDGER.md` is the record of the
+adversarial audits run against this repo (per-claim findings across
+mathematics, citations, numerics, prose, privacy, and the README), with
+fixes applied and cross-referenced.
 
 ## How to use this repository
 
@@ -89,16 +79,17 @@ guarantee of correctness — read them.
 
 Build the paper:
 ```
-pdflatex main.tex && pdflatex main.tex
+cd paper && pdflatex main.tex && pdflatex main.tex
 ```
-Run the reference SOCP solver on its built-in default parameters (needs
-`cvxpy` and a cone solver, e.g. `clarabel`; `pip install -r code/requirements.txt`):
+Run the reference SOCP solver on its built-in default parameters, in a
+local venv (needs `cvxpy` and a cone solver, e.g. `clarabel`):
 ```
-cd code && python cazac-socp-solver.py
+cd code && python3 -m venv .venv && .venv/bin/pip install -r requirements.txt
+.venv/bin/python cazac-socp-solver.py
 ```
-Recorded output (ran 2026-07-26, ~56s at the script's default size):
+Recorded output (ran 2026-07-26, ~57s at the script's default size):
 ```
-Time (s):     56.1
+Time (s):     57.0
 Max |H(j,k)| 1.00000e+00
 Min |H(j,k)| 1.00000e+00
 Size H       (106, 106)
@@ -110,19 +101,17 @@ above. See `code/README.md` for both scripts' parameters.)
 
 ## Layout
 
-- `main.tex` / `main.pdf` — the sole content artifact: setup, Theorems
-  A–D, the elliptope corollary, the Björck partial result, open problems
+- `paper/` — the sole content artifact: `main.tex` (setup, Theorems A–D,
+  the elliptope corollary, the Björck partial result, open problems
   (Q1–Q7), and a tiered verification/provenance section, with an inline
-  bibliography.
-- `theorems/convergence.md`, `problems/open-questions.md`, `STATUS.md` —
-  retired pointer files (see "Read this first"); content lives only in
-  `main.tex` now.
+  bibliography) and the built `main.pdf`.
 - `code/` — reference implementations of the algorithm the theorems
   analyze, plus a projection-based comparison baseline (see
   `code/README.md`).
 - `AUDIT-LEDGER.md` — the record of adversarial audits run against this
   repo (per-claim findings across mathematics, citations, numerics,
   prose, privacy, and this file), with fixes applied and cross-referenced.
+- `LICENSE` — GNU GPL v3.0.
 
 ## How to cite
 

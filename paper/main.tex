@@ -36,66 +36,48 @@
 
 \begin{abstract}
 Constant-amplitude zero-autocorrelation (CAZAC) sequences satisfy a
-constant-modulus condition in time and a flat-spectrum condition in
-frequency simultaneously, a nonconvex intersection of two tori. Replacing
-the equality constraints with convex inequalities (bounded amplitude,
-bounded spectral energy) yields a compact convex semialgebraic body
-$C_\tau$; at $\tau=1$, CAZAC systems are exactly its maximal-norm points.
-The natural algorithm is to iterate a second-order cone program (SOCP) whose
-objective direction resets to the previous optimizer. This paper's
-central technical content is Theorem D: a \emph{regularity} hypothesis
-(R), needed to get a sharp local convergence rate near a CAZAC point, is
-proved unconditionally at every Zadoff--Chu tuple, for every length $n$
-(both parities, not previously closed for even $n$), via an elementary
-mechanism new to this problem --- the discrete Fourier transform of a
-Zadoff--Chu chirp is again a chirp, which collapses a linear-dependency
-rank computation to counting solutions of $t^2\equiv0\bmod n$, so (R)
-holds iff $n$ is squarefree. We show this closure mechanism is a
-reusable schema, not a one-off: it extends (with a genuinely different
-closure fact, the self-duality of the Legendre symbol) to give a partial
-regularity result at Bj\"orck's quadratic-phase construction at prime
-$n$ --- proved, on the symmetry-invariant subspace, and reduced elsewhere
-to one unproved, numerically-confirmed (44 primes) determinant-nonvanishing
-lemma --- and we prove, by contrast, that the same mechanism provably
-cannot reach cubic or higher-degree phase sequences. This regularity
-result underwrites Theorem C (proved conditional on hypothesis (R),
-unconditional at Zadoff--Chu points of squarefree length): near a regular
-CAZAC point the $\ell^1$ constraint slack has \emph{sharp linear}, not
-merely quadratic, growth; the KL exponent is exactly $0$; and the
-iteration lands on the point \emph{exactly} after finitely many steps
-(we give the complete proof of part (c), finite exact arrival). The
-convergence theory this rests on is Theorem A (unconditional): every
-measurable selection from the iteration has finite length and converges
-to a single fixed point, via the Attouch--Bolte--Svaiter
-Kurdyka--{\L}ojasiewicz (KL) descent framework, applied here to a
-set-valued argmax update rather than a proximal step; this descent
-mechanism is itself a known, general-purpose template --- Akta\c{s} and
-Kroer \cite{AK25} independently instantiate the same KL/Frank-Wolfe
-argument for a general strongly convex smooth objective, of which our
-$f=\tfrac12\|x\|^2$ is a special case --- and the paper's own contribution
-here is the reduction of CAZAC feasibility to $\max_{C_\tau}\|x\|^2$
-(Prop.~\ref{prop:2}) that makes the template applicable, not the descent
-argument itself. Since neither that reduction nor the descent argument
-uses CAZAC-specific structure beyond compactness, convexity, and
-semialgebraicity, the argument transfers verbatim to a second example,
-the elliptope $\El=\{X\succeq0: X_{ii}=1\}$ --- Felzenszwalb--Klivans--Paul's
-(2021) own worked case, where their finiteness-dependent
-single-point-convergence mechanism does not apply and their own example
-stalls at set-level convergence; we prove single-point convergence there
-unconditionally. Which fixed point is reached is settled only in part:
-Felzenszwalb--Klivans--Paul's own Theorem~20 already proves, by direct
-citation and no new argument here, that rank-1 points are exactly the
-fixed points whose full neighborhood converges to them; a $140$-trial
-numerical sweep finds every trajectory converging to rank~1 with no
-exceptions; whether the complementary set of initializations has
-Gaussian measure zero remains open (Q7). Theorem B
-(unconditional, obstruction): non-CAZAC fixed points exist and some are
-exposed (unique maximizers of their own functional), so no deterministic
-selection rule can guarantee convergence to the CAZAC set; the correct
-target class of theorem is probabilistic over initializations. We close
-with a precise statement of the remaining open problems (Q1--Q7) and a
-tiered verification ledger disclosing exactly which claims are proved,
-proved conditionally, numerically verified, or conjectural.
+constant-modulus time condition and a flat-spectrum frequency condition
+simultaneously --- a nonconvex intersection of two tori. Relaxing the
+equality constraints to convex inequalities gives a compact convex body
+$C_\tau$ whose maximal-norm points, at $\tau=1$, are exactly the CAZAC
+systems, and the natural algorithm iterates a second-order cone program
+(SOCP) whose objective direction resets to the previous optimizer. The
+central technical content is Theorem D: a regularity hypothesis (R),
+needed for a sharp local convergence rate, is proved unconditionally at
+every Zadoff--Chu tuple and length $n$ (both parities; even $n$ was
+previously open), via a mechanism new to this problem --- the DFT of a
+Zadoff--Chu chirp is again a chirp, collapsing a rank computation to
+counting solutions of $t^2\equiv0\bmod n$, so (R) holds iff $n$ is
+squarefree. The mechanism is a reusable schema: a different closure fact
+(self-duality of the Legendre symbol) extends it to a partial regularity
+result at Bj\"orck's quadratic-phase construction, reduced to one
+unproved, numerically-confirmed (44 primes) determinant lemma; we prove
+it cannot reach cubic or higher-degree phase. This underwrites Theorem C
+(conditional on (R); unconditional at squarefree Zadoff--Chu lengths):
+near a regular CAZAC point the constraint slack grows \emph{linearly},
+not quadratically (KL exponent exactly $0$), and the iteration reaches
+the point exactly after finitely many steps. The theory rests on Theorem
+A (unconditional): every measurable selection converges to a single fixed
+point, via an Attouch--Bolte--Svaiter Kurdyka--{\L}ojasiewicz descent
+argument applied to a set-valued argmax update --- a known template also
+independently instantiated by Akta\c{s} and Kroer \cite{AK25} for general
+strongly convex objectives; our contribution is the reduction of CAZAC
+feasibility to $\max_{C_\tau}\|x\|^2$ (Prop.~\ref{prop:2}) that makes the
+template apply, not the descent argument itself. This reduction is
+CAZAC-agnostic and transfers verbatim to a second example, the elliptope
+$\El=\{X\succeq0: X_{ii}=1\}$ --- Felzenszwalb--Klivans--Paul's (2021) own
+worked case, where their mechanism stalls at set-level convergence; we
+prove single-point convergence there unconditionally. Their own
+Theorem~20 further settles, by direct citation, that rank-1 points are
+exactly the fixed points whose full neighborhood converges to them; a
+$140$-trial sweep finds no exceptions, and whether the exceptional set
+has measure zero remains open (Q7). Theorem B (unconditional,
+obstruction): non-CAZAC fixed points exist and some are exposed, so no
+deterministic selection rule can guarantee convergence to the CAZAC set
+--- the correct target class of theorem is probabilistic over
+initializations. We close with the remaining open problems (Q1--Q7) and a
+tiered ledger disclosing exactly which claims are proved, proved
+conditionally, numerically verified, or conjectural.
 \end{abstract}
 
 \section{Setup}

@@ -6,3 +6,11 @@
 *.fls
 *.fdb_latexmk
 *.synctex.gz
+
+# Python
+.venv/
+__pycache__/
+*.pyc
+
+# OS
+.DS_Store

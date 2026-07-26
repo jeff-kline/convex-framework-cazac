@@ -425,3 +425,39 @@ inherit the lesson rather than re-learning it:
    independently verified first — run the script, fetch the primary
    source — the same bar an auditor would apply, applied *before*
    publication instead of after.
+
+## Structural fixes — before round 5
+
+Two more findings, this time from the user reading the repo directly
+rather than from an audit round: the abstract had grown long across
+successive integration rounds without a corresponding gain in checked
+content, and this repo's top-level layout did not match the author's
+other public paper repositories (`extremal-eigenvalues`,
+`geometric-difference-families`), which both use a `paper/` directory for
+the LaTeX source/PDF and keep no retired-pointer markdown files. Fixed:
+
+1. **Abstract tightened**: 586 → 412 words (−30%), now inside the
+   223–451-word range spanned by the sibling repos' own abstracts. No
+   claim was dropped — every theorem, the Björck partial result and its
+   cubic-phase negative result, the AK25 attribution disclosure, the FKP
+   Theorem 20 / Q7 dichotomy, and the tiered-ledger disclosure are all
+   still present, just without the repeated qualifying clauses. The
+   README's opening prose summary was tightened in parallel, 430 → 340
+   words, for the same reason.
+2. **Directory structure aligned to house style**: `main.tex`/`main.pdf`
+   moved to `paper/main.tex`/`paper/main.pdf` (matching both sibling
+   repos). `theorems/convergence.md`, `problems/open-questions.md`, and
+   `STATUS.md` — retired to short pointer files in the prior round — are
+   now removed outright, since neither sibling repo carries that
+   "pointer file" pattern at all; recompiled clean from the new location
+   (`pdflatex main.tex` in `paper/`, twice, no errors, no undefined
+   references, 15 pages) before removal. `README.md` and `code/README.md`
+   updated for the new paths; `code/README.md`'s quick-start also fixed
+   to instruct a local venv instead of a bare `python` invocation
+   (matching both sibling repos' `code/README.md` conventions), and the
+   recorded SOCP-solver output was re-run for real inside that venv
+   (57.0s, `code/.venv`, `clarabel`) rather than left as a stale figure —
+   result matches the prior recorded run (56.1s) to within normal
+   variance, same matrix diagnostics.
+
+Round 5 (next) audits this state.

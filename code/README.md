@@ -1,7 +1,7 @@
 # Reference scripts
 
 Two small reference implementations of the algorithm analyzed in
-`../theorems/convergence.md`.
+`../paper/main.tex`.
 
 - `cazac-socp-solver.py` — CVXPY-based SOCP refinement that enforces an
   amplitude bound and a coupled spectral-flatness (Fourier energy) bound
@@ -21,19 +21,25 @@ See the docstrings and in-file comments for parameter meanings.
 
 ## Quick start
 
+Never run these against a global/system Python interpreter — create and
+use a local venv:
+
+```
+python3 -m venv .venv
+.venv/bin/pip install -r requirements.txt
+```
+
 Edit parameters at the top of the file you want to run, then:
 
 ```
-python cazac-socp-solver.py
-python cazac-projected-solver.py
+.venv/bin/python cazac-socp-solver.py
+.venv/bin/python cazac-projected-solver.py
 ```
+
+(or `source .venv/bin/activate && python cazac-socp-solver.py`).
 
 ## Requirements
 
 - SOCP script: `numpy`, `scipy`, `cvxpy`, plus a cone solver (e.g.,
   `clarabel`; other solvers may work depending on your setup).
 - Projection baseline: `numpy`.
-
-```
-pip install -r requirements.txt
-```
