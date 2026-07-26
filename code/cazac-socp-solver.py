@@ -58,7 +58,7 @@ Requirements
 
 Sample output
 ----------------------------
-Time (s):      5.7
+Time (s):     57.0
 Max |H(j,k)| 1.00000e+00
 Min |H(j,k)| 1.00000e+00
 Size H       (106, 106)
