@@ -37,25 +37,25 @@ example. FKP's own Theorem 20 in turn settles, by direct citation, the
 vertices are exactly the fixed points whose full neighborhood converges
 to them, and every non-vertex point provably cannot attract one either.
 A 140-trial numerical sweep finds zero exceptions to full rank-1
-convergence; the residual *measure-zero* form of the claim is open
-(Q7/P8), structurally the same conjecture as the paper's own central open
-question (Q6) in a second domain. **Theorem B** (unconditional,
-obstruction): the limit need not be a CAZAC point — there exist
-non-CAZAC fixed points that no measurable selection rule can escape, so
-no *deterministic* convergence-to-CAZAC theorem is possible.
+convergence; the residual *measure-zero* form of the claim is open (Q7),
+structurally the same conjecture as the paper's own central open question
+(Q6) in a second domain. **Theorem B** (unconditional, obstruction): the
+limit need not be a CAZAC point — there exist non-CAZAC fixed points that
+no measurable selection rule can escape, so no *deterministic*
+convergence-to-CAZAC theorem is possible.
 
 ## Read this first
 
-`main.tex` / `main.pdf` — the paper (build with `pdflatex main.tex`).
-`theorems/convergence.md` — the same theorems and proofs, mirrored in
-markdown. `STATUS.md` — every principal claim with its proof tier (proved /
-proved-conditional / numerically verified / conjectural). `problems/` —
-the open questions this leaves (P1–P8; `main.tex`'s own condensed
-Open Problems section labels the same list Q1–Q7 for its shorter,
-paper-facing form), stated precisely enough to attack. `AUDIT-LEDGER.md` —
-the record of an adversarial audit run against this repo (per-claim
-findings across mathematics, citations, numerics, prose, privacy, and
-this file), with fixes applied and cross-referenced.
+`main.tex` / `main.pdf` is the only content artifact — the paper (build
+with `pdflatex main.tex`), including its own proof-tier ledger and open-
+problems list. `theorems/convergence.md`, `STATUS.md`, and `problems/`
+are retired pointer files (kept only so old links don't 404) — they used
+to independently restate the paper's content and, across several audit
+rounds, drifted out of sync with it; `main.tex` is now the single source
+of truth. `AUDIT-LEDGER.md` is the record of the adversarial audits run
+against this repo (per-claim findings across mathematics, citations,
+numerics, prose, privacy, and the README), with fixes applied and
+cross-referenced.
 
 ## How to use this repository
 
@@ -67,8 +67,7 @@ ingest. The intended workflow:
 2. Ask it to trace the proof structure — which propositions each theorem
    depends on, where a hypothesis is used, and what exactly remains open.
 3. Interrogate its answers as a human reader: request derivations, exact
-   statements, and the specific line in `theorems/convergence.md` a claim
-   comes from.
+   statements, and the specific line in `main.tex` a claim comes from.
 
 The proofs are written to be precise enough for an agent to navigate while
 remaining readable by a human. They should not be treated as an automatic
@@ -83,7 +82,8 @@ guarantee of correctness — read them.
 - Why does Theorem A's proof not already rule out Theorem B's obstruction?
 - What would it take to upgrade Theorem C from "near a regular point" to
   a global statement?
-- Which claims in `STATUS.md` are proved vs. merely numerically observed?
+- Which claims in `main.tex`'s closing "Verification status" section are
+  proved vs. merely numerically observed?
 
 ## Verify something in a minute
 
@@ -110,14 +110,13 @@ above. See `code/README.md` for both scripts' parameters.)
 
 ## Layout
 
-- `main.tex` / `main.pdf` — the paper: setup, Theorems A–D, the elliptope
-  corollary, the Björck partial result, open problems, and a tiered
-  verification/provenance section, with an inline bibliography.
-- `theorems/convergence.md` — the same theorems (statements and proofs),
-  mirrored in markdown.
-- `problems/open-questions.md` — open problems (P1–P8), stated for others
-  to attack.
-- `STATUS.md` — proof tier of every principal claim.
+- `main.tex` / `main.pdf` — the sole content artifact: setup, Theorems
+  A–D, the elliptope corollary, the Björck partial result, open problems
+  (Q1–Q7), and a tiered verification/provenance section, with an inline
+  bibliography.
+- `theorems/convergence.md`, `problems/open-questions.md`, `STATUS.md` —
+  retired pointer files (see "Read this first"); content lives only in
+  `main.tex` now.
 - `code/` — reference implementations of the algorithm the theorems
   analyze, plus a projection-based comparison baseline (see
   `code/README.md`).

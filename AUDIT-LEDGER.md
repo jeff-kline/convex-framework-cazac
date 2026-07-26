@@ -385,3 +385,43 @@ Recompiled clean after every fix, `pdflatex main.tex` twice, no errors,
 no undefined references, 15 pages throughout.
 
 **Current HEAD as of this line: `4798a92`** (round 4's fixes, committed).
+
+---
+
+## Process fix — after round 4, before round 5
+
+Round 4's two must-fix findings (the "208 trials" claim, the FKP §4.2
+misattribution) were not pre-existing defects that a deeper audit finally
+reached — they were errors the coordinator introduced while integrating
+round 3's own new research (a numerical claim and a citation transcribed
+from a subagent's report without independent re-verification first). That
+is a treadmill, not convergence: each round was spending its budget
+cleaning up the coordinator's own last round of edits rather than
+narrowing in on the artifact's pre-existing content. The user flagged
+this directly and asked what would fix it, before authorizing another
+audit round. Two structural changes follow, plus one binding personal
+discipline; all three are now also recorded in the `adversarial-audit`
+skill (`~/.claude/skills/adversarial-audit/SKILL.md`) so future sessions
+inherit the lesson rather than re-learning it:
+
+1. **De-duplication.** This repo previously kept the same claims restated
+   independently across five files (`main.tex`, `README.md`, `STATUS.md`,
+   `theorems/convergence.md`, `problems/open-questions.md`). A large
+   fraction of every round's "must-fix" findings were exactly this: one
+   file drifting out of sync with another, not a content defect. Per the
+   user's explicit choice, `theorems/convergence.md`, `STATUS.md`, and
+   `problems/open-questions.md` are now retired to short pointer files;
+   `main.tex` is the sole source of truth. This converts an O(N)
+   synchronization problem (which was never actually kept in sync,
+   repeatedly, across 4 rounds) into an O(1) one.
+2. **A stated convergence criterion**, so "run another audit" has a
+   defined end state instead of running indefinitely: **two consecutive
+   full audit rounds with zero must-fix findings.** Round 5 (next) starts
+   the count at zero regardless of history, since the artifact itself
+   (not just the file structure) changed this round.
+3. **Binding personal discipline**: no specific, checkable claim (a
+   number, a trial count, a "paper X shows Y" attribution) gets written
+   into `main.tex` on the strength of a subagent's report alone. It gets
+   independently verified first — run the script, fetch the primary
+   source — the same bar an auditor would apply, applied *before*
+   publication instead of after.
