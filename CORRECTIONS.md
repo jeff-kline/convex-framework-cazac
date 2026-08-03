@@ -9,7 +9,13 @@ silently replacing the citable object.
 
 | Version | Tag | Commit | DOI | Date | Status |
 |---|---|---|---|---|---|
-| 0.1.0 | Pending | Pending | Pending | Pending | Release candidate; not published |
+| 0.1.0 | [`v0.1.0`](https://github.com/jeff-kline/convex-framework-cazac/releases/tag/v0.1.0) | `8e2441dd670c6262ed685b1d0fbeaa7484ce04cd` | [10.5281/zenodo.21766714](https://doi.org/10.5281/zenodo.21766714) | 2026-08-03 | Released, archived, and admitted |
+
+## Admission
+
+Version 0.1.0 was admitted on August 2, 2026, after its prior-work,
+consistency, reproducibility, archive, and stewardship gates passed. Admission
+is a process verdict, not peer review or a correctness certificate.
 
 ## Corrections
 
@@ -39,3 +45,10 @@ numerical claim, and a prior-art credit for prime-case transversality.
 - A later result that replaces this work is recorded as a supersession, not as
   a silent rewrite of the earlier archive.
 - Suspected errors may be reported through the public repository issue tracker.
+
+## Archive-route disclosure
+
+Version 0.1.0 was archived through the Zenodo GitHub integration. The immutable
+tag predates DOI creation and therefore retains honest prepublication wording.
+The living metadata identifies the active version DOI; the tag and archived
+file have not been rewritten.

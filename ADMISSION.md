@@ -1,20 +1,22 @@
 # Admission record
 
-**Current verdict: NOT YET ADMITTED**
+**Current verdict: ADMITTED**
 
-**Release state:** CANDIDATE
+**Release state:** ADMITTED
 
-**Planned version:** 0.1.0
+**Version:** 0.1.0
 
-**Immutable release:** Pending
+**Immutable release:** tag `v0.1.0`, commit
+`8e2441dd670c6262ed685b1d0fbeaa7484ce04cd`
 
-**Version DOI:** Pending
+**Version DOI:** [10.5281/zenodo.21766714](https://doi.org/10.5281/zenodo.21766714)
+
+**Admission date:** August 2, 2026
 
 This is the living gate record for the first public research release.
-Admission will mean that the project passed its defined prior-work,
-consistency, reproducibility, archive, and stewardship checks against one
-frozen commit. It will not mean peer review, a correctness certificate, or
-proof of global novelty.
+Admission means that the project passed its defined prior-work, consistency,
+reproducibility, archive, and stewardship checks against one frozen commit. It
+is not peer review, a correctness certificate, or proof of global novelty.
 
 ## Standard applied
 
@@ -28,7 +30,7 @@ Work”](https://jeff-kline.github.io/posts/research-program/index.html), versio
 |---|---|---|
 | P1 — prior work and claim boundary | PASS with named access limits | The public claims credit the optimization template, earlier continuous CAZAC families, Benoist's prime Gaussian-chirp transversality and full Björck regularity, and other cited antecedents. Novelty is bounded to the cited corpus. Some primary sources and the companion repository were unavailable; the limits remain visible. |
 | A1 — adversarial consistency | PASS | The Opus audit rederived Theorems A--D and found no mathematical defect. Its prose, citation, and parameter findings were accepted and repaired. The raw report and root disposition are preserved under `audit/reports/`. |
-| R1 — reproducibility and release integrity | IN PROGRESS | The paper rebuild, PDF inspection, solver reproduction, citation metadata, correction policy, and evidence boundary are complete. A clean commit, immutable tag, permanent archive, DOI verification, and provider byte-identity check remain pending. |
+| R1 — reproducibility and release integrity | PASS | The paper rebuilt and was visually inspected; the default solver reproduced the recorded structural output; the immutable tag resolves to the audited commit; and the public Zenodo file is byte-identical to the pinned GitHub tag zipball with a valid 16-file internal manifest. |
 
 ## Claim boundary
 
@@ -47,23 +49,40 @@ Work”](https://jeff-kline.github.io/posts/research-program/index.html), versio
   basin-of-attraction theorem, or global priority beyond the bounded cited
   corpus.
 
-## Planned archive route and action ownership
+## Archive record
 
-The proposed route is the **Zenodo GitHub integration**, consistent with the
-repository owner's recent releases. Before any immutable action, the user must
-approve the exact candidate commit, tag `v0.1.0`, and GitHub Release. The user
-must enable the repository in the authenticated Zenodo portal; agents will not
-open or operate that portal. A later, separate approval will govern any living
-metadata or public-site update.
+| Field | Verified value |
+|---|---|
+| Record status | Published; open access |
+| Version DOI | `10.5281/zenodo.21766714` |
+| Concept DOI | `10.5281/zenodo.21766713` |
+| Record URL | `https://zenodo.org/records/21766714` |
+| Title | *Convergence of iterated SOCP refinement for CAZAC feasibility* |
+| Creator | Jeffery Kline |
+| Publication date | 2026-08-03 |
+| Version | `v0.1.0` |
+| License | GNU General Public License v3.0 |
+| Resource type | Software |
+| Repository | `https://github.com/jeff-kline/convex-framework-cazac` |
+| Archived file | `jeff-kline/convex-framework-cazac-v0.1.0.zip` |
+| File size | 493,141 bytes |
+| Provider checksum | `md5:b391a134c6c8e29a7b939837025b1c2c` |
+| SHA-256 | `4d5861d335d2752251be03f5ecb4b831eed0e9600c6bfc5aab392237da4e8905` |
+
+The downloaded Zenodo file is byte-identical to the GitHub `v0.1.0` tag
+zipball pinned before publication. Its internal `MANIFEST.sha256` verifies all
+16 release files. A deterministic `git archive` was also generated twice and
+matched byte-for-byte, with SHA-256
+`af1559b3e92f98db4faaca4ba15f1dec6164164c96456b1d00ced232f72fd24f`.
 
 ## State transitions
 
 | State | Condition | Status |
 |---|---|---|
 | DRAFT → CANDIDATE | P1, A1, and pre-freeze R1 pass; prose and artifacts agree. | Passed August 2, 2026 |
-| CANDIDATE → TAGGED | Freeze one clean commit and create one immutable semantic tag. | Pending explicit approval |
-| TAGGED → ARCHIVED | Archive the exact tagged tree and verify the downloaded provider file byte-for-byte. | Pending |
-| ARCHIVED → ADMITTED | Activate and verify the DOI, reconcile living surfaces, and issue the final verdict. | Pending separate approval |
+| CANDIDATE → TAGGED | Freeze one clean commit and create one immutable semantic tag. | Passed: `v0.1.0` → `8e2441dd670c6262ed685b1d0fbeaa7484ce04cd` |
+| TAGGED → ARCHIVED | Archive the exact tagged tree and verify the downloaded provider file byte-for-byte. | Passed: Zenodo record `21766714` |
+| ARCHIVED → ADMITTED | Activate and verify the DOI, reconcile living surfaces, and issue the final verdict. | Passed August 2, 2026 |
 
 ## Named residual risks
 

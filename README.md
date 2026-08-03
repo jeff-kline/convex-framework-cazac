@@ -1,9 +1,12 @@
 # Convergence of iterated SOCP refinement for CAZAC feasibility
 
-**Release status: draft.** This repository has not yet been
-admitted under the project's
-[public research standard](https://jeff-kline.github.io/posts/research-program/index.html),
-tagged as a stable release, or archived with a DOI.
+**Release status: admitted.** Version `0.1.0` is preserved at tag
+[`v0.1.0`](https://github.com/jeff-kline/convex-framework-cazac/releases/tag/v0.1.0)
+and archived at
+[`10.5281/zenodo.21766714`](https://doi.org/10.5281/zenodo.21766714).
+Admission under the project's
+[public research standard](https://jeff-kline.github.io/posts/research-program/index.html)
+is a process verdict, not peer review or a correctness certificate.
 
 This repository studies an iterative method for constructing
 constant-amplitude zero-autocorrelation (CAZAC) sequences. A CAZAC sequence
@@ -106,10 +109,12 @@ The repository distinguishes the support for its claims:
 - **Audit history.** [AUDIT-LEDGER.md](AUDIT-LEDGER.md) records earlier
   AI-assisted mathematical, citation, numerical, prose, and privacy checks.
   It is a historical record, not peer review.
+- **Archived release.** The Zenodo `v0.1.0` file is byte-identical to the
+  canonical GitHub tag zipball and has SHA-256
+  `4d5861d335d2752251be03f5ecb4b831eed0e9600c6bfc5aab392237da4e8905`.
 
 Important release limitations remain:
 
-- The repository has no stable tag, permanent archive, or DOI yet.
 - Several numerical claims in the paper refer to scripts in the companion
   `cazac-algorithm` repository, which the paper states is not publicly
   fetchable at the time of writing. Those claims are not independently
@@ -174,8 +179,8 @@ See [code/README.md](code/README.md) for parameters, dependencies, and scope.
 - [code/README.md](code/README.md) -- code setup and scope.
 - [REPRODUCIBILITY.md](REPRODUCIBILITY.md) -- verified environment, commands,
   expected outputs, and the boundary between tracked and unavailable evidence.
-- [CITATION.cff](CITATION.cff) -- machine-readable citation metadata for the
-  planned `v0.1.0` release; the DOI will be added only after archival.
+- [CITATION.cff](CITATION.cff) -- machine-readable citation metadata for
+  version `0.1.0` and its DOI.
 - [CORRECTIONS.md](CORRECTIONS.md) -- version history and the correction,
   withdrawal, and supersession policy.
 - [AUDIT-LEDGER.md](AUDIT-LEDGER.md) -- historical audit findings and
@@ -195,18 +200,17 @@ directs the work and is responsible for claims released under his name.
 
 ## Citation
 
-No stable release citation exists yet. During the draft stage, cite the exact
-commit used and identify the living repository. `CITATION.cff` is staged for
-version `0.1.0`; its release date and DOI remain intentionally unset.
+For reproducible citation, use version `0.1.0` and its version DOI:
 
 ```bibtex
 @misc{kline2026cazacconvergence,
   author       = {Kline, Jeffery},
   title        = {Convergence of iterated SOCP refinement for CAZAC feasibility},
   year         = {2026},
-  howpublished = {GitHub repository},
+  version      = {0.1.0},
+  doi          = {10.5281/zenodo.21766714},
   url          = {https://github.com/jeff-kline/convex-framework-cazac},
-  note         = {Draft; cite the exact commit used}
+  note         = {Archived research software and paper}
 }
 ```
 
