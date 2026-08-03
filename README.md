@@ -1,161 +1,214 @@
 # Convergence of iterated SOCP refinement for CAZAC feasibility
 
-**Scorecard** (blind, cold, per-axis grading; see `AUDIT-LEDGER.md` for
-methodology, per-axis justification, and what would move each score):
+**Release status: draft.** This repository has not yet been
+admitted under the project's
+[public research standard](https://jeff-kline.github.io/posts/research-program/index.html),
+tagged as a stable release, or archived with a DOI.
 
-| Axis | One-line note |
-| --- | --- |
-| Novelty | Graded against CAZAC construction (the target field), not just the optimization literature Theorem A borrows from: no prior iterative CAZAC method (e.g. IPUC, 2025) has a convergence guarantee; Theorem D's exact dimension count is unclaimed elsewhere. |
-| Depth | Central claims fully proved and independently re-derivable; secondary claims (Theorem C, Björck) conditional on a stated hypothesis proved in an important special case. |
-| Reach | Method genuinely reused within the paper (elliptope, Björck, cubic-phase) with real payoffs each time; Q1--Q7 are concrete, some already partially attacked. |
-| Evidence | Flagship numerical claims reproducible with stated tolerances and disclosed negative results (the $p=71$ near-degeneracy); a couple of secondary claims were found under-cited during scoring and fixed. |
+This repository studies an iterative method for constructing
+constant-amplitude zero-autocorrelation (CAZAC) sequences. A CAZAC sequence
+has constant magnitude in time and a flat Fourier magnitude. The method
+replaces those nonconvex equalities by convex inequalities and repeatedly
+solves a second-order cone program (SOCP), using the previous optimizer as the
+next objective direction.
 
-CAZAC sequences satisfy a constant-modulus condition in time and a flat
-spectral-magnitude condition in frequency — a nonconvex intersection of two
-tori. This repository's primary artifact is `paper/main.tex`, a
-self-contained paper proving a convergence theory for a convex relaxation of
-that feasibility problem: replace the equality constraints with convex
-inequalities and iterate a second-order cone program (SOCP) against a
-running reference direction that resets to each new optimizer. Four named
-results. The central technical content is **Theorem D**: a regularity
-hypothesis needed for a sharp local convergence rate is proved
-unconditionally at Zadoff–Chu points for *all* lengths $n$ (both parities —
-even $n$ was not previously closed), via a new mechanism: the DFT of a
-Zadoff–Chu chirp is again a chirp, collapsing a dependency-rank computation
-to counting solutions of a congruence. The same mechanism extends to a
-partial result at Björck's Legendre-symbol-phase construction, proved here
-only on a symmetry-invariant subspace (full regularity there is proved
-elsewhere in the literature, not in this paper — see `paper/main.tex`);
-that same specific mechanism (not every conceivable route) provably
-cannot reach cubic or higher phase.
-This underwrites **Theorem C** (proved conditional on the hypothesis;
-unconditional when Theorem A's limit lies on a Zadoff–Chu tuple's symmetry
-orbit at squarefree $n$): near a regular CAZAC point the iteration lands on
-it **exactly** after finitely many steps. The theory rests on **Theorem A**
-(unconditional): the iterate sequence always converges to a single fixed
-point, not merely a set of limit points — via a KL/Frank-Wolfe descent
-mechanism that is itself a known template, of which Aktaş and Kroer (2025,
-prior art) give a general instance; the paper's own
-contribution is the reduction of CAZAC feasibility to a norm-maximization
-problem that makes the template apply. This reduction transfers verbatim to
-a second example, the elliptope of correlation matrices, closing a gap
-Felzenszwalb–Klivans–Paul's (2021, "FKP") own machinery leaves open on their
-own worked example. FKP's own Theorem 20 in turn settles, by direct
-citation, the *pointwise* half of "does every trajectory converge to a
-rank-1 point?"; a 140-trial numerical sweep finds zero exceptions, and the
-residual *measure-zero* form of the claim is open (Q7). **Theorem B**
-(unconditional, obstruction): the limit need not be a CAZAC point, so no
-*deterministic* convergence-to-CAZAC theorem is possible.
+The iteration always converges to one fixed point and has finite total path
+length. It does **not**, however, always converge to a CAZAC point: the paper
+constructs exposed non-CAZAC fixed points that no deterministic selection rule
+can escape once reached.
 
-## Read this first
+> **Main result.** For each fixed relaxation parameter `τ ≥ 1`, every
+> trajectory from a nonzero input converges to a single fixed point. Near a
+> regular CAZAC limit, the trajectory reaches that point exactly after finitely
+> many steps. At a Zadoff--Chu tuple, the required regularity holds exactly when
+> the sequence length is squarefree.
 
-`paper/main.tex` / `paper/main.pdf` is the only content artifact — the
-paper (build with `pdflatex main.tex` from inside `paper/`), including its
-own proof-tier ledger and open-problems list. Earlier drafts kept the same
-claims independently restated across several markdown files
-(`theorems/convergence.md`, `STATUS.md`, `problems/open-questions.md`);
-every one of several audit rounds found at least one place where those
-copies had drifted out of sync, so they have been removed and `main.tex`
-is the single source of truth. `AUDIT-LEDGER.md` is the record of the
-adversarial audits run against this repo (per-claim findings across
-mathematics, citations, numerics, prose, privacy, and the README), with
-fixes applied and cross-referenced.
+The proof is in [paper/main.pdf](paper/main.pdf); its authoritative source is
+[paper/main.tex](paper/main.tex).
 
-## How to use this repository
+## What is proved
 
-This repository was written with substantial assistance from large
-language models and is designed, in part, for other language models to
-ingest. The intended workflow:
+The paper separates four principal results.
 
-1. Give an AI agent access to the repository.
-2. Ask it to trace the proof structure — which propositions each theorem
-   depends on, where a hypothesis is used, and what exactly remains open.
-3. Interrogate its answers as a human reader: request derivations, exact
-   statements, and the specific line in `main.tex` a claim comes from.
+1. **Global convergence (Theorem A).** For every relaxation parameter
+   `τ ≥ 1`, every nonzero initialization, and every measurable choice of
+   SOCP optimizer, the iterates have finite length and converge to a single
+   fixed point. The Kurdyka--Łojasiewicz descent mechanism is a special case of
+   the general framework of Aktaş and Kroer (2025). The CAZAC-specific step is
+   the reduction of feasibility to maximizing the squared norm over the convex
+   relaxation.
+2. **An obstruction (Theorem B).** Some fixed points are not CAZAC points, and
+   some are exposed: they uniquely maximize their own linear objective. Thus
+   global convergence does not imply convergence to the CAZAC set, and no
+   deterministic optimizer-selection rule can provide that guarantee.
+3. **Finite local arrival (Theorem C).** If the limiting CAZAC point satisfies
+   the stated regularity hypothesis `(R)`, then the local constraint slack has
+   sharp linear growth, the relevant KL exponent is zero, and the iteration
+   reaches the limit exactly after finitely many steps. This theorem is proved
+   conditional on `(R)`.
+4. **Regularity at Zadoff--Chu points (Theorem D).** If
+   `n = ∏ p^(a_p)` and `d_max = ∏ p^floor(a_p/2)`, then the
+   active-gradient dependency space at every Zadoff--Chu tuple has dimension
+   `d_max`. Consequently `(R)` holds there exactly when `n` is squarefree,
+   for odd and even lengths alike.
 
-The proofs are written to be precise enough for an agent to navigate while
-remaining readable by a human. They should not be treated as an automatic
-guarantee of correctness — read them.
+The general convergence argument also applies to the elliptope of correlation
+matrices. It proves convergence to a single fixed point even when the
+fixed-point set is a continuum. Which fixed point is reached is only partly
+understood: a rank-one attraction dichotomy follows from Felzenszwalb,
+Klivans, and Paul (2021), while the claim that the exceptional basin has
+measure zero remains open.
 
-### Ask your agent
+## What is new—and what is not
 
-- Which theorem, if any, guarantees the algorithm reaches a CAZAC point,
-  and under what hypothesis?
-- What exactly does hypothesis (R) require, and where is it proved to
-  hold?
-- Why does Theorem A's proof not already rule out Theorem B's obstruction?
-- What would it take to upgrade Theorem C from "near a regular point" to
-  a global statement?
-- Which claims in `main.tex`'s closing "Verification status" section are
-  proved vs. merely numerically observed?
+The descent template behind Theorem A is prior work, not a new optimization
+principle. The contribution here is its CAZAC formulation, the obstruction to
+deterministic convergence to the target set, the conditional finite-arrival
+theorem, and the exact dependency count at Zadoff--Chu tuples.
 
-## Verify something in a minute
+Earlier constructions of Backelin (1989), Popović (1992), and Björck--Saffari
+(1995) already produce continuous CAZAC families at non-squarefree lengths.
+They anticipate the lower-bound, or existence, side of the degeneracy counted
+in Theorem D. The paper's narrower contribution is the exact count at every
+Zadoff--Chu tuple, its connection to the convergence hypothesis, and the
+chirp-Fourier mechanism used to obtain it. The precise identification between
+those older families and the dependency space computed here has not been
+proved.
 
-Build the paper:
+For odd prime lengths, Benoist (2024, Proposition A.2) proves projective
+transversality at Gaussian chirps, the prime-length counterpart of the
+regularity condition used here. The paper's Zadoff--Chu calculation gives an
+exact dependency count for every length, both parities, every coprime root,
+and coupled systems with `N ≥ 1`. The paper also proves a partial statement for
+Björck's construction on a symmetry-invariant subspace; full regularity for
+Björck sequences is available from Benoist (2024, Proposition A.3) and is not
+claimed here.
+
+Novelty claims are limited to the sources cited in the paper and the
+repository's existing audit record; they do not claim global priority.
+
+## Evidence and limitations
+
+The repository distinguishes the support for its claims:
+
+- **Proof.** The paper proves Theorems A, B, and D unconditionally. Theorem C is
+  proved conditional on `(R)`, which Theorem D verifies for squarefree
+  Zadoff--Chu tuples.
+- **Exact or numerical checks.** The paper names scripts used to test the
+  Zadoff--Chu rank formula, Björck calculations, and elliptope trajectories.
+  Those checks support the proofs or motivate open questions; they do not
+  replace the proofs.
+- **Reference implementation.** The tracked `code/` directory contains the
+  SOCP iteration and a projection-based comparison method. The SOCP script
+  encodes optional phase-window constraints, but its release default makes
+  them redundant, so the default feasible sets are exactly the `C_τ` sets
+  analyzed in the paper.
+- **Audit history.** [AUDIT-LEDGER.md](AUDIT-LEDGER.md) records earlier
+  AI-assisted mathematical, citation, numerical, prose, and privacy checks.
+  It is a historical record, not peer review.
+
+Important release limitations remain:
+
+- The repository has no stable tag, permanent archive, or DOI yet.
+- Several numerical claims in the paper refer to scripts in the companion
+  `cazac-algorithm` repository, which the paper states is not publicly
+  fetchable at the time of writing. Those claims are not independently
+  reproducible from this checkout alone.
+- Theorem C does not give a global basin-of-attraction theorem.
+- Theorem B rules out a deterministic guarantee of reaching a CAZAC point; it
+  does not rule out probabilistic guarantees over initializations.
+- The cubic-or-higher-phase discussion obstructs only the specific
+  completing-the-square mechanism used for quadratic chirps, under the stated
+  coprimality condition. It is not a general impossibility theorem.
+- Process-separated AI audits can expose errors, but they are not independent
+  expert review or a correctness certificate.
+
+## Reproduce the tracked checks
+
+Build the paper from the repository root:
+
+```bash
+cd paper
+pdflatex main.tex
+pdflatex main.tex
 ```
-cd paper && pdflatex main.tex && pdflatex main.tex
-```
-Run the reference SOCP solver on its built-in default parameters, in a
-local venv (needs `cvxpy` and a cone solver, e.g. `clarabel`):
-```
-cd code && python3 -m venv .venv && .venv/bin/pip install -r requirements.txt
+
+Run the reference SOCP implementation in a local virtual environment:
+
+```bash
+cd code
+python3 -m venv .venv
+.venv/bin/pip install -r requirements.txt
 .venv/bin/python cazac-socp-solver.py
 ```
-Recorded output (ran 2026-07-26, ~57s at the script's default size):
-```
-Time (s):     57.0
+
+The current default was reproduced on 2026-08-02. Runtime is machine-specific;
+the structural diagnostics were:
+
+```text
+Time (s):     62.1
 Max |H(j,k)| 1.00000e+00
 Min |H(j,k)| 1.00000e+00
 Size H       (106, 106)
 Condition(H) 1.00000e+00
 ```
-(Harmless `cvxpy`/`ortools` GLOP-PDLP import warnings on newer `ortools`
-versions may print first; they do not affect the CLARABEL-based result
-above. See `code/README.md` for both scripts' parameters.)
 
-## Layout
+The projection baseline is a different algorithm and is not covered by the
+convergence theorems:
 
-- `paper/` — the sole content artifact: `main.tex` (setup, Theorems A–D,
-  the elliptope corollary, the Björck partial result, open problems
-  (Q1–Q7), and a tiered verification/provenance section, with an inline
-  bibliography) and the built `main.pdf`.
-- `code/` — reference implementations of the algorithm the theorems
-  analyze, plus a projection-based comparison baseline (see
-  `code/README.md`).
-- `AUDIT-LEDGER.md` — the record of adversarial audits run against this
-  repo (per-claim findings across mathematics, citations, numerics,
-  prose, privacy, and this file), with fixes applied and cross-referenced.
-- `LICENSE` — GNU GPL v3.0.
+```bash
+cd code
+.venv/bin/python cazac-projected-solver.py
+```
 
-## How to cite
+See [code/README.md](code/README.md) for parameters, dependencies, and scope.
 
-If you reference this work, please cite the repository. **Note:** the
-remote below is this repository's configured `origin`, but at the time of
-writing that remote is a private, out-of-date snapshot that predates this
-document (an earlier version of the repository, from before its current
-`paper/` layout and audit history) and local work here is currently ahead
-of it — the URL will not resolve to what is described in this document
-until the local state is pushed. Check before citing, or cite a local
-commit hash in the interim.
+## Repository map
+
+- [paper/main.tex](paper/main.tex) and [paper/main.pdf](paper/main.pdf) -- the
+  paper, proofs, prior-work discussion, open problems, and claim-tier ledger.
+- [code/cazac-socp-solver.py](code/cazac-socp-solver.py) -- reference
+  implementation of the SOCP iteration analyzed in the paper.
+- [code/cazac-projected-solver.py](code/cazac-projected-solver.py) --
+  projection-based comparison baseline, not the analyzed iteration.
+- [code/README.md](code/README.md) -- code setup and scope.
+- [REPRODUCIBILITY.md](REPRODUCIBILITY.md) -- verified environment, commands,
+  expected outputs, and the boundary between tracked and unavailable evidence.
+- [CITATION.cff](CITATION.cff) -- machine-readable citation metadata for the
+  planned `v0.1.0` release; the DOI will be added only after archival.
+- [CORRECTIONS.md](CORRECTIONS.md) -- version history and the correction,
+  withdrawal, and supersession policy.
+- [AUDIT-LEDGER.md](AUDIT-LEDGER.md) -- historical audit findings and
+  dispositions.
+- [audit/reports/opus-release-audit-draft.md](audit/reports/opus-release-audit-draft.md)
+  -- preserved read-only release audit; its central disposition is recorded
+  separately in
+  [audit/reports/opus-release-audit-disposition.md](audit/reports/opus-release-audit-disposition.md).
+- [LICENSE](LICENSE) -- GNU General Public License v3.0.
+
+## AI assistance and responsibility
+
+Large language models substantially assisted with the mathematics, code,
+literature search, exposition, and adversarial checks. Model agreement is
+evidence about the checking process, not independent validation. Jeffery Kline
+directs the work and is responsible for claims released under his name.
+
+## Citation
+
+No stable release citation exists yet. During the draft stage, cite the exact
+commit used and identify the living repository. `CITATION.cff` is staged for
+version `0.1.0`; its release date and DOI remain intentionally unset.
 
 ```bibtex
 @misc{kline2026cazacconvergence,
   author       = {Kline, Jeffery},
-  title        = {{Convergence of iterated SOCP refinement for CAZAC feasibility}},
+  title        = {Convergence of iterated SOCP refinement for CAZAC feasibility},
   year         = {2026},
-  howpublished = {\url{https://github.com/jeff-kline/convex-framework-cazac}},
-  note         = {GitHub repository; written by large language models under human direction}
+  howpublished = {GitHub repository},
+  url          = {https://github.com/jeff-kline/convex-framework-cazac},
+  note         = {Draft; cite the exact commit used}
 }
 ```
 
-Plain text: Jeffery Kline, *Convergence of iterated SOCP refinement for
-CAZAC feasibility*, 2026.
-https://github.com/jeff-kline/convex-framework-cazac
-
-For a reproducible reference, pin a specific commit hash or a tagged
-release in the `note` field.
-
-## License
-
-This project is licensed under the GNU General Public License v3.0 — see
-[`LICENSE`](LICENSE) for the full text.
+This project is licensed under the GNU General Public License v3.0; see
+[LICENSE](LICENSE).

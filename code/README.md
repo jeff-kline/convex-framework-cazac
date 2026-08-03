@@ -5,8 +5,9 @@ Two small reference implementations of the algorithm analyzed in
 
 - `cazac-socp-solver.py` — CVXPY-based SOCP refinement that enforces an
   amplitude bound and a coupled spectral-flatness (Fourier energy) bound
-  across `N` sequences. Optional phase/quantized-phase side constraints are
-  supported. For `N=2`, the script also assembles the associated
+  across `N` sequences. Phase-window side constraints are encoded, but the
+  release default makes them redundant; lowering `sigma` activates a stricter
+  variant that is not analyzed in the paper. For `N=2`, the script also assembles the associated
   `2n × 2n` block-circulant matrix and prints basic diagnostics.
 
 - `cazac-projected-solver.py` — NumPy-only iterative-projection (IPUC-style)

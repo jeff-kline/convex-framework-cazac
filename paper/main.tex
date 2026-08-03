@@ -30,62 +30,126 @@
 
 \title{Convergence of iterated SOCP refinement for CAZAC feasibility}
 \author{Jeffery Kline}
-\date{July 2026}
+\date{Draft, August 2026}
 
 \begin{document}
 \maketitle
 
 \begin{abstract}
-Constant-amplitude zero-autocorrelation (CAZAC) sequences satisfy a
-constant-modulus time condition and a flat-spectrum frequency condition
-simultaneously --- a nonconvex intersection of two tori. Relaxing the
-equality constraints to convex inequalities gives a compact convex body
-$C_\tau$ whose maximal-norm points, at $\tau=1$, are exactly the CAZAC
-systems, and the natural algorithm iterates a second-order cone program
-(SOCP) whose objective direction resets to the previous optimizer. The
-central technical content is Theorem D: a regularity hypothesis (R) needed
-for a sharp local convergence rate is pinned down exactly at every
-Zadoff--Chu tuple and length $n$ (both parities; even $n$ was previously
-open), via a mechanism new to this problem --- the DFT of a Zadoff--Chu
-chirp is again a chirp, collapsing a rank computation to counting
-solutions of $t^2\equiv0\bmod n$ --- so (R) holds iff $n$ is squarefree.
-The mechanism is a reusable schema: a different closure fact (self-duality
-of the Legendre symbol) extends it to a partial regularity result at
-Bj\"orck's Legendre-symbol-phase construction, proved here only on a
-symmetry-invariant subspace (full regularity is available in the
-literature \cite{Benoist24}, not proved in this paper); the same specific
-mechanism, by contrast, provably cannot reach cubic or higher-degree
-phase (this does not rule out some other route). This underwrites Theorem
-C (conditional on (R); unconditional when Theorem A's limit lies on a
-Zadoff--Chu tuple's symmetry orbit and $n$ is squarefree): near a regular
-CAZAC point the constraint slack grows \emph{linearly}, not quadratically
-(KL exponent exactly $0$), and the iteration reaches the point exactly
-after finitely many steps. The theory rests on Theorem A (unconditional):
-every measurable selection converges to a single fixed point, via an
-Attouch--Bolte--Svaiter Kurdyka--{\L}ojasiewicz descent argument applied
-to a set-valued argmax update --- a known template, of which Akta\c{s} and
-Kroer \cite{AK25} (2025, prior art) give a general instance for arbitrary
-strongly convex objectives; our contribution is the reduction of CAZAC
-feasibility to $\max_{C_\tau}\|x\|^2$ (Prop.~\ref{prop:2}) that makes the
-template apply, not the descent argument itself. This reduction is
-CAZAC-agnostic and transfers verbatim to a second example, the elliptope
-$\El=\{X\succeq0: X_{ii}=1\}$ --- Felzenszwalb--Klivans--Paul's (2021) own
-worked case, where their mechanism stalls at set-level convergence; we
-prove single-point convergence there unconditionally. Their own
-Theorem~20 further settles, by direct citation, that rank-1 points are
-exactly the fixed points whose full neighborhood converges to them; a
-$140$-trial sweep finds no exceptions, and whether the exceptional set
-has measure zero remains open (Q7). Theorem B (unconditional,
-obstruction): non-CAZAC fixed points exist and some are exposed, so no
-deterministic selection rule can guarantee convergence to the CAZAC set
---- only a probabilistic statement over initializations is possible. We
-close with the open-problems ledger (Q1 settled here as Theorem A;
-Q2--Q7 open or partially resolved) and a tiered accounting of exactly
-which claims are proved, proved conditionally, numerically verified, or
-conjectural.
+Constant-amplitude zero-autocorrelation (CAZAC) sequences have constant
+magnitude in time and flat Fourier magnitude.  We study an iterative
+construction that relaxes these two nonconvex equality constraints to convex
+inequalities and repeatedly solves a second-order cone program, using the
+previous optimizer as the next objective direction.  At relaxation parameter
+$\tau=1$, the CAZAC systems are exactly the maximal-norm points of the
+resulting compact convex set.
+
+For each fixed $\tau\ge1$, every nonzero trajectory converges to a single
+fixed point and has finite total path length.  This conclusion follows by
+applying a known
+Kurdyka--{\L}ojasiewicz/Frank--Wolfe descent template to the CAZAC
+norm-maximization formulation.  Global convergence is not global success:
+we construct exposed non-CAZAC fixed points, so no deterministic choice of
+optimizer can guarantee convergence to the CAZAC set.  Locally, a regularity
+hypothesis gives a sharper conclusion.  Near a regular CAZAC limit the
+constraint slack grows linearly, the relevant KL exponent is zero, and the
+iteration reaches the limit exactly after finitely many steps.
+
+We compute the regularity condition at every Zadoff--Chu tuple.  If
+$n=\prod_p p^{a_p}$ and
+$d_{\max}=\prod_p p^{\lfloor a_p/2\rfloor}$, then the active-gradient
+dependency space has dimension $d_{\max}$, for odd and even $n$ alike.
+Thus the local finite-arrival theorem applies at Zadoff--Chu limits exactly
+when $n$ is squarefree.  Earlier constructions already supplied continuous
+CAZAC families at non-squarefree lengths; the result here is the exact local
+count and its connection to convergence.  We also apply the general
+convergence argument to the elliptope and prove a partial symmetry-restricted
+statement for Bj\"orck sequences; full Bj\"orck regularity is prior work.
+The paper separates unconditional proofs, the regularity-conditional result,
+numerical evidence, and open basin-of-attraction questions.
 \end{abstract}
 
-\section{Setup}
+\section{Introduction}
+
+A constant-amplitude zero-autocorrelation (CAZAC) sequence is a finite complex
+sequence whose entries all have the same magnitude and whose discrete Fourier
+transform also has constant magnitude.  Such sequences are useful in waveform
+design, synchronization, and coding, and they form a nonconvex
+feasibility set: one must satisfy a torus constraint in time and another in
+frequency at the same time.  Zadoff--Chu chirps give explicit examples at
+every length \cite{Chu72}, but the broader geometry of the feasible set and
+the behavior of iterative construction methods remain difficult.
+
+This paper studies a convex-relaxation method for that feasibility problem.
+For $N$ coupled length-$n$ sequences, let $C_\tau$ impose upper bounds on
+each time-domain amplitude and on the coupled Fourier energy at each
+frequency.  The set $C_\tau$ is compact, convex, semialgebraic, and
+second-order-cone representable.  At $\tau=1$, its points of largest squared
+norm are exactly the coupled CAZAC systems.  Starting from a nonzero vector,
+we repeatedly maximize the linear functional defined by the current iterate:
+\[
+ x^{\ell+1}\in\operatorname*{arg\,max}_{x\in C_\tau}
+       \langle x^\ell,x\rangle_\R.
+\]
+This is iterated linear optimization, or a generalized power method, and each
+step is an SOCP.
+
+The first result separates convergence of the iteration from success of the
+construction.  Theorem~\ref{thm:A} proves that every measurable optimizer
+selection has finite total path length and converges to one fixed point.  The
+descent mechanism is not new: it is the quadratic-objective instance of the
+Kurdyka--{\L}ojasiewicz/Frank--Wolfe framework developed in greater generality
+by Akta\c{s} and Kroer \cite{AK25}, building on standard KL descent theory
+\cite{ABS13}.  The CAZAC-specific contribution is the norm-maximization
+reduction that makes this framework apply.  Theorem~\ref{thm:B} then shows why
+convergence alone cannot guarantee success: exposed non-CAZAC fixed
+points exist, so a deterministic selection rule cannot guarantee arrival at
+the target set.
+
+The local theory is stronger.  Under a regularity condition on the active
+constraint gradients, Theorem~\ref{thm:C} proves linear growth of the
+constraint slack, KL exponent zero, and exact arrival at the limiting CAZAC
+point after finitely many steps.  Theorem~\ref{thm:D} determines when this
+hypothesis holds at Zadoff--Chu tuples.  If
+$n=\prod_p p^{a_p}$, the dependency space has dimension
+$d_{\max}=\prod_p p^{\lfloor a_p/2\rfloor}$; hence regularity holds exactly
+for squarefree $n$.  The proof uses closure of quadratic chirps under the
+DFT to replace a rank computation by the congruence $t^2\equiv0\pmod n$.
+
+Earlier CAZAC work already shows why degeneracy can occur.  Backelin
+\cite{Backelin89}, Popovi\'c \cite{Popovic92}, and Bj\"orck--Saffari
+\cite{BjorckSaffari95} already constructed continuous families at
+non-squarefree lengths and therefore anticipated the existence of the
+degeneracy.  Theorem~\ref{thm:D} supplies the exact count at every
+Zadoff--Chu tuple, for both parities, and connects it to the convergence
+rate.  The paper does not identify its dependency space with those earlier
+families, and it does not claim that the existence of non-squarefree
+degeneracy is new.
+
+The same method also applies to the elliptope.  The global
+finite-length argument transfers to the elliptope of correlation matrices,
+where it proves single-point convergence even though the fixed-point set is
+positive-dimensional for $n>3$.  The pointwise attractive-fixed-point
+dichotomy follows from Felzenszwalb, Klivans, and Paul \cite{FKP21}, but it
+remains open whether almost every initialization reaches a rank-one point.
+For Bj\"orck's Legendre-symbol construction, we prove regularity only
+on a symmetry-invariant subspace; full regularity is proved by Benoist
+\cite{Benoist24} and is not a contribution of this paper.
+
+For $N=1$ and odd prime $n$, Benoist \cite[Prop.~A.2]{Benoist24} proves
+projective transversality at Gaussian chirps, the prime-length counterpart
+of hypothesis (R).  Theorem~\ref{thm:D} supplies the exact dependency count
+and extends the calculation to every length, both parities, every coprime
+root, and coupled systems with $N\ge1$.
+
+The next section defines the relaxation and its fixed points.  Theorem A and
+the elliptope application follow, then the obstruction theorem, the
+regularity-conditional local result, and the Zadoff--Chu dependency
+calculation.  The paper closes with open problems and a claim-by-claim
+verification ledger.  Numerical experiments support selected calculations
+and basin questions, but they are kept distinct from the proofs.
+
+\section{Setup}\label{sec:setup}
 
 Fix $n\ge1$ and $N\ge1$. Let $F$ denote the unnormalized discrete Fourier
 transform on $\C^n$, $F(u)(k)=\sum_m u(m)e^{-2\pi ikm/n}$, so Parseval's
@@ -117,11 +181,12 @@ optimization}:
 x^{\ell+1}\in\operatorname*{arg\,max}_{x\in C_\tau}\langle x^\ell,x\rangle_\R. \tag{$\star$}
 \end{equation}
 The argmax may be non-unique; $(\star)$ permits any measurable selection.
-The paper's practical schedule presolves at $\tau=2+1/\ell$ for
-$\ell=1,\dots,10$, then fixes $\tau=1$ for the main phase; all theorems
-below concern the main phase at fixed $\tau\ge1$ (in particular $\tau=1$),
-and hold for any measurable selection rule, so the finitely many presolve
-steps do not affect any conclusion.
+The reference implementation performs ten preliminary solves with
+$\tau=1/\ell$ for $\ell=1,\dots,10$, then resets to $\tau=1$ for the main
+phase.  All theorems below concern an iteration at one fixed $\tau\ge1$
+(in particular $\tau=1$), and hold for any measurable selection rule.  The
+preliminary solves merely choose the input direction for the analyzed main
+phase; they are not part of any theorem.
 
 \begin{definition}[Fixed point]
 $x^*$ is a fixed point of $(\star)$ if
@@ -137,11 +202,15 @@ limit points; (2) is that limit CAZAC; (3) at what rate.
 \section{The iteration as a generalized power method}
 
 \begin{proposition}\label{prop:1}
-With $f(x)=\tfrac12\|x\|^2$ (convex, $\nabla f(x)=x$), $(\star)$ is exactly
-$x^{\ell+1}\in\arg\max_{x\in C_\tau}\langle\nabla f(x^\ell),x\rangle_\R$: the
-conditional-gradient / generalized-power-method update for maximizing the
-convex function $f$ over the compact convex set $C_\tau$ \cite{JNRS10},
-also called iterated linear optimization \cite{FKP21}.
+Let $f(x)=\tfrac12\|x\|^2$, so $f$ is convex and $\nabla f(x)=x$. Then
+$(\star)$ is exactly
+\[
+x^{\ell+1}\in\arg\max_{x\in C_\tau}
+    \langle\nabla f(x^\ell),x\rangle_\R.
+\]
+This is the conditional-gradient or generalized-power-method update for
+maximizing $f$ over the compact convex set $C_\tau$ \cite{JNRS10}, also
+called iterated linear optimization \cite{FKP21}.
 \end{proposition}
 \begin{proof}
 Immediate from the definitions.
@@ -193,15 +262,11 @@ divide by $\|x^\ell\|$; monotone and bounded above by Prop.~\ref{prop:2}.
 by (1); telescope and apply (2).
 \end{proof}
 
-The hypothesis $x^0\in C_\tau$ costs nothing: the paper's own presolve
-schedule (Section~1) hands the main phase a point in $C_{2.1}\setminus
-C_1$, not in $C_1$, but every $x^{\ell+1}$ for $\ell\ge0$ is by
-construction an argmax over $C_\tau$ and hence lies in $C_\tau$
-automatically --- so re-indexing the main phase to start from its own
-\emph{first} iterate (which is in $C_\tau$ regardless of where the
-presolve output sat) restores the hypothesis with no loss; every result
-below that depends on Prop.~\ref{prop:3} inherits this same one-step
-re-indexing.
+The hypothesis $x^0\in C_\tau$ costs nothing.  Whatever input direction is
+handed to a fixed-$\tau$ phase, its first optimizer lies in $C_\tau$ by
+construction.  Re-indexing that phase from its first optimizer therefore
+restores the hypothesis with no loss; every result below that depends on
+Prop.~\ref{prop:3} inherits this same one-step re-indexing.
 
 Square-summable increments alone do not imply convergence of the full
 sequence (harmonic-type sums can wander); closing exactly this gap is
@@ -265,7 +330,7 @@ semialgebraic, hence KL \cite{BDLS07}.
 Critical points of $F$ are exactly the fixed points of $(\star)$: $0\in\partial F(x^*)$
 iff $x^*\in N_{C_\tau}(x^*)$ (the sum rule above) iff $x^*$ maximizes
 $\langle x^*,\cdot\rangle_\R$ over $C_\tau$, which is the Fixed-point
-Definition of Section~1. The theorem then gives finite length and
+Definition of Section~\ref{sec:setup}. The theorem then gives finite length and
 convergence to a single critical point.
 \end{proof}
 
@@ -346,13 +411,16 @@ which hold verbatim on $\El\subset\R^{\binom{n+1}2}$.
 \end{proof}
 
 \begin{proposition}[Proved, $n>3$]\label{prop:ell3}
-For $n>3$, the fixed-point set $\mathcal F=\{X\in\El:X\in\arg\max_{Y\in\El}\langle
-X,Y\rangle\}$ of the elliptope iteration is infinite, hence (being
+For $n>3$, let
+\[
+\mathcal F=\{X\in\El:X\in\arg\max_{Y\in\El}\langle X,Y\rangle\}
+\]
+be the fixed-point set of the elliptope iteration. It is infinite, hence (being
 semialgebraic) a genuine positive-dimensional continuum, not a singleton
-or a finite set. (This restriction is load-bearing, not cosmetic: at
+or a finite set. The restriction $n>3$ is necessary: at
 $n=2$, $\El=\{[\begin{smallmatrix}1&r\\r&1\end{smallmatrix}]:|r|\le1\}$ and
 one checks directly that $\mathcal F=\{r\in\{-1,0,1\}\}$ is finite, so the
-statement is false without $n>3$.)
+statement is false without $n>3$.
 \end{proposition}
 \begin{proof}
 $\mathcal F$ is semialgebraic: $\El$ is semialgebraic
@@ -393,9 +461,9 @@ continuum entirely and converge to a rank-1 correlation matrix $vv^\top$
 (eigenvalues $(0,0,0,0,5)$ to machine precision); the trajectory started at
 $X^0=I_5$ is an edge case in which the solver's own deterministic tie-break
 returns $I_5$ again, a valid fixed point, not a counterexample. Script:
-{\tt experiments/verify\_elliptope\_convergence.py} in the companion
+\path{experiments/verify_elliptope_convergence.py} in the companion
 repository \cite{CazacAlgorithmRepo}. A broader sweep (same repository,
-{\tt experiments/verify\_elliptope\_rank\_sweep.py}) of $140$ random and
+\path{experiments/verify_elliptope_rank_sweep.py}) of $140$ random and
 Gaussian-perturbed trials across $n\in\{3,4,5,8,10,15,20\}$ finds
 \textbf{every trajectory converges to rank $1$}, no exceptions. This
 remains \emph{verified numerically only}, at these tested $n$ and trial
@@ -488,7 +556,7 @@ measure-zero refinement, structurally the same gap as Q6.
 
 \section{Theorem B --- obstruction: the limit need not be CAZAC}
 
-\begin{theorem}[Theorem B --- Proved, unconditional]\label{thm:B}
+\begin{theorem}[Theorem B --- Proved, unconditional]\phantomsection\label{thm:B}
 \begin{enumerate}
 \item[\rm(a)] The fixed points of $(\star)$ at $\tau=1$ with every
 amplitude constraint slack are exactly the points whose \emph{coupled}
@@ -559,11 +627,20 @@ $((1,t),(1,t))$, the amplitude constraints are still per-block
 ($\re y_j(0)\le|y_j(0)|\le1$ for $j=0,1$), but the spectral constraint is
 \emph{coupled} ($S_y(0)=\sum_j|F(y_j)(0)|^2\le4$, not two separate
 per-block bounds of $2$), so the argument is not a coordinatewise repeat:
-$$\langle x^*,y\rangle_\R=(1-t)\bigl[\re y_0(0)+\re y_1(0)\bigr]+t\bigl[\re F(y_0)(0)+\re F(y_1)(0)\bigr]
-\le(1-t)\cdot2+t\sqrt2\sqrt{S_y(0)}\le2(1-t)+2\sqrt2\,t=2(1+t^2),$$
-using the amplitude bound directly on the first bracket and
-Cauchy--Schwarz ($\re F(y_0)(0)+\re F(y_1)(0)\le\sqrt2\sqrt{S_y(0)}$) only
-on the coupled second bracket, matching $\|x^*\|^2=2(1+t^2)$ for the
+\begin{align*}
+\langle x^*,y\rangle_\R
+ &= (1-t)\bigl[\re y_0(0)+\re y_1(0)\bigr]
+    +t\bigl[\re F(y_0)(0)+\re F(y_1)(0)\bigr]\\
+ &\le 2(1-t)+t\sqrt2\sqrt{S_y(0)}\\
+ &\le 2(1-t)+2\sqrt2\,t=2(1+t^2).
+\end{align*}
+Here the first bound uses the amplitude constraints directly, while
+Cauchy--Schwarz gives
+\[
+\re F(y_0)(0)+\re F(y_1)(0)\le\sqrt2\sqrt{S_y(0)}
+\]
+on the coupled spectral term. The last expression matches
+$\|x^*\|^2=2(1+t^2)$ for the
 doubled point. Equality forces $\re y_j(0)=1$ for $j=0,1$ (each term of
 the first bracket individually at its bound, so $y_j(0)=1$ exactly), and
 in the Cauchy--Schwarz step: $\re F(y_0)(0)=\re F(y_1)(0)=|F(y_j)(0)|$
@@ -638,7 +715,8 @@ $h(x)=0$, so $x\in\CAZ(n,N)$. Conversely $\CAZ(n,N)\subseteq\{g=0,h=0\}\subseteq
 \end{proof}
 
 \begin{lemma}[Uniform derivative bounds]\label{lem:phis-lip}
-$D\Phi_s$ is $2\sqrt2$-Lipschitz globally, and at any $x^*\in\CAZ(n,N)$,
+The derivative map $D\Phi_s$ is globally $2\sqrt2$-Lipschitz. At any
+$x^*\in\CAZ(n,N)$ it also satisfies
 $\|D\Phi_s(x^*)\|_{\mathrm{op}}\le2\sqrt{N+1}$. Both bounds are independent
 of $n$.
 \end{lemma}
@@ -669,7 +747,7 @@ Write $\sigma_s>0$ for the smallest singular value of $D\Phi_s(x^*)$ when
 (R) holds, and $\rho:=\sigma_s/(16\sqrt2)$ (so $\sigma_s/(8M)=\rho$ with
 $M=2\sqrt2$, Lemma~\ref{lem:phis-lip}).
 
-\begin{theorem}[Theorem C --- Proved conditional on hypothesis (R)]\label{thm:C}
+\begin{theorem}[Theorem C --- Proved conditional on (R)]\label{thm:C}
 Near a regular $x^*\in\CAZ(n,N)$:
 \begin{enumerate}
 \item[\rm(a)] \emph{Sharp (linear) growth:}
@@ -688,7 +766,12 @@ arrival is at most $(Nn-\|x^0\|^2)/c_0^2$.
 (a) The objective deficit is simultaneously the $\ell^1$ slack of both
 constraint families:
 $D(x)=\sum_{j,m}(1-|x_j(m)|^2)=\tfrac1n\sum_k(Nn-S_x(k))$, all terms
-$\ge0$; in particular $\|\Phi_s(x)\|=\sqrt{\|g(x)\|^2+\|P_Hh(x)/n\|^2}\le\sqrt{D(x)^2+D(x)^2}=\sqrt2D(x)$.
+$\ge0$. In particular,
+\begin{align*}
+\|\Phi_s(x)\|
+ &=\sqrt{\|g(x)\|^2+\|P_Hh(x)/n\|^2}\\
+ &\le\sqrt{D(x)^2+D(x)^2}=\sqrt2D(x).
+\end{align*}
 \emph{Case 1: $\sqrt2D(x)\le\sigma_s^2/(16M)$, $M=2\sqrt2$.} Apply
 Lemma~\ref{lem:newton} to $\Phi=\Phi_s$ (quadratic; zero set $\CAZ(n,N)$ by
 Lemma~\ref{lem:phis-zero}; surjective at $x^*$ by (R)):
@@ -819,7 +902,7 @@ both parities, $q_m=G_u\sum_sc'_s\,\phi(s+m)$, where $\phi(j)=\omega^{uT_j}$
 $q_m\in\R$ for all $m$ iff $q_m-\overline{q_m}=0$:
 $$\sum_sc'_s\,e(s+m)=0\quad\forall m,\qquad e(j):=G_u\,\phi(j)-\overline{G_u}\,\overline{\phi(j)}$$
 --- the vanishing of a convolution against the \emph{reality-defect}
-kernel $e$, not (a subtlety a compressed first pass can miss) mere reality
+kernel $e$, not mere reality
 of $\sum_sc'_s\phi(s+m)$ itself, which would be a strictly stronger, false
 requirement: $\phi$ alone is not conjugate-symmetric, and $\hat\phi$ never
 vanishes (it is a pure Gauss sum of constant modulus $\sqrt n$), so that
@@ -881,11 +964,18 @@ tangent dimension is exactly $(N-1)n+1$: a $1$-dimensional phase circle for
 $N=1$ versus an $(n+1)$-dimensional manifold for $N=2$.
 \end{corollary}
 
-Numerical verification: {\tt experiments/verify\_zc\_regularity.py} for odd
-$n\in\{3,5,7,9,15,21,25,27,45,49,75\}$ (21 configurations) and
-{\tt experiments/verify\_even\_n\_regularity.py} for the $13$ even values
-$n\in\{2,4,6,8,10,12,14,16,18,20,24,36,50\}$ (43 configurations); all match
-$\dim K=d_{\max}$ exactly. No Chebotar\"ev-type nonvanishing-minors
+Numerical verification uses \path{experiments/verify_zc_regularity.py} for
+odd lengths
+\[
+n\in\{3,5,7,9,15,21,25,27,45,49,75\}
+\]
+($21$ configurations), and
+\path{experiments/verify_even_n_regularity.py} for the even lengths
+\[
+n\in\{2,4,6,8,10,12,14,16,18,20,24,36,50\}
+\]
+($43$ configurations). All match $\dim K=d_{\max}$ exactly. No
+Chebotar\"ev-type nonvanishing-minors
 argument is needed: the DFT of a chirp is a chirp, collapsing the
 dependency analysis to counting solutions of $t^2\equiv0\bmod n$. Both
 scripts are in the companion repository \cite{CazacAlgorithmRepo}.
@@ -995,8 +1085,16 @@ rescues part of the argument.
 \begin{lemma}[Proved, exact symbolic computation]\label{lem:bjaffine}
 $b$ is exactly \textbf{affine} in $\chi$: $b=A\cdot\mathbf1+B\cdot\chi+C\cdot\delta_0$
 with $C=1-A$, where
-$$p\equiv1\!\!\pmod4:\ A=\cos\alpha,\ B=i\sin\alpha,\ \alpha=\arccos\tfrac1{1+\sqrt p};
-\qquad p\equiv3\!\!\pmod4:\ A=\tfrac{1+e^{i\beta}}2,\ B=\tfrac{1-e^{i\beta}}2=C,\ \beta=\arccos\tfrac{1-p}{1+p}.$$
+\[
+\begin{aligned}
+p\equiv1\pmod4:\quad
+ &A=\cos\alpha,\quad B=i\sin\alpha,\\
+ &\alpha=\arccos\frac1{1+\sqrt p};\\
+p\equiv3\pmod4:\quad
+ &A=\frac{1+e^{i\beta}}2,\quad B=\frac{1-e^{i\beta}}2=C,\\
+ &\beta=\arccos\frac{1-p}{1+p}.
+\end{aligned}
+\]
 The $3$-dimensional space $T:=\operatorname{span}_\C\{\mathbf1,\chi,\delta_0\}$
 closes under the DFT: $\hat b=C\cdot\mathbf1+Bg\cdot\chi+Ap\cdot\delta_0$
 (using $F(\mathbf1)=p\delta_0$, $F(\chi)=g\chi$, $F(\delta_0)=\mathbf1$,
@@ -1059,7 +1157,7 @@ In both residue classes the system forces $\beta=\gamma=0$ with $\alpha$
 free, giving $K\cap T=\operatorname{span}\{\mathbf1\}$ exactly.
 \end{proof}
 
-\begin{remark}[What is proved and what is not --- do not upgrade]
+\begin{remark}[What is proved and what remains open]
 Lemma~\ref{lem:bjaffine} and Lemma~\ref{lem:bjequiv} and
 Theorem~\ref{thm:E0} are complete proofs. What remains \textbf{unproved} is
 whether $K$ meets any of the $q-1$ nontrivial isotypic pieces of $\R^p$
@@ -1186,18 +1284,19 @@ question: it is the natural generalization of Bj\"orck and Saffari's own
 still-open finiteness conjecture (\S\ref{sec:zc}, remark after
 Corollary~\ref{cor:D2}) --- settled only at prime $n$, by Haagerup \cite{Haagerup08}.
 
-\noindent\textbf{Q5 (open, deprioritized).} What does the $\tau$-continuation
-presolve actually buy? Hypothesis: it drives the iterate onto (or near) the
-easier flat-spectrum variety before the main phase. Untested by ablation.
+\noindent\textbf{Q5 (open, deprioritized).} What, if anything, do the
+preliminary solves buy? The reference implementation solves successively at
+$\tau=1,1/2,\ldots,1/10$ before resetting to $\tau=1$. Their effect has not
+been tested by ablation, and no theoretical benefit is claimed.
 
 \noindent\textbf{Q6 (the central open question).} For $N\ge2$ and Gaussian
 initialization, does the iteration converge to $\CAZ(n,N)$ with
 probability $1$ (or $\ge1-c^n$)? Requires a full fixed-point census (Q2)
-and a basin/measure argument. For $N=1$, empirical success probability
-decays from $\approx1$ at small $n$ to $\approx0.3$ at $n=167$ (50 trials
-per configuration; {\tt docs/main.tex}, Table~1, in the companion
-repository \cite{CazacAlgorithmRepo}); whether
-this decay is exponential or polynomial in $n$ is unresolved.
+and a basin/measure argument. No tracked experiment in this repository
+currently estimates that success probability for $(\star)$. The
+$15/50$ success count at $n=167$ printed by the tracked projection script
+belongs to a different IPUC-style baseline and is not evidence for this
+question.
 
 \noindent\textbf{Q7 (partially settled by citation, residual part open).}
 Does every trajectory of the elliptope iteration converge to a rank-1
@@ -1319,12 +1418,10 @@ answered'' to fully open conjectures, as stated there.
 from large language models (Claude, Anthropic) under the direction of
 Jeffery Kline, drawing on a longer working record of derivations kept in
 the companion repository \cite{CazacAlgorithmRepo}'s {\tt theory/}
-directory; every numerical claim above is backed either by a named
-script in that repository's {\tt experiments/} directory or, where noted
-explicitly (Q6), by direct citation to a table in an earlier paper draft
-kept in that repository's {\tt docs/} directory. Every claim above carries
-the status tag most consistent with that record; none has been upgraded
-in the writing of this paper.
+directory. Numerical claims name their supporting scripts in that
+repository's {\tt experiments/} directory. Claims whose supporting companion
+artifact is unavailable are identified as such in the repository's release
+documentation.
 
 \begin{thebibliography}{99}
 

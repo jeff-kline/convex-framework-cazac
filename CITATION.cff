@@ -1,0 +1,24 @@
+cff-version: 1.2.0
+message: "Please cite version 0.1.0 once released; before release, cite the exact commit used."
+title: "Convergence of iterated SOCP refinement for CAZAC feasibility"
+type: software
+version: 0.1.0
+authors:
+  - family-names: Kline
+    given-names: Jeffery
+repository-code: "https://github.com/jeff-kline/convex-framework-cazac"
+url: "https://github.com/jeff-kline/convex-framework-cazac"
+license: GPL-3.0-only
+abstract: >-
+  Proofs and reference code for an iterated second-order cone programming
+  method for coupled CAZAC feasibility. The work proves global convergence to
+  a fixed point, constructs exposed non-CAZAC fixed points, proves finite local
+  arrival under a regularity condition, and computes that condition exactly at
+  Zadoff--Chu tuples for every length.
+keywords:
+  - CAZAC sequence
+  - Zadoff--Chu sequence
+  - second-order cone programming
+  - iterated linear optimization
+  - Fourier analysis
+  - semialgebraic optimization

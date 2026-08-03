@@ -26,7 +26,7 @@ a structured block-circulant matrix.
 Model (high level)
 ------------------
 Given N length-n complex sequences {x_j}, the program enforces:
-  • Time-domain amplitude bound:            |x_j(k)| ≤ τ   (parameter τ tightened in a presolve loop)
+  • Time-domain amplitude bound:            |x_j(k)| ≤ τ
   • Joint spectral flatness (energy):       Σ_j |FFT(x_j)(m)|^2 ≤ N n   for all frequency bins m
   • Optional quantized-phase side-constraint:
         entries lie within a neighborhood of vertices of a regular 2q-gon on the unit circle
@@ -36,8 +36,10 @@ Given N length-n complex sequences {x_j}, the program enforces:
 Sequential refinement
 ---------------------
 The objective maximizes alignment with a running reference direction r. After each solve,
-r is updated to the current solution. A short continuation phase tightens τ (the listing’s
-“presolve”), followed by a main loop at τ = 1 until convergence.
+r is updated to the current solution. Ten preliminary solves use
+τ = 1, 1/2, ..., 1/10, followed by a main loop at τ = 1 until convergence.
+The theorems concern the main, fixed-τ iteration; no benefit is claimed for
+the preliminary schedule.
 
 N=2 block construction
 ----------------------
@@ -58,7 +60,7 @@ Requirements
 
 Sample output
 ----------------------------
-Time (s):     57.0
+Time (s):     62.1
 Max |H(j,k)| 1.00000e+00
 Min |H(j,k)| 1.00000e+00
 Size H       (106, 106)
@@ -96,7 +98,7 @@ def get_lp_prog(n: int, N: int, q: int) -> Tuple[cp.Problem, List[cp.Variable], 
     # DFT matrix (O(n^2) memory, consistent with the listing)
     F = nf.fft(np.eye(n))
 
-    # Objective direction and continuation parameters
+    # Objective direction and schedule parameters
     r = cp.Parameter(N * n, complex=True)
     t = cp.Parameter(nonneg=True)  # τ in the paper (named t in the listing)
     s = cp.Parameter(nonneg=True)  # cos(pi/(2q)) + σ in the paper
@@ -136,13 +138,12 @@ def main() -> None:
     # Parameters from the listing
 
     # n and N define the program size
-    # the output matrix will be 2nN x 2nN
-    # the 
+    # for N=2, the output matrix is 2n x 2n
     n = 53
     N = 2
     
-    # these are iteration thresholds for presolve (L0) 
-    # and the main program (L)
+    # these are iteration thresholds for the preliminary loop (L0)
+    # and the main loop (L)
     L0 = 10
     L = 100
 
@@ -152,13 +153,11 @@ def main() -> None:
     q = 2
     eps = 1e-5
 
-    # Phase-window slack (σ)
-    # Increase sigma to relax the phase constraints
-    # If sigma is too small, the problem will fail to converge 
-    # to an orthogonal solution
-    # If sigma is large enough, the problem will ignore the
-    # phase constraints
-    sigma = 0.2
+    # Phase-window slack (σ). The release default makes these optional
+    # constraints redundant: throughout this schedule |X| <= 1, while
+    # s = cos(pi/(2q)) + sigma > 1. Lower sigma to experiment with the
+    # stricter phase-window variant, which is not analyzed in the paper.
+    sigma = 1.0
 
     prob, x, r, t, s = get_lp_prog(n, N, q)
 
@@ -168,7 +167,7 @@ def main() -> None:
 
     t0 = time.time()
 
-    # Presolve loop: tighten τ (named t here) and update r to the solution
+    # Preliminary loop: use τ = 1, 1/2, ..., 1/L0 and update r
     for it in range(L0):
         t.value = 1 / (it + 1)
         solve_with_fallback(prob, preferred="CLARABEL")

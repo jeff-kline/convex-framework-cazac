@@ -229,23 +229,27 @@ def run_regime(
 
 
 
-summary, results = run_regime(
-    attempts=50,
-    n=167,
-    N=1,            # change if you want N=1 or N=2, etc.
-    max_iter=100000,
-    eps=1e-5,
-    real=False,
-    base_seed=1
-)
+def main():
+    summary, results = run_regime(
+        attempts=50,
+        n=167,
+        N=1,            # change if you want N=1 or N=2, etc.
+        max_iter=100000,
+        eps=1e-5,
+        real=False,
+        base_seed=1,
+    )
 
-print("=== Testing Regime Summary ===")
-for k, v in summary.items():
-    print(f"{k}: {v}")
+    print("=== Testing Regime Summary ===")
+    for key, value in summary.items():
+        print(f"{key}: {value}")
 
-# Optional: quick list of failed seeds (useful for debugging)
-failed = [r for r in results if not r["success"]]
-print("\nFailed trials:", len(failed))
-if failed:
-    print("Failed seeds:", [r["seed"] for r in failed])
+    failed = [result for result in results if not result["success"]]
+    print("\nFailed trials:", len(failed))
+    if failed:
+        print("Failed seeds:", [result["seed"] for result in failed])
+
+
+if __name__ == "__main__":
+    main()
     
